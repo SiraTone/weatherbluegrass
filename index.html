@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bluegrass TV</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
+    <div class="brand-text">BLUEGRASS<span>TV</span></div>
+  </div>
+  <div class="datetime" id="datetime"></div>
+</header>
+
+<div class="ticker-wrap">
+  <div class="ticker-label"><span class="live-dot"></span> LATEST</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+</div>
+
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="news">News</button>
+  <button class="tab-btn" data-tab="weather">Weather</button>
+  <button class="tab-btn" data-tab="sports">Sports</button>
+  <button class="tab-btn" data-tab="community">Community</button>
+</nav>
+
+<main id="main"></main>
+
+<footer>
+  Bluegrass TV &middot; Local news, weather, sports &amp; community &middot; <a href="admin.html">Newsroom Login</a>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

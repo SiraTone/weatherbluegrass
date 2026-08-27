@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsroom Admin &middot; Bluegrass TV</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
+    <div class="brand-text">BLUEGRASS<span>TV</span> <span style="color:rgba(255,255,255,0.5); font-size:0.9rem; font-weight:500;">/ Newsroom</span></div>
+  </div>
+  <a href="index.html" class="datetime">&larr; View site</a>
+</header>
+
+<main class="admin-main">
+
+  <section class="panel" id="settingsPanel">
+    <h2>Connection settings</h2>
+    <p class="hint">This connects the admin page directly to your GitHub repo so publishing commits the change for you. Your token is stored only in this browser (localStorage) &mdash; never sent anywhere except GitHub's API.</p>
+    <div class="field-row">
+      <label>GitHub username / org<input type="text" id="cfgOwner" placeholder="siratone"></label>
+      <label>Repository name<input type="text" id="cfgRepo" placeholder="my-repo"></label>
+    </div>
+    <div class="field-row">
+      <label>Branch<input type="text" id="cfgBranch" placeholder="main"></label>
+      <label>Path to articles.json<input type="text" id="cfgPath" placeholder="data/articles.json"></label>
+    </div>
+    <label class="full">Personal access token (fine-grained, Contents: Read & Write on this repo only)
+      <input type="password" id="cfgToken" placeholder="github_pat_...">
+    </label>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="saveSettingsBtn">Save & connect</button>
+      <span class="status" id="connStatus"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="editorPanel" style="display:none;">
+    <h2 id="editorHeading">New article</h2>
+    <div class="field-row">
+      <label>Title<input type="text" id="fTitle" placeholder="Headline"></label>
+      <label>Section
+        <select id="fTab">
+          <option value="news">News</option>
+          <option value="weather">Weather</option>
+          <option value="sports">Sports</option>
+          <option value="community">Community</option>
+        </select>
+      </label>
+    </div>
+    <div class="field-row">
+      <label>Author<input type="text" id="fAuthor" placeholder="Newsroom Staff"></label>
+      <label>Date<input type="date" id="fDate"></label>
+    </div>
+    <label class="full">Image URL (optional)<input type="text" id="fImage" placeholder="https://..."></label>
+    <label class="full">Summary (shown on section pages)<textarea id="fSummary" rows="2" placeholder="One or two sentence teaser"></textarea></label>
+    <label class="full">Full article<textarea id="fContent" rows="10" placeholder="Write the full story here..."></textarea></label>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="publishBtn">Publish</button>
+      <button class="btn btn-ghost" id="clearBtn">Clear form</button>
+      <button class="btn btn-danger" id="deleteBtn" style="display:none;">Delete this article</button>
+      <span class="status" id="publishStatus"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="listPanel" style="display:none;">
+    <h2>Published articles</h2>
+    <div id="articleList" class="article-list"></div>
+  </section>
+
+</main>
+
+<script src="assets/admin.js"></script>
+</body>
+</html>
