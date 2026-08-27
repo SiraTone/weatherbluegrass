@@ -4,7 +4,37 @@
     "tab": "news",
     "title": "Welcome to Bluegrass TV",
     "summary": "Your new home for local news, weather, sports, and community stories.",
-    "content": "This is a sample article. Head to the admin page to publish real stories \u2014 they'll show up here automatically, organized by section.",
+    "content": "This is a sample article. Head to the admin page to publish real stories — they'll show up here automatically, organized by section.",
+    "author": "Newsroom Staff",
+    "date": "2026-08-27",
+    "image": ""
+  },
+  {
+    "id": "1787821236455",
+    "tab": "news",
+    "title": "sdsds",
+    "summary": "",
+    "content": "dsadsad",
+    "author": "Newsroom Staff",
+    "date": "2026-08-27",
+    "image": ""
+  },
+  {
+    "id": "1787821238463",
+    "tab": "news",
+    "title": "sdsds",
+    "summary": "",
+    "content": "dsadsadsadsad",
+    "author": "Newsroom Staff",
+    "date": "2026-08-27",
+    "image": ""
+  },
+  {
+    "id": "1787821263543",
+    "tab": "news",
+    "title": "sdsds",
+    "summary": "",
+    "content": "dsadsadsadsad",
     "author": "Newsroom Staff",
     "date": "2026-08-27",
     "image": ""
