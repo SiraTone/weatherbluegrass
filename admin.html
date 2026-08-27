@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com;">
 <title>Newsroom Admin &middot; Bluegrass TV</title>
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/admin.css">
@@ -19,7 +21,17 @@
 
 <main class="admin-main">
 
-  <section class="panel" id="settingsPanel">
+  <section class="panel" id="lockPanel">
+    <h2>Newsroom login</h2>
+    <p class="hint">This page is restricted to newsroom staff. Enter the admin password to continue.</p>
+    <label class="full">Password<input type="password" id="fLockPassword" autocomplete="current-password"></label>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="unlockBtn">Unlock</button>
+      <span class="status" id="lockStatus"></span>
+    </div>
+  </section>
+
+  <section class="panel" id="settingsPanel" style="display:none;">
     <h2>Connection settings</h2>
     <p class="hint">This connects the admin page directly to your GitHub repo so publishing commits the change for you. Your token is stored only in this browser (localStorage) &mdash; never sent anywhere except GitHub's API.</p>
     <div class="field-row">
@@ -33,8 +45,13 @@
     <label class="full">Personal access token (fine-grained, Contents: Read & Write on this repo only)
       <input type="password" id="cfgToken" placeholder="github_pat_...">
     </label>
+    <label class="full" style="flex-direction:row; align-items:center; gap:8px;">
+      <input type="checkbox" id="cfgRemember" style="width:auto;">
+      <span style="text-transform:none; font-weight:400; letter-spacing:normal;">Remember these settings on this device (stored in this browser only, not recommended on shared/public computers)</span>
+    </label>
     <div class="btn-row">
       <button class="btn btn-primary" id="saveSettingsBtn">Save & connect</button>
+      <button class="btn btn-ghost" id="logoutBtn">Log out</button>
       <span class="status" id="connStatus"></span>
     </div>
   </section>

@@ -1,18 +1,78 @@
-const LS_KEY = "bgtv_admin_cfg";
+// ---------- Security: admin password gate ----------
+// This is a static site with no server, so this lock cannot stop a determined
+// attacker who reads the JS source - but it stops casual/opportunistic access
+// to your GitHub owner/repo details and publishing controls, which is the
+// realistic threat for a page linked in your public site footer.
+//
+// CHANGE THE DEFAULT PASSWORD: open this file in a browser console and run
+//   crypto.subtle.digest("SHA-256", new TextEncoder().encode("your-new-password"))
+//     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")))
+// then paste the resulting hex string in place of ADMIN_PW_HASH below.
+const ADMIN_PW_HASH = "122fb4feb1cb2d504e4ac3afa7b1c20aeb850963548f4d3834d067edf8f3dc04"; // default password: "BluegrassTV-2026!" - CHANGE THIS BEFORE GOING LIVE
 
-let cfg = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+const SS_AUTH_KEY = "bgtv_admin_auth"; // sessionStorage - cleared when the tab/browser closes
+const LS_KEY = "bgtv_admin_cfg"; // localStorage - only used if "remember this device" is checked
+const SS_CFG_KEY = "bgtv_admin_cfg_session"; // sessionStorage - default, cleared on tab close
+
+let cfg = {};
 let articles = [];
 let currentSha = null;
 let editingId = null;
 
 const el = (id) => document.getElementById(id);
 
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function isUnlocked() {
+  return sessionStorage.getItem(SS_AUTH_KEY) === "1";
+}
+
+async function tryUnlock() {
+  const statusEl = el("lockStatus");
+  const pw = el("fLockPassword").value;
+  statusEl.textContent = "Checking...";
+  statusEl.className = "status";
+  const hash = await sha256Hex(pw);
+  if (hash === ADMIN_PW_HASH) {
+    sessionStorage.setItem(SS_AUTH_KEY, "1");
+    showAdminUI();
+  } else {
+    statusEl.textContent = "Incorrect password.";
+    statusEl.className = "status error";
+    el("fLockPassword").value = "";
+  }
+}
+
+function showAdminUI() {
+  el("lockPanel").style.display = "none";
+  el("settingsPanel").style.display = "block";
+  loadCfgIntoForm();
+  clearForm();
+  if (cfg.owner && cfg.repo && cfg.token) connect();
+}
+
+function logout() {
+  sessionStorage.removeItem(SS_AUTH_KEY);
+  sessionStorage.removeItem(SS_CFG_KEY);
+  location.reload();
+}
+
+// ---------- GitHub connection settings ----------
+// Settings (including the token) are kept in sessionStorage by default, so
+// they disappear when the tab closes. They're only written to localStorage
+// (persisting across sessions on this device) if "remember" is checked.
 function loadCfgIntoForm() {
+  const stored = localStorage.getItem(LS_KEY) || sessionStorage.getItem(SS_CFG_KEY);
+  cfg = JSON.parse(stored || "{}");
   el("cfgOwner").value = cfg.owner || "";
   el("cfgRepo").value = cfg.repo || "";
   el("cfgBranch").value = cfg.branch || "main";
   el("cfgPath").value = cfg.path || "data/articles.json";
   el("cfgToken").value = cfg.token || "";
+  el("cfgRemember").checked = !!localStorage.getItem(LS_KEY);
 }
 
 function readCfgFromForm() {
@@ -23,7 +83,14 @@ function readCfgFromForm() {
     path: el("cfgPath").value.trim() || "data/articles.json",
     token: el("cfgToken").value.trim()
   };
-  localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+  const remember = el("cfgRemember").checked;
+  localStorage.removeItem(LS_KEY);
+  sessionStorage.removeItem(SS_CFG_KEY);
+  if (remember) {
+    localStorage.setItem(LS_KEY, JSON.stringify(cfg));
+  } else {
+    sessionStorage.setItem(SS_CFG_KEY, JSON.stringify(cfg));
+  }
 }
 
 function apiUrl() {
@@ -111,6 +178,17 @@ function escapeHtml(str) {
   return d.innerHTML;
 }
 
+// Only allow http(s) image URLs - blocks javascript:/data: URLs being stored
+// and later rendered into style attributes on the public site.
+function sanitizeImageUrl(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url, location.href);
+    if (u.protocol === "http:" || u.protocol === "https:") return u.href;
+  } catch (e) { /* invalid URL */ }
+  return "";
+}
+
 function loadIntoEditor(id) {
   const a = articles.find(x => x.id === id);
   if (!a) return;
@@ -170,13 +248,13 @@ async function publish() {
 
   const record = {
     id: editingId || String(Date.now()),
-    tab: el("fTab").value,
+    tab: el("fTab").value.trim().toLowerCase(),
     title,
     summary: el("fSummary").value.trim(),
     content: el("fContent").value.trim(),
     author: el("fAuthor").value.trim() || "Newsroom Staff",
     date: el("fDate").value || new Date().toISOString().slice(0, 10),
-    image: el("fImage").value.trim()
+    image: sanitizeImageUrl(el("fImage").value.trim())
   };
 
   if (editingId) {
@@ -222,11 +300,16 @@ async function deleteArticle() {
   }
 }
 
+el("unlockBtn").addEventListener("click", tryUnlock);
+el("fLockPassword").addEventListener("keydown", (e) => { if (e.key === "Enter") tryUnlock(); });
 el("saveSettingsBtn").addEventListener("click", connect);
+el("logoutBtn").addEventListener("click", logout);
 el("publishBtn").addEventListener("click", publish);
 el("clearBtn").addEventListener("click", clearForm);
 el("deleteBtn").addEventListener("click", deleteArticle);
 
-loadCfgIntoForm();
-clearForm();
-if (cfg.owner && cfg.repo && cfg.token) connect();
+if (isUnlocked()) {
+  showAdminUI();
+} else {
+  el("fLockPassword").focus();
+}

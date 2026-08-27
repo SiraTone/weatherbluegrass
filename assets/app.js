@@ -47,13 +47,24 @@ function escapeHtml(str) {
   return d.innerHTML;
 }
 
+// Defensively re-check image URLs are http(s) before using them, in case
+// articles.json was ever edited by hand or by an older admin session.
+function safeImageUrl(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url, location.href);
+    if (u.protocol === "http:" || u.protocol === "https:") return u.href;
+  } catch (e) { /* invalid */ }
+  return "";
+}
+
 function renderTab(tab) {
   currentTab = tab;
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.tab === tab);
   });
 
-  const items = ARTICLES.filter(a => a.tab === tab);
+  const items = ARTICLES.filter(a => (a.tab || "").trim().toLowerCase() === tab);
 
   if (!items.length) {
     mainEl.innerHTML = `
@@ -69,7 +80,7 @@ function renderTab(tab) {
     <h1 class="section-heading">${tab}</h1>
     <div class="story-grid ${rest.length ? "" : "story-grid-solo"}">
       <article class="feature-card" data-id="${feature.id}">
-        ${feature.image ? `<div class="thumb" style="background-image:url('${escapeHtml(feature.image)}')"></div>` : ""}
+        ${feature.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(feature.image))}')"></div>` : ""}
         <div class="eyebrow">${feature.tab}</div>
         <h2>${escapeHtml(feature.title)}</h2>
         <p>${escapeHtml(feature.summary || "")}</p>
@@ -79,7 +90,7 @@ function renderTab(tab) {
       <div class="side-list">
         ${rest.map(a => `
           <div class="side-item" data-id="${a.id}">
-            ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(a.image)}')"></div>` : `<div class="thumb"></div>`}
+            ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(a.image))}')"></div>` : `<div class="thumb"></div>`}
             <div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="byline">${formatDate(a.date)}</div>
@@ -104,7 +115,7 @@ function renderArticle(id) {
       <div class="eyebrow">${a.tab}</div>
       <h1>${escapeHtml(a.title)}</h1>
       <div class="byline">${escapeHtml(a.author || "Newsroom Staff")} &middot; ${formatDate(a.date)}</div>
-      ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(a.image)}')"></div>` : ""}
+      ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(a.image))}')"></div>` : ""}
       <div class="body-text">${escapeHtml(a.content || a.summary || "")}</div>
     </div>
   `;

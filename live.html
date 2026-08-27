@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.youtube.com; connect-src 'self';">
+<title>Live &middot; Bluegrass TV</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .live-main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+  .live-heading {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .live-heading .live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d32f2f;
+    display: inline-block;
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+  .live-sub {
+    color: rgba(23,18,26,0.6);
+    font-size: 0.9rem;
+    margin: 0 0 20px;
+  }
+  /* 16:9 responsive frame with no visible chrome around it */
+  .player-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #000;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .player-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
+    <div class="brand-text">BLUEGRASS<span>TV</span></div>
+  </div>
+  <div class="datetime" id="datetime"></div>
+</header>
+
+<nav class="tab-nav">
+  <a href="index.html" class="tab-btn">Home</a>
+  <a href="index.html#news" class="tab-btn">News</a>
+  <a href="index.html#weather" class="tab-btn">Weather</a>
+  <a href="index.html#sports" class="tab-btn">Sports</a>
+  <a href="index.html#community" class="tab-btn">Community</a>
+  <a href="live.html" class="tab-btn active">Live</a>
+</nav>
+
+<main class="live-main">
+  <h1 class="live-heading"><span class="live-dot"></span> Live Stream</h1>
+  <p class="live-sub">Streaming automatically whenever Bluegrass Weather Communications goes live on YouTube.</p>
+
+  <div class="player-wrap">
+    <iframe
+      src="https://www.youtube.com/embed/live_stream?channel=UC14hACfawpcNNctfqvb3Xog&autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0"
+      title="Bluegrass Weather Communications Live"
+      allow="autoplay; encrypted-media"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen="false">
+    </iframe>
+  </div>
+</main>
+
+<footer>
+  Bluegrass TV &middot; Local news, weather, sports &amp; community &middot; <a href="admin.html">Newsroom Login</a>
+</footer>
+
+<script>
+  document.getElementById("datetime").textContent = new Date().toLocaleDateString(undefined, {
+    weekday: "long", month: "long", day: "numeric", year: "numeric"
+  });
+</script>
+</body>
+</html>
