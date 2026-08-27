@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.youtube.com; connect-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.youtube.com; connect-src 'self' https://www.youtube.com;">
 <title>Live &middot; Bluegrass TV</title>
 <link rel="stylesheet" href="assets/style.css">
 <style>
@@ -56,6 +56,18 @@
     height: 100%;
     border: 0;
   }
+  .player-status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 20px;
+  }
 </style>
 </head>
 <body>
@@ -81,14 +93,8 @@
   <h1 class="live-heading"><span class="live-dot"></span> Live Stream</h1>
   <p class="live-sub">Streaming automatically whenever Bluegrass Weather Communications goes live on YouTube.</p>
 
-  <div class="player-wrap">
-    <iframe
-      src="https://www.youtube.com/embed/live_stream?channel=UC14hACfawpcNNctfqvb3Xog&autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0"
-      title="Bluegrass Weather Communications Live"
-      allow="autoplay; encrypted-media"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen="false">
-    </iframe>
+  <div class="player-wrap" id="playerWrap">
+    <div class="player-status" id="playerStatus">Checking for a live stream&hellip;</div>
   </div>
 </main>
 
@@ -100,6 +106,52 @@
   document.getElementById("datetime").textContent = new Date().toLocaleDateString(undefined, {
     weekday: "long", month: "long", day: "numeric", year: "numeric"
   });
+
+  // Auto-detects the channel's current live video ID via YouTube's oEmbed
+  // endpoint (which resolves /@handle/live to whatever's live right now),
+  // then builds a chromeless embed for that specific video. This means the
+  // page never needs the video ID hardcoded or updated by hand - it just
+  // asks YouTube "what's live on this channel right now?" every time it
+  // loads, and again periodically while the page stays open.
+  const CHANNEL_LIVE_URL = "https://www.youtube.com/@BluegrassWeatherCommunications/live";
+  const wrap = document.getElementById("playerWrap");
+  const statusEl = document.getElementById("playerStatus");
+  let currentVideoId = null;
+
+  function showStatus(msg) {
+    wrap.innerHTML = `<div class="player-status">${msg}</div>`;
+  }
+
+  function showPlayer(videoId) {
+    if (videoId === currentVideoId) return; // already showing it, don't reload
+    currentVideoId = videoId;
+    const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0`;
+    wrap.innerHTML = `<iframe src="${src}" title="Bluegrass Weather Communications Live" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  }
+
+  async function checkLive() {
+    try {
+      const res = await fetch(
+        `https://www.youtube.com/oembed?url=${encodeURIComponent(CHANNEL_LIVE_URL)}&format=json`
+      );
+      if (!res.ok) throw new Error("not live");
+      const data = await res.json();
+      // The embed html YouTube returns contains the resolved video ID.
+      const match = (data.html || "").match(/embed\/([A-Za-z0-9_-]{11})/);
+      if (match) {
+        showPlayer(match[1]);
+      } else {
+        throw new Error("couldn't parse video id");
+      }
+    } catch (e) {
+      if (!currentVideoId) {
+        showStatus("Not currently live. This page checks automatically and will start playing as soon as a stream begins.");
+      }
+    }
+  }
+
+  checkLive();
+  setInterval(checkLive, 60000); // re-check every minute in case a stream starts or ends
 </script>
 </body>
 </html>
