@@ -1,0 +1,43 @@
+name: Build article pages
+
+# Runs whenever the newsroom publishes/edits/deletes a story through
+# admin.html (which commits straight to data/articles.json), and rebuilds
+# a real, standalone, Google-indexable HTML page for every story in
+# /articles/, plus sitemap.xml. Also runnable by hand from the Actions tab.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/articles.json"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate article pages, sitemap.xml, robots.txt
+        run: node scripts/build-articles.mjs
+
+      - name: Commit generated files
+        run: |
+          git config user.name "bluegrass-tv-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add articles sitemap.xml robots.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Rebuild story pages [skip ci]"
+            git push
+          fi

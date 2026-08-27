@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "build": "node scripts/build-articles.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

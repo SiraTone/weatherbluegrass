@@ -1,6 +1,30 @@
 const TABS = ["news", "weather", "sports", "community"];
 let ARTICLES = [];
-let currentTab = "news";
+
+// Keep in sync with slugify()/articleSlug() in scripts/build-articles.mjs —
+// this is how the homepage links to each story's real, static, indexable
+// page in /articles/.
+function slugify(str) {
+  return (str || "")
+    .toLowerCase()
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 70)
+    .replace(/-+$/g, "");
+}
+function articleSlug(a) {
+  const base = slugify(a.title) || "story";
+  const suffix = String(a.id).slice(-6);
+  return `${base}-${suffix}`;
+}
+function articleUrl(a) {
+  return `articles/${articleSlug(a)}.html`;
+}
+
+const initialTab = new URLSearchParams(location.search).get("tab");
+let currentTab = TABS.includes(initialTab) ? initialTab : "news";
 
 const mainEl = document.getElementById("main");
 const tickerTrack = document.getElementById("tickerTrack");
@@ -79,52 +103,36 @@ function renderTab(tab) {
   mainEl.innerHTML = `
     <h1 class="section-heading">${tab}</h1>
     <div class="story-grid ${rest.length ? "" : "story-grid-solo"}">
-      <article class="feature-card" data-id="${feature.id}">
-        ${feature.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(feature.image))}')"></div>` : ""}
-        <div class="eyebrow">${feature.tab}</div>
-        <h2>${escapeHtml(feature.title)}</h2>
-        <p>${escapeHtml(feature.summary || "")}</p>
-        <div class="byline">${escapeHtml(feature.author || "Newsroom Staff")} &middot; ${formatDate(feature.date)}</div>
+      <article class="feature-card">
+        <a href="${escapeHtml(articleUrl(feature))}" class="card-link">
+          ${feature.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(feature.image))}')"></div>` : ""}
+          <div class="eyebrow">${feature.tab}</div>
+          <h2>${escapeHtml(feature.title)}</h2>
+          <p>${escapeHtml(feature.summary || "")}</p>
+          <div class="byline">${escapeHtml(feature.author || "Newsroom Staff")} &middot; ${formatDate(feature.date)}</div>
+        </a>
       </article>
       ${rest.length ? `
       <div class="side-list">
         ${rest.map(a => `
-          <div class="side-item" data-id="${a.id}">
+          <a href="${escapeHtml(articleUrl(a))}" class="side-item">
             ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(a.image))}')"></div>` : `<div class="thumb"></div>`}
             <div>
               <h3>${escapeHtml(a.title)}</h3>
               <div class="byline">${formatDate(a.date)}</div>
             </div>
-          </div>
+          </a>
         `).join("")}
       </div>` : ""}
     </div>
   `;
+}
 
-  mainEl.querySelectorAll("[data-id]").forEach(el => {
-    el.addEventListener("click", () => renderArticle(el.dataset.id));
+document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    renderTab(btn.dataset.tab);
+    history.replaceState(null, "", `?tab=${btn.dataset.tab}`);
   });
-}
-
-function renderArticle(id) {
-  const a = ARTICLES.find(x => x.id === id);
-  if (!a) return;
-  mainEl.innerHTML = `
-    <div class="article-view">
-      <div class="back-link" id="backLink">&larr; Back to ${a.tab}</div>
-      <div class="eyebrow">${a.tab}</div>
-      <h1>${escapeHtml(a.title)}</h1>
-      <div class="byline">${escapeHtml(a.author || "Newsroom Staff")} &middot; ${formatDate(a.date)}</div>
-      ${a.image ? `<div class="thumb" style="background-image:url('${escapeHtml(safeImageUrl(a.image))}')"></div>` : ""}
-      <div class="body-text">${escapeHtml(a.content || a.summary || "")}</div>
-    </div>
-  `;
-  document.getElementById("backLink").addEventListener("click", () => renderTab(a.tab));
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => renderTab(btn.dataset.tab));
 });
 
 loadArticles();
