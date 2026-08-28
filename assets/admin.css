@@ -80,7 +80,11 @@ textarea { resize: vertical; }
   border-radius: var(--radius);
   border: none;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-primary { background: var(--maroon); color: #fff; }
 .btn-primary:hover { background: var(--maroon-bright); }

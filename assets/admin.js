@@ -1,46 +1,134 @@
 // ---------- Security: admin password gate ----------
 // This is a static site with no server, so this lock cannot stop a determined
-// attacker who reads the JS source - but it stops casual/opportunistic access
-// to your GitHub owner/repo details and publishing controls, which is the
-// realistic threat for a page linked in your public site footer.
+// attacker who reads the JS source - it cannot be made truly server-side
+// secure. What it CAN do is stop casual/opportunistic access, and slow down
+// scripted brute-forcing enough to make it impractical. Two things do that
+// work here: PBKDF2 with a high iteration count (makes each guess slow to
+// compute) and a lockout that backs off after repeated failures (makes
+// scripting around it slow too). The GitHub token's repo-scoped permissions
+// are still your real security boundary - see the note by the token field.
 //
-// CHANGE THE DEFAULT PASSWORD: open this file in a browser console and run
-//   crypto.subtle.digest("SHA-256", new TextEncoder().encode("your-new-password"))
-//     .then(b => console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")))
-// then paste the resulting hex string in place of ADMIN_PW_HASH below.
-const ADMIN_PW_HASH = "122fb4feb1cb2d504e4ac3afa7b1c20aeb850963548f4d3834d067edf8f3dc04"; // default password: "BluegrassTV-2026!" - CHANGE THIS BEFORE GOING LIVE
+// CHANGE THE DEFAULT PASSWORD: unlock this page is not required. Open
+// admin.html, scroll to "Change admin password" (visible before you log in),
+// enter a new password, and copy the generated line over ADMIN_PW_HASH below.
+const ADMIN_PW_SALT = "bgtv-2026-static-site-salt-v1"; // safe to keep as-is; salt just stops precomputed rainbow-table lookups
+const PBKDF2_ITERATIONS = 250000;
+const ADMIN_PW_HASH = "cb2acaa0114259f8b1f1b5d8f1cfe0d5dfa61b6f535f1e1ccd49ec675d65198d"; // set from user-provided password
 
 const SS_AUTH_KEY = "bgtv_admin_auth"; // sessionStorage - cleared when the tab/browser closes
+const SS_AUTH_TIME_KEY = "bgtv_admin_auth_time"; // last-activity timestamp, for idle auto-logout
+const LS_ATTEMPTS_KEY = "bgtv_admin_attempts"; // localStorage - survives tab close so a refresh can't reset the lockout
 const LS_KEY = "bgtv_admin_cfg"; // localStorage - only used if "remember this device" is checked
 const SS_CFG_KEY = "bgtv_admin_cfg_session"; // sessionStorage - default, cleared on tab close
+
+const IDLE_LOGOUT_MS = 20 * 60 * 1000; // auto-lock after 20 minutes of no activity
+const LOCKOUT_THRESHOLD = 5; // failed attempts before backoff kicks in
 
 let cfg = {};
 let articles = [];
 let currentSha = null;
 let editingId = null;
+let idleTimer = null;
 
 const el = (id) => document.getElementById(id);
 
-async function sha256Hex(text) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+// PBKDF2-SHA256 is deliberately slow (250k rounds) so each password guess
+// costs real CPU time - unlike a single SHA-256 hash, which a script can
+// test millions of times per second.
+async function derivePasswordHash(password, salt = ADMIN_PW_SALT, iterations = PBKDF2_ITERATIONS) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", salt: enc.encode(salt), iterations, hash: "SHA-256" },
+    keyMaterial,
+    256
+  );
+  return [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
 function isUnlocked() {
-  return sessionStorage.getItem(SS_AUTH_KEY) === "1";
+  if (sessionStorage.getItem(SS_AUTH_KEY) !== "1") return false;
+  const lastActive = Number(sessionStorage.getItem(SS_AUTH_TIME_KEY) || 0);
+  if (Date.now() - lastActive > IDLE_LOGOUT_MS) {
+    logout();
+    return false;
+  }
+  return true;
+}
+
+function markActive() {
+  sessionStorage.setItem(SS_AUTH_TIME_KEY, String(Date.now()));
+}
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  if (!isUnlocked()) return;
+  idleTimer = setTimeout(() => {
+    logout();
+    alert("You were logged out after 20 minutes of inactivity.");
+  }, IDLE_LOGOUT_MS);
+}
+["click", "keydown", "mousemove", "scroll"].forEach(evt =>
+  document.addEventListener(evt, () => { if (isUnlocked()) { markActive(); resetIdleTimer(); } }, { passive: true })
+);
+
+// ---------- Login attempt lockout ----------
+function getAttemptState() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_ATTEMPTS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+function setAttemptState(state) {
+  localStorage.setItem(LS_ATTEMPTS_KEY, JSON.stringify(state));
+}
+function lockoutMsRemaining() {
+  const state = getAttemptState();
+  if (!state.lockedUntil) return 0;
+  return Math.max(0, state.lockedUntil - Date.now());
+}
+function recordFailedAttempt() {
+  const state = getAttemptState();
+  state.count = (state.count || 0) + 1;
+  if (state.count >= LOCKOUT_THRESHOLD) {
+    // Exponential backoff: 30s, 60s, 120s, 240s... capped at 30 min
+    const extraFailures = state.count - LOCKOUT_THRESHOLD;
+    const seconds = Math.min(30 * Math.pow(2, extraFailures), 30 * 60);
+    state.lockedUntil = Date.now() + seconds * 1000;
+  }
+  setAttemptState(state);
+}
+function clearAttempts() {
+  localStorage.removeItem(LS_ATTEMPTS_KEY);
 }
 
 async function tryUnlock() {
   const statusEl = el("lockStatus");
+
+  const remaining = lockoutMsRemaining();
+  if (remaining > 0) {
+    statusEl.textContent = `Too many attempts. Try again in ${Math.ceil(remaining / 1000)}s.`;
+    statusEl.className = "status error";
+    return;
+  }
+
   const pw = el("fLockPassword").value;
   statusEl.textContent = "Checking...";
   statusEl.className = "status";
-  const hash = await sha256Hex(pw);
+  const hash = await derivePasswordHash(pw);
   if (hash === ADMIN_PW_HASH) {
+    clearAttempts();
     sessionStorage.setItem(SS_AUTH_KEY, "1");
+    markActive();
+    resetIdleTimer();
     showAdminUI();
   } else {
-    statusEl.textContent = "Incorrect password.";
+    recordFailedAttempt();
+    const remainingNow = lockoutMsRemaining();
+    statusEl.textContent = remainingNow > 0
+      ? `Incorrect password. Locked for ${Math.ceil(remainingNow / 1000)}s.`
+      : "Incorrect password.";
     statusEl.className = "status error";
     el("fLockPassword").value = "";
   }
@@ -48,6 +136,7 @@ async function tryUnlock() {
 
 function showAdminUI() {
   el("lockPanel").style.display = "none";
+  el("changePwPanel").style.display = "none";
   el("settingsPanel").style.display = "block";
   loadCfgIntoForm();
   clearForm();
@@ -55,9 +144,30 @@ function showAdminUI() {
 }
 
 function logout() {
+  clearTimeout(idleTimer);
   sessionStorage.removeItem(SS_AUTH_KEY);
+  sessionStorage.removeItem(SS_AUTH_TIME_KEY);
   sessionStorage.removeItem(SS_CFG_KEY);
   location.reload();
+}
+
+// ---------- In-page password hash generator ----------
+// Replaces the old "open devtools and run this snippet" workflow: paste a
+// new password here, copy the printed line over the ADMIN_PW_HASH constant
+// at the top of this file, commit, done.
+async function generatePasswordHash() {
+  const pw = el("fNewPassword").value;
+  const outEl = el("newHashOutput");
+  if (!pw || pw.length < 10) {
+    outEl.textContent = "Use a password of at least 10 characters.";
+    outEl.className = "status error";
+    return;
+  }
+  outEl.textContent = "Deriving hash (this takes a moment on purpose)...";
+  outEl.className = "status";
+  const hash = await derivePasswordHash(pw);
+  outEl.textContent = `const ADMIN_PW_HASH = "${hash}";`;
+  outEl.className = "status ok";
 }
 
 // ---------- GitHub connection settings ----------
@@ -145,6 +255,7 @@ async function connect() {
     }
     el("editorPanel").style.display = "block";
     el("listPanel").style.display = "block";
+    el("analyticsPanel").style.display = "block";
     renderList();
   } catch (e) {
     statusEl.textContent = "Error: " + e.message;
@@ -307,9 +418,28 @@ el("logoutBtn").addEventListener("click", logout);
 el("publishBtn").addEventListener("click", publish);
 el("clearBtn").addEventListener("click", clearForm);
 el("deleteBtn").addEventListener("click", deleteArticle);
+el("generateHashBtn").addEventListener("click", generatePasswordHash);
+
+function reflectLockoutStatus() {
+  const remaining = lockoutMsRemaining();
+  const statusEl = el("lockStatus");
+  const btn = el("unlockBtn");
+  if (remaining > 0) {
+    btn.disabled = true;
+    statusEl.textContent = `Too many attempts. Try again in ${Math.ceil(remaining / 1000)}s.`;
+    statusEl.className = "status error";
+    setTimeout(reflectLockoutStatus, 1000);
+  } else {
+    btn.disabled = false;
+    if (statusEl.textContent.startsWith("Too many attempts")) statusEl.textContent = "";
+  }
+}
 
 if (isUnlocked()) {
+  markActive();
+  resetIdleTimer();
   showAdminUI();
 } else {
+  reflectLockoutStatus();
   el("fLockPassword").focus();
 }

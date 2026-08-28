@@ -136,7 +136,7 @@ function renderArticlePage(article, all) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com;">
 <title>${escapeHtml(article.title)} | ${SITE_NAME}</title>
 <meta name="description" content="${description}">
 <link rel="canonical" href="${url}">
@@ -192,6 +192,7 @@ ${image ? `<meta name="twitter:image" content="${escapeAttr(image)}">` : ""}
   Bluegrass TV &middot; Local news, weather, sports &amp; community &middot; <a href="../admin.html">Newsroom Login</a>
 </footer>
 
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "YOUR_CF_BEACON_TOKEN"}'></script>
 </body>
 </html>
 `;

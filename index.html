@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com;">
 <title>Bluegrass TV | Richmond &amp; Central Kentucky News, Weather, Sports</title>
 <meta name="description" content="Bluegrass TV brings you local news, weather, sports, and community stories from Richmond and Central Kentucky.">
 <link rel="canonical" href="https://bluegrasstransport.site/index.html">
@@ -41,5 +41,14 @@
 </footer>
 
 <script src="assets/app.js"></script>
+<!--
+  Site analytics: Cloudflare Web Analytics (free, no cookies, no consent
+  banner needed). Sign up at https://dash.cloudflare.com -> Analytics & Logs
+  -> Web Analytics -> Add a site (JS snippet mode, no DNS changes required),
+  then replace YOUR_CF_BEACON_TOKEN below with the token it gives you.
+  Because each story now has its own /articles/*.html page, Cloudflare's
+  dashboard will show per-story pageviews out of the box.
+-->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "YOUR_CF_BEACON_TOKEN"}'></script>
 </body>
 </html>

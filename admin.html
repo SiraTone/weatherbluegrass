@@ -31,9 +31,19 @@
     </div>
   </section>
 
+  <section class="panel" id="changePwPanel">
+    <h2>Change admin password</h2>
+    <p class="hint">Generates a slow-to-brute-force password hash (PBKDF2, 250,000 rounds) entirely in your browser &mdash; nothing is sent anywhere. Copy the output line over the <code>ADMIN_PW_HASH</code> constant near the top of <code>assets/admin.js</code>, commit, and the new password takes effect on next deploy. Use at least 10 characters.</p>
+    <label class="full">New password<input type="password" id="fNewPassword" autocomplete="new-password"></label>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="generateHashBtn">Generate hash</button>
+      <span class="status" id="newHashOutput" style="word-break: break-all;"></span>
+    </div>
+  </section>
+
   <section class="panel" id="settingsPanel" style="display:none;">
     <h2>Connection settings</h2>
-    <p class="hint">This connects the admin page directly to your GitHub repo so publishing commits the change for you. Your token is stored only in this browser (localStorage) &mdash; never sent anywhere except GitHub's API.</p>
+    <p class="hint">This connects the admin page directly to your GitHub repo so publishing commits the change for you. Your token is stored only in this browser &mdash; never sent anywhere except GitHub's API. Use a <strong>fine-grained personal access token</strong> scoped to only this repo, with only "Contents: Read and write" permission &mdash; never a classic token with full account access. If this device is ever lost or compromised, revoke the token from GitHub's Developer Settings immediately.</p>
     <div class="field-row">
       <label>GitHub username / org<input type="text" id="cfgOwner" placeholder="siratone"></label>
       <label>Repository name<input type="text" id="cfgRepo" placeholder="my-repo"></label>
@@ -87,6 +97,14 @@
   <section class="panel" id="listPanel" style="display:none;">
     <h2>Published articles</h2>
     <div id="articleList" class="article-list"></div>
+  </section>
+
+  <section class="panel" id="analyticsPanel" style="display:none;">
+    <h2>Site analytics</h2>
+    <p class="hint">Traffic is tracked with Cloudflare Web Analytics (privacy-friendly, no cookies) &mdash; pageviews, top pages, and referrers for every story, since each one now has its own URL. View the numbers on Cloudflare's dashboard rather than here, so no analytics API key has to live in this browser.</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://dash.cloudflare.com/?to=/:account/analytics/web" target="_blank" rel="noopener">Open analytics dashboard</a>
+    </div>
   </section>
 
 </main>
