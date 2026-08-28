@@ -56,8 +56,29 @@ async function loadArticles() {
   renderTab(currentTab);
 }
 
+// Re-check ages periodically so a story quietly drops off the ticker once it
+// crosses 24 hours old, even if the page is left open and articles.json
+// hasn't changed.
+setInterval(renderTicker, 5 * 60 * 1000);
+
+// Articles are considered "fresh" for the ticker for this many hours after
+// they were published. `id` is a millisecond timestamp assigned when the
+// article was created (see build-articles.mjs), so we use that instead of
+// the day-only `date` field to get real 24-hour precision.
+const TICKER_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+function articleTimestamp(a) {
+  const idMs = Number(a.id);
+  if (!isNaN(idMs) && idMs > 0) return idMs;
+  // Fallback for articles without a usable numeric id: midnight of `date`.
+  const dt = new Date(a.date + "T00:00:00");
+  return isNaN(dt) ? 0 : dt.getTime();
+}
+
 function renderTicker() {
-  const latest = ARTICLES.slice(0, 8);
+  const now = Date.now();
+  const fresh = ARTICLES.filter(a => now - articleTimestamp(a) < TICKER_MAX_AGE_MS);
+  const latest = fresh.slice(0, 8);
   if (!latest.length) {
     tickerTrack.innerHTML = "<span>No stories published yet &mdash; check back soon.</span>";
     return;
