@@ -180,6 +180,7 @@ ${image ? `<meta name="twitter:image" content="${escapeAttr(image)}">` : ""}
     <a class="back-link" href="../index.html?tab=${escapeAttr(tab)}">&larr; Back to ${escapeHtml(tabLabel)}</a>
     <div class="eyebrow">${escapeHtml(tabLabel)}</div>
     <h1>${escapeHtml(article.title)}</h1>
+    ${article.summary ? `<p class="dek">${escapeHtml(article.summary)}</p>` : ""}
     <div class="byline">${escapeHtml(article.author || "Newsroom Staff")} &middot; <time datetime="${escapeAttr(article.date || "")}">${escapeHtml(formatDateHuman(article.date))}</time></div>
     ${image ? `<div class="thumb" style="background-image:url('${escapeAttr(image)}')" role="img" aria-label="${escapeAttr(article.title)}"></div>` : ""}
     <div class="body-text">

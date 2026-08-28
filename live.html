@@ -13,12 +13,13 @@
     padding: 32px 28px 80px;
   }
   .live-heading {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    font-size: 1.6rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.01em;
+    font-size: 2rem;
     color: var(--ink);
-    margin: 0 0 4px;
+    margin: 0 0 8px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -72,12 +73,18 @@
 </head>
 <body>
 
-<header class="site-header">
-  <div class="brand">
-    <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
-    <div class="brand-text">BLUEGRASS<span>TV</span></div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-row">
+      <span id="datetime"></span>
+      <span class="tagline">Serving Richmond &amp; Central Kentucky</span>
+      <span>Vol. 1</span>
+    </div>
+    <div class="brand">
+      <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
+      <div class="brand-text">BLUEGRASS<span>TV</span></div>
+    </div>
   </div>
-  <div class="datetime" id="datetime"></div>
 </header>
 
 <nav class="tab-nav">
