@@ -97,7 +97,8 @@ img.shot:hover{transform:scale(1.008);box-shadow:var(--shadow)}
 .stat strong{display:block;font-size:1.6rem;letter-spacing:-.5px}
 .stat span{color:var(--sub);font-size:.85rem}
 @media(max-width:860px){.stats{grid-template-columns:1fr 1fr}}
-.site-footer{border-top:1px solid var(--border);margin-top:36px;padding:20px 0;color:var(--sub)}
+.site-footer{border-top:1px solid var(--border);margin-top:36px;padding:20px 0 24px;color:var(--sub)}
+.safety{margin:12px 0 0;font-size:.8rem;color:var(--sub);max-width:760px}
 .status{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#3a2a00;background:linear-gradient(180deg,#ffe27a,var(--yellow));border-radius:999px;padding:4px 11px;margin:0 0 8px}
 .perf{width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem}
 .perf th,.perf td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border)}
