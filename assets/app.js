@@ -1,11 +1,45 @@
-// CellScope Products — nav, year, contact form (static, no backend)
+// CellScope Products — nav, year, contact form, ripple, reveal
 (function () {
   var toggle = document.getElementById('navToggle');
   var nav = document.getElementById('siteNav');
-  if (toggle && nav) toggle.addEventListener('click', function () { nav.classList.toggle('open'); });
+  if (toggle && nav) {
+    toggle.addEventListener('click', function () { nav.classList.toggle('open'); });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) nav.classList.remove('open');
+    });
+  }
 
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
+
+  // Button ripple + press feedback
+  document.addEventListener('pointerdown', function (e) {
+    var btn = e.target.closest('.btn');
+    if (!btn) return;
+    var rect = btn.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height);
+    var ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    btn.appendChild(ripple);
+    setTimeout(function () { ripple.remove(); }, 650);
+  });
+
+  // Reveal on scroll
+  var targets = document.querySelectorAll('.hero-card, .product-card, .product, .cta, .card');
+  targets.forEach(function (el) { el.classList.add('reveal'); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    targets.forEach(function (el) { io.observe(el); });
+  } else {
+    targets.forEach(function (el) { el.classList.add('visible'); });
+  }
 
   var form = document.getElementById('contactForm');
   if (form) form.addEventListener('submit', function (e) {
@@ -17,7 +51,6 @@
       'Email: ' + (data.get('email') || '') + '\n\n' +
       (data.get('message') || '')
     );
-    // TODO: replace with your real inbox
     window.location.href = 'mailto:hello@cellscope.example?subject=' + subject + '&body=' + body;
     var note = document.getElementById('formNote');
     if (note) note.textContent = 'Opening your email app…';
