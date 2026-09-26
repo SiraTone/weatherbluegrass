@@ -30,9 +30,12 @@ a{color:var(--cyan)}
 .nav-toggle{display:none;background:none;border:1px solid var(--border);color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer;transition:border-color .2s,transform .15s}
 .nav-toggle:hover{border-color:var(--cyan)}
 .nav-toggle:active{transform:scale(.94)}
-.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#02222b;text-decoration:none;font-weight:800;letter-spacing:.2px;padding:13px 24px;border-radius:12px;border:0;cursor:pointer;box-shadow:0 6px 24px rgba(53,224,255,.25);transition:transform .18s ease,box-shadow .25s ease,filter .2s ease}
-.btn:hover{transform:translateY(-2px);filter:brightness(1.06);box-shadow:var(--glow)}
-.btn:active{transform:translateY(0) scale(.98);box-shadow:0 3px 12px rgba(53,224,255,.25)}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--cyan),var(--cyan2),var(--cyan));background-size:200% 200%;color:#02222b;text-decoration:none;font-weight:800;letter-spacing:.2px;padding:13px 24px;border-radius:12px;border:0;cursor:pointer;box-shadow:0 6px 24px rgba(53,224,255,.25);transition:transform .18s ease,box-shadow .25s ease,filter .2s ease}
+.btn::before{content:"";position:absolute;top:0;left:-80%;width:60%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.65),transparent);transform:skewX(-20deg);transition:left .2s ease;pointer-events:none}
+.btn:hover{background-position:100% 50%;transform:translateY(-3px) scale(1.03);filter:brightness(1.1);box-shadow:0 0 0 1px rgba(53,224,255,.5),0 12px 42px rgba(53,224,255,.4);animation:btn-pulse 1.2s ease-in-out infinite}
+.btn:hover::before{left:130%;transition:left .6s ease}
+.btn:active{transform:translateY(0) scale(.96);box-shadow:0 3px 12px rgba(53,224,255,.25);animation:none}
+@keyframes btn-pulse{0%,100%{box-shadow:0 0 0 1px rgba(53,224,255,.5),0 12px 42px rgba(53,224,255,.35)}50%{box-shadow:0 0 0 2px rgba(53,224,255,.7),0 12px 55px rgba(53,224,255,.55)}}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .btn-ghost{background:rgba(53,224,255,.07);color:#fff;border:1px solid var(--border);box-shadow:none}
 .btn-ghost:hover{background:rgba(53,224,255,.14);box-shadow:0 6px 24px rgba(53,224,255,.12)}

@@ -27,6 +27,19 @@
     setTimeout(function () { ripple.remove(); }, 650);
   });
 
+  // Magnetic hover pull on buttons
+  if (window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.btn').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var rect = btn.getBoundingClientRect();
+        var x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+        var y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+        btn.style.translate = (x * 6) + 'px ' + (y * 4) + 'px';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.translate = '0px 0px'; });
+    });
+  }
+
   // Reveal on scroll
   var targets = document.querySelectorAll('.hero-card, .product-card, .product, .cta, .card');
   targets.forEach(function (el) { el.classList.add('reveal'); });
