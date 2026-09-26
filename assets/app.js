@@ -73,7 +73,7 @@
       'Email: ' + (data.get('email') || '') + '\n\n' +
       (data.get('message') || '')
     );
-    window.location.href = 'mailto:hello@cellscope.example?subject=' + subject + '&body=' + body;
+    window.location.href = 'mailto:Frymoon5@gmail.com?subject=' + subject + '&body=' + body;
     var note = document.getElementById('formNote');
     if (note) note.textContent = 'Opening your email app…';
   });
