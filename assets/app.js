@@ -27,7 +27,7 @@
     setTimeout(function () { ripple.remove(); }, 650);
   });
 
-  // Magnetic hover pull on buttons
+  // Magnetic hover pull on buttons + subtle lift on cards
   if (window.matchMedia('(hover: hover)').matches) {
     document.querySelectorAll('.btn').forEach(function (btn) {
       btn.addEventListener('mousemove', function (e) {
@@ -37,6 +37,15 @@
         btn.style.translate = (x * 6) + 'px ' + (y * 4) + 'px';
       });
       btn.addEventListener('mouseleave', function () { btn.style.translate = '0px 0px'; });
+    });
+    document.querySelectorAll('.product-card').forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        var x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+        var y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+        card.style.transform = 'translateY(-6px) perspective(800px) rotateX(' + (-y * 4) + 'deg) rotateY(' + (x * 4) + 'deg)';
+      });
+      card.addEventListener('mouseleave', function () { card.style.transform = ''; });
     });
   }
 
