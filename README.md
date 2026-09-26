@@ -1,4 +1,4 @@
-# CellScope Products — Weather
+# CellScope Products | Weather
 
 Static GitHub Pages site for CellScope, weather product company ([@CellScopeRadar](https://x.com/CellScopeRadar)).
 

@@ -1,4 +1,4 @@
-// CellScope Products — nav, year, contact form, ripple, reveal
+// CellScope Products: nav, year, contact form, ripple, reveal
 (function () {
   var toggle = document.getElementById('navToggle');
   var nav = document.getElementById('siteNav');
