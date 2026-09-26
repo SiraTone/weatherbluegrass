@@ -3,58 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://cloudflareinsights.com;">
-<title>Bluegrass TV | Richmond &amp; Central Kentucky News, Weather, Sports</title>
-<meta name="description" content="Bluegrass TV brings you local news, weather, sports, and community stories from Richmond and Central Kentucky.">
-<link rel="canonical" href="https://bluegrasstransport.site/index.html">
+<title>CellScope Products — Weather Visualization Products</title>
+<meta name="description" content="CellScope Products: 3D Storm Visualization, 3D Weather Graphs for broadcast, CS1.0 Weather AI Model, CellScope Radar app. All in development. Follow @CellScopeRadar on X.">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-
-<header class="masthead">
-  <div class="masthead-inner">
-    <div class="masthead-row">
-      <span id="datetime"></span>
-      <span class="tagline">Serving Richmond &amp; Central Kentucky</span>
-      <span>Vol. 1</span>
-    </div>
-    <div class="brand">
-      <img src="assets/logo-bluegrasstv.png" alt="Bluegrass TV logo">
-      <div class="brand-text">BLUEGRASS<span>TV</span></div>
-    </div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-badge">CS</span>
+      <span class="brand-text">CELLSCOPE <strong>PRODUCTS</strong><small>WEATHER</small></span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="active">Home</a>
+      <a href="products.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
   </div>
 </header>
 
-<div class="ticker-wrap">
-  <div class="ticker-label"><span class="live-dot"></span> BREAKING</div>
-  <div class="ticker-track-wrap">
-    <div class="ticker-track" id="tickerTrack"></div>
+<main>
+  <section class="hero container">
+    <div class="hero-copy">
+      <p class="eyebrow">CellScope • Weather product company • <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></p>
+      <h1>Radar &amp; forecast graphics that look like the storm feels.</h1>
+      <p class="lede">Four products, one style: 3D Storm Visualization, broadcast-ready 3D Weather Graphs, the CS1.0 weather AI model, and the CellScope Radar app.</p>
+      <div class="hero-actions">
+        <a class="btn" href="products.html">View products</a>
+        <a class="btn btn-ghost" href="https://x.com/CellScopeRadar">Follow on X</a>
+      </div>
+      <p class="meta">All products currently in development • 38.96°N 98.00°W samples</p>
+    </div>
+    <div class="hero-card">
+      <div class="cs-banner">
+        <span class="cs-logo">CS</span>
+        <div><strong>3D STORM VISUALIZATION</strong><span>10 kft – 50 kft • in development</span></div>
+        <em></em>
+      </div>
+      <div class="mock-3d">
+        <span class="axis">50 kft</span><span class="axis a40">40 kft</span><span class="axis a30">30 kft</span><span class="axis a20">20 kft</span><span class="axis a10">10 kft</span>
+        <div class="storm s1"></div><div class="storm s2"></div><div class="storm s3"></div>
+        <p>Your Image 1 here — save as <code>assets/radar-3d.png</code></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container grid-2">
+    <article class="card product-card">
+      <p class="status">In development</p>
+      <h2>3D Storm Visualization</h2>
+      <p>True-3D storm structure with height-tagged volume. Your Image 1.</p>
+      <a href="products.html#storm">Details →</a>
+    </article>
+    <article class="card product-card">
+      <p class="status">In development</p>
+      <h2>3D Weather Graphs</h2>
+      <p>Customizable for broadcast — cloud cover, wind, gusts. Your Images 2-4.</p>
+      <a href="products.html#graphs">Details →</a>
+    </article>
+    <article class="card product-card">
+      <p class="status">In development</p>
+      <h2>CS1.0 — Weather AI Model</h2>
+      <p>Our in-house forecast model powering CellScope renders.</p>
+      <a href="products.html#cs1">Details →</a>
+    </article>
+    <article class="card product-card">
+      <p class="status">In development</p>
+      <h2>CellScope Radar — App</h2>
+      <p>Standalone radar application for live storm tracking.</p>
+      <a href="products.html#app">Details →</a>
+    </article>
+  </section>
+
+  <section class="container split">
+    <div>
+      <h2>Built for posting</h2>
+      <p>Dark background, cyan accent, condensed type, consistent CS banner with coords • date range • peak value. Time axis: 6AM TODAY • 6PM • 12AM SUN • 6AM • 2AM MON.</p>
+      <ul class="checklist">
+        <li>✓ Broadcast-ready 16:9 + vertical cuts for X</li>
+        <li>✓ Custom location / date / peak per render</li>
+        <li>✓ High-res stills + loop-ready motion</li>
+      </ul>
+    </div>
+    <div class="card muted">
+      <h3>To finish</h3>
+      <ol class="todo">
+        <li>Save your 4 images to <code>assets/</code> as <code>radar-3d.png</code>, <code>cloud-cover.png</code>, <code>wind-speed.png</code>, <code>gust-meter.png</code></li>
+        <li>Tell me contact email + waitlist link and I'll wire up <code>contact.html</code></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year"></span> CellScope Products • <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav><a href="products.html">Products</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
   </div>
-</div>
-
-<nav class="tab-nav" id="tabNav">
-  <button class="tab-btn active" data-tab="news">News</button>
-  <button class="tab-btn" data-tab="weather">Weather</button>
-  <button class="tab-btn" data-tab="sports">Sports</button>
-  <button class="tab-btn" data-tab="community">Community</button>
-  <a href="live.html" class="tab-btn" style="display:inline-block;">Live</a>
-</nav>
-
-<main id="main"></main>
-
-<footer>
-  Bluegrass TV &middot; Local news, weather, sports &amp; community &middot; <a href="admin.html">Newsroom Login</a>
 </footer>
-
 <script src="assets/app.js"></script>
-<!--
-  Site analytics: Cloudflare Web Analytics (free, no cookies, no consent
-  banner needed). Sign up at https://dash.cloudflare.com -> Analytics & Logs
-  -> Web Analytics -> Add a site (JS snippet mode, no DNS changes required),
-  then replace YOUR_CF_BEACON_TOKEN below with the token it gives you.
-  Because each story now has its own /articles/*.html page, Cloudflare's
-  dashboard will show per-story pageviews out of the box.
--->
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "YOUR_CF_BEACON_TOKEN"}'></script>
 </body>
 </html>
