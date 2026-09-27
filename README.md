@@ -1,13 +1,38 @@
-# CellScope Products | Weather
+# CellScope Products
 
-Static GitHub Pages site for CellScope, weather product company ([@CellScopeRadar](https://x.com/CellScopeRadar)).
+Static site for CellScope Products. No framework, no build step, no dependencies.
+Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
-Products:
-1. 3D Volumetric Radar → `assets/radar-3d.png` (Image 1)
-2. Cloud Cover Timeline → `assets/cloud-cover.png` (Image 2, peak 72%)
-3. Wind Speed Graph → `assets/wind-speed.png` (Image 3, peak 16 mph)
-4. Gust Meter → `assets/gust-meter.png` (Image 4, peak 26 mph)
+## Pages
 
-Add images: save the 4 images you sent with those exact filenames in `assets/`. The products page auto-shows them, otherwise shows a missing placeholder.
+| File | Purpose |
+|---|---|
+| `index.html` | Opening banner, product grid, why-we-build-it |
+| `products.html` | Five product sections with renders, perf table, motion clips |
+| `solutions.html` | Coming soon |
+| `about.html` | Mission and approach |
+| `contact.html` | Mailto form (no backend) |
+| `404.html` | Not found |
 
-TODO: real contact email (currently hello@cellscope.example), pricing, about copy, custom domain.
+## Assets
+
+- `assets/style.css` — single stylesheet, ~14 KB, no webfonts
+- `assets/app.js` — nav, reveal-on-scroll, button sheen, mailto form
+- `assets/radar-3d.png` — 3D storm render (used for OG previews too)
+- `assets/*.png` — graph renders
+- `assets/videos/*.mp4` — clips, `preload="none"` with poster frames
+- `downloads/CellScope-Demo.exe` — Windows demo, linked from home and products
+
+## Conventions
+
+- Type: Inter if the OS has it, otherwise the system stack. No webfont requests.
+- Motion: transforms and opacity only. Everything respects `prefers-reduced-motion`.
+- Every image carries `width`/`height` and `loading="lazy"` below the fold, so anchors
+  land where they are supposed to.
+- Copy is plain and factual. No em dashes, no hype adjectives, no em-dash-free AI
+  phrasing. Say what a product does, then stop.
+
+## Deploy
+
+Push to `main`. GitHub Pages serves `main` from the repo root, with the domain
+declared in `CNAME`. Do not delete `CNAME`; the domain 404s on the next push.

@@ -1,89 +1,83 @@
-// CellScope Products: nav, year, contact form, ripple, reveal
+// CellScope Products: small, dependency-free progressive enhancement
 (function () {
-  var toggle = document.getElementById('navToggle');
-  var nav = document.getElementById('siteNav');
-  if (toggle && nav) {
-    toggle.addEventListener('click', function () { nav.classList.toggle('open'); });
-    nav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) nav.classList.remove('open');
-    });
-  }
+  'use strict';
+  var d = document;
 
-  var y = document.getElementById('year');
+  /* Year */
+  var y = d.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
-  // Re-assert anchor position after images/fonts settle (fixes stale anchor landings)
-  function snapToHash() {
-    if (!location.hash) return;
-    var el = document.querySelector(location.hash);
-    if (el) el.scrollIntoView();
+  /* Mobile nav */
+  var toggle = d.getElementById('navToggle');
+  var nav = d.getElementById('siteNav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', function () {
+      var open = nav.hasAttribute('data-open');
+      if (open) nav.removeAttribute('data-open'); else nav.setAttribute('data-open', '');
+      toggle.setAttribute('aria-expanded', String(!open));
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) { nav.removeAttribute('data-open'); toggle.setAttribute('aria-expanded', 'false'); }
+    });
   }
-  window.addEventListener('load', function () { setTimeout(snapToHash, 50); });
-  window.addEventListener('hashchange', snapToHash);
 
-  // Button ripple + press feedback
-  document.addEventListener('pointerdown', function (e) {
-    var btn = e.target.closest('.btn');
-    if (!btn) return;
-    var rect = btn.getBoundingClientRect();
-    var size = Math.max(rect.width, rect.height);
-    var ripple = document.createElement('span');
-    ripple.className = 'ripple';
-    ripple.style.width = ripple.style.height = size + 'px';
-    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-    btn.appendChild(ripple);
-    setTimeout(function () { ripple.remove(); }, 650);
+  /* Buttons: sheen sweep + ripple (transform only, compositor-friendly) */
+  d.querySelectorAll('.btn').forEach(function (btn) {
+    btn.addEventListener('pointerenter', function () { btn.classList.add('is-hot'); });
+    btn.addEventListener('pointerleave', function () { btn.classList.remove('is-hot'); });
+    btn.addEventListener('pointerdown', function (e) {
+      var r = btn.getBoundingClientRect();
+      var s = Math.max(r.width, r.height);
+      var span = d.createElement('span');
+      span.className = 'ripple';
+      span.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
+      btn.appendChild(span);
+      span.addEventListener('animationend', function () { span.remove(); });
+    });
   });
 
-  // Magnetic hover pull on buttons + subtle lift on cards
-  if (window.matchMedia('(hover: hover)').matches) {
-    document.querySelectorAll('.btn').forEach(function (btn) {
-      btn.addEventListener('mousemove', function (e) {
-        var rect = btn.getBoundingClientRect();
-        var x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        var y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        btn.style.translate = (x * 6) + 'px ' + (y * 4) + 'px';
-      });
-      btn.addEventListener('mouseleave', function () { btn.style.translate = '0px 0px'; });
-    });
-    document.querySelectorAll('.product-card').forEach(function (card) {
-      card.addEventListener('mousemove', function (e) {
-        var rect = card.getBoundingClientRect();
-        var x = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        var y = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        card.style.transform = 'translateY(-6px) perspective(800px) rotateX(' + (-y * 4) + 'deg) rotateY(' + (x * 4) + 'deg)';
-      });
-      card.addEventListener('mouseleave', function () { card.style.transform = ''; });
-    });
+  /* Anchor landing: re-snap after images/fonts settle */
+  function snap() {
+    if (!location.hash) return;
+    var el = d.querySelector(location.hash);
+    if (el) el.scrollIntoView();
   }
-
-  // Reveal on scroll
-  var targets = document.querySelectorAll('.hero-card, .product-card, .product, .cta, .card');
-  targets.forEach(function (el) { el.classList.add('reveal'); });
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
       });
-    }, { threshold: 0.12 });
-    targets.forEach(function (el) { io.observe(el); });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    d.querySelectorAll('.pcard, .product, .callout, .stat, .video-grid figure, .section-head, .cta, .split > *').forEach(function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
   } else {
-    targets.forEach(function (el) { el.classList.add('visible'); });
+    d.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-in'); });
+  }
+  window.addEventListener('load', function () { setTimeout(snap, 60); });
+
+  /* Videos: play what you can see, pause what you can't (saves CPU) */
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var vio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var v = en.target;
+        if (en.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        else v.pause();
+      });
+    }, { threshold: 0.5 });
+    d.querySelectorAll('video[autoplay]').forEach(function (v) { vio.observe(v); });
   }
 
-  var form = document.getElementById('contactForm');
+  /* Contact form -> prefilled email */
+  var form = d.getElementById('contactForm');
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var data = new FormData(form);
-    var subject = encodeURIComponent('CellScope inquiry: ' + (data.get('topic') || 'General'));
-    var body = encodeURIComponent(
-      'Name: ' + (data.get('name') || '') + '\n' +
-      'Email: ' + (data.get('email') || '') + '\n\n' +
-      (data.get('message') || '')
-    );
-    window.location.href = 'mailto:Frymoon5@gmail.com?subject=' + subject + '&body=' + body;
-    var note = document.getElementById('formNote');
+    var fd = new FormData(form);
+    var subject = encodeURIComponent('CellScope inquiry: ' + (fd.get('topic') || 'General'));
+    var body = encodeURIComponent('Name: ' + (fd.get('name') || '') + '\nEmail: ' + (fd.get('email') || '') + '\n\n' + (fd.get('message') || ''));
+    var note = d.getElementById('formNote');
     if (note) note.textContent = 'Opening your email app…';
+    location.href = 'mailto:Frymoon5@gmail.com?subject=' + subject + '&body=' + body;
   });
 })();

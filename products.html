@@ -3,134 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Products | CellScope Weather</title>
-<meta name="description" content="CellScope products: 3D Storm Visualization, 3D Weather Graphs, CS1.0 AI model, CellScope Radar app. All in development.">
-<link rel="stylesheet" href="assets/style.css">
+<title>Products | CellScope Products</title>
+<meta name="description" content="3D storm visualization, broadcast weather graphics, CS1.0 weather AI model, model visualization suite, and the CellScope Radar app for Windows.">
 <link rel="canonical" href="https://bluegrasstransport.site/products.html">
-<meta name="theme-color" content="#05070d">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%2305070d' stroke='white' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='22' font-style='italic' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'%3ECS%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%2304060c' stroke='white' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='22' font-style='italic' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'%3ECS%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/radar-3d.png" as="image" fetchpriority="high">
+<link rel="stylesheet" href="assets/style.css">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CellScope Products">
-<meta property="og:title" content="Products | CellScope Weather">
-<meta property="og:description" content="3D Storm Visualization, 3D Weather Graphs, the CS1.0 AI model, and the CellScope Radar app for Windows. All in development.">
+<meta property="og:title" content="Products | CellScope Products">
+<meta property="og:description" content="3D storm visualization, broadcast weather graphics, CS1.0 weather AI model, model visualization suite, and the CellScope Radar app for Windows.">
 <meta property="og:url" content="https://bluegrasstransport.site/products.html">
 <meta property="og:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@CellScopeRadar">
-<meta name="twitter:title" content="Products | CellScope Weather">
-<meta name="twitter:description" content="3D Storm Visualization, 3D Weather Graphs, the CS1.0 AI model, and the CellScope Radar app for Windows. All in development.">
+<meta name="twitter:title" content="Products | CellScope Products">
+<meta name="twitter:description" content="3D storm visualization, broadcast weather graphics, CS1.0 weather AI model, model visualization suite, and the CellScope Radar app for Windows.">
 <meta name="twitter:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="index.html"><span class="brand-badge">CS</span><span class="brand-text">CELLSCOPE <strong>PRODUCTS</strong></span></a>
-    <nav class="site-nav" id="siteNav"><a href="index.html">Home</a><a href="products.html" class="active">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="contact.html" class="btn btn-sm">Contact</a></nav>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    <a class="brand" href="index.html">
+      <span class="brand-badge" aria-hidden="true">CS</span>
+      <span class="brand-text">CELLSCOPE<small>WEATHER</small></span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNav">☰</button>
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="products.html" aria-current="page">Products</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
   </div>
 </header>
-<main class="container">
-  <p class="eyebrow">What we make • <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></p>
-  <h1>Products</h1>
-  <p class="lede">All five products are currently <strong>in development</strong>.</p>
 
-  <section id="storm" class="product">
-    <p class="status">In development</p>
-    <div class="cs-banner"><span class="cs-logo">CS</span><div><strong>3D STORM VISUALIZATION</strong><span>10 kft – 50 kft</span></div><em></em></div>
-    <h2>1. 3D Storm Visualization</h2>
-    <p>Volumetric storm rendering with height-tagged structure. Red cores, gold anvils. Built for severe weather breakdowns and case studies.</p>
-    <ul class="checklist"><li>Height axis 10 / 20 / 30 / 40 / 50 kft</li><li>Still + turntable loop</li><li>Any storm / time</li></ul>
-    <div class="card muted">
-      <h3>Dev update: 3D loading got WAY faster</h3>
-      <p>Same KUEX storm volume, same laptop, 384 x 96 x 384 brick. The red bars are the old code. REF bricks are bit-for-bit identical, and the page now makes 1 request instead of 3.</p>
-      <table class="perf">
-        <tr><th>Case</th><th>Before</th><th>After</th><th>Speedup</th></tr>
-        <tr><td>REF, box on radar</td><td>76.8s</td><td>3.7s</td><td>21x faster</td></tr>
-        <tr><td>REF, typical storm box</td><td>16.2s</td><td>2.3s</td><td>7x faster</td></tr>
-        <tr><td>REF, empty box</td><td>314.8s</td><td>4.5s</td><td>70x faster</td></tr>
-        <tr><td>VEL, box on radar</td><td>80.6s</td><td>14.1s</td><td>5.7x faster</td></tr>
-        <tr><td>VEL, typical storm box</td><td>20.4s</td><td>2.1s</td><td>10x faster</td></tr>
-      </table>
-      <img class="shot" src="assets/loading-faster.png" alt="CellScope 3D loading performance chart" onerror="this.remove()">
+<main id="main">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Products</p>
+        <h1>Five products, all in development</h1>
+        <p class="lede">Renders below are from current builds. Specs and release dates move as the products do.</p>
+      </div>
+
+      <article class="product" id="storm">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">In development</p>
+            <h2><span class="product-no">01</span> 3D Storm Visualization</h2>
+          </div>
+        </div>
+        <div class="cs-banner">
+          <span class="cs-logo" aria-hidden="true">CS</span>
+          <div><span class="ttl">3D STORM VISUALIZATION</span><span class="sub">38.96°N 98.00°W · 10 KFT TO 50 KFT · LEVEL-II VOLUME</span></div>
+        </div>
+        <p>Volumetric storm rendering with height-tagged structure. Red cores, gold anvils, reflectivity on a real dBZ scale. Built for severe weather breakdowns and case studies.</p>
+        <ul class="checks">
+          <li>Height axis from 10 to 50 kft</li>
+          <li>Still frames and turntable loops</li>
+          <li>Any storm, any time window</li>
+        </ul>
+        <img class="shot" src="assets/radar-3d.png" width="1035" height="709" fetchpriority="high" decoding="async" alt="3D volumetric radar render of a thunderstorm">
+        <div class="callout" style="margin-top:24px">
+          <h3>Dev update: 3D loading got much faster</h3>
+          <p>Same KUEX storm volume, same laptop, 384 × 96 × 384 brick. Red bars are the old code. REF bricks are bit-for-bit identical, and the page now makes one request instead of three.</p>
+          <table class="perf">
+            <thead><tr><th>Case</th><th>Before</th><th>After</th><th>Speedup</th></tr></thead>
+            <tbody>
+              <tr><td>REF, box on radar</td><td>76.8s</td><td>3.7s</td><td>21×</td></tr>
+              <tr><td>REF, typical storm box</td><td>16.2s</td><td>2.3s</td><td>7×</td></tr>
+              <tr><td>REF, empty box</td><td>314.8s</td><td>4.5s</td><td>70×</td></tr>
+              <tr><td>VEL, box on radar</td><td>80.6s</td><td>14.1s</td><td>5.7×</td></tr>
+              <tr><td>VEL, typical storm box</td><td>20.4s</td><td>2.1s</td><td>10×</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="product" id="graphs">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">In development · Customizable for broadcast</p>
+            <h2><span class="product-no">02</span> 3D Weather Graphs</h2>
+          </div>
+        </div>
+        <div class="cs-banner">
+          <span class="cs-logo" aria-hidden="true">CS</span>
+          <div><span class="ttl">3D WEATHER GRAPHS</span><span class="sub">38.96°N 98.00°W · SEP 26 TO SEP 28 · 6AM TO 2AM</span></div>
+        </div>
+        <p>Timeline graphs with the CS banner, peak callouts, and a perspective grid. You set the location, dates, units, colors, and logos. These generate automatically in CellScope Studio, so nothing needs hand editing.</p>
+        <ul class="checks">
+          <li>Cloud cover: clear to overcast, peak 72%</li>
+          <li>Wind speed: calm to extreme, peak 16 mph</li>
+          <li>Gust meter: gust against sustained, peak 26 mph</li>
+          <li>Temperature, feels-like, dewpoint bar graphs</li>
+        </ul>
+        <img class="shot" src="assets/cloud-cover.png" width="1313" height="830" loading="lazy" decoding="async" alt="Cloud cover timeline graph, peak 72 percent">
+        <img class="shot" src="assets/wind-speed.png" width="1286" height="904" loading="lazy" decoding="async" alt="Wind speed timeline graph, peak 16 mph">
+        <img class="shot" src="assets/gust-meter.png" width="1573" height="816" loading="lazy" decoding="async" alt="Gust meter comparing gusts to sustained wind, peak 26 mph">
+        <img class="shot" src="assets/temperature.png" width="1417" height="812" loading="lazy" decoding="async" alt="Temperature bar graph, peak 82 degrees">
+        <img class="shot" src="assets/feels-like.png" width="1475" height="854" loading="lazy" decoding="async" alt="Feels-like bar graph, peak 86 degrees">
+        <img class="shot" src="assets/dewpoint.png" width="1170" height="862" loading="lazy" decoding="async" alt="Dewpoint bar graph, peak 71 degrees">
+      </article>
+
+      <article class="product" id="cs1">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">In development</p>
+            <h2><span class="product-no">03</span> CS1.0 Weather AI Model</h2>
+          </div>
+        </div>
+        <div class="cs-banner">
+          <span class="cs-logo" aria-hidden="true">CS</span>
+          <div><span class="ttl">CS1.0</span><span class="sub">IN-HOUSE FORECAST MODEL</span></div>
+        </div>
+        <p>CellScope's own weather AI model. It is what sits behind the visualizations, so the renders and the guidance come from the same source. Public specs come when they are stable enough to stand behind.</p>
+        <ul class="checks">
+          <li>Resolution, regions, and variables: to be announced</li>
+          <li>Evaluation and sample output: to be announced</li>
+          <li>Access through the waitlist</li>
+        </ul>
+      </article>
+
+      <article class="product" id="models">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">In development</p>
+            <h2><span class="product-no">04</span> Model Visualization Suite</h2>
+          </div>
+        </div>
+        <div class="cs-banner">
+          <span class="cs-logo" aria-hidden="true">CS</span>
+          <div><span class="ttl">MODEL VISUALIZATION SUITE</span><span class="sub">HRRR · NAM · GFS · ECMWF · ICON · MORE</span></div>
+        </div>
+        <p>A models-only desk. Every field drawn on a clean basemap with roads and city labels, nothing else competing for attention. Step through forecast hours and read the valid time as you go. Ships as its own build, separate from the radar app.</p>
+        <ul class="checks">
+          <li>Global and regional models in one picker</li>
+          <li>Temperature, precipitation, severe, and wind field groups</li>
+          <li>Timeline slider with valid-time readout</li>
+        </ul>
+      </article>
+
+      <article class="product" id="app">
+        <div class="product-head">
+          <div>
+            <div class="pills"><p class="pill pill--amber">In development</p><p class="pill pill--green">Demo available</p></div>
+            <h2><span class="product-no">05</span> CellScope Radar App</h2>
+          </div>
+        </div>
+        <div class="cs-banner">
+          <span class="cs-logo" aria-hidden="true">CS</span>
+          <div><span class="ttl">CELLSCOPE RADAR</span><span class="sub">RADAR APPLICATION · WINDOWS FIRST</span></div>
+        </div>
+        <p>Standalone radar application for live storm tracking. First release on Windows, built as a desktop window rather than a browser tab.</p>
+        <ul class="checks">
+          <li>Windows 10 and 11, 64-bit</li>
+          <li>Live radar layers and loops</li>
+          <li>Storm alerts</li>
+          <li>RAM and install size: to be confirmed</li>
+        </ul>
+        <p style="margin-top:24px"><a class="btn" href="downloads/CellScope-Demo.exe" download>Download the demo <span class="arr">↓</span></a> <span class="kicker">67 MB · WINDOWS</span></p>
+        <p class="safety" style="border-top:0;padding-top:16px;margin-top:16px">CellScope is for planning and broadcast. It is not a substitute for official warnings. Follow the National Weather Service and local officials.</p>
+      </article>
+
+      <article class="product" id="motion">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">Older builds</p>
+            <h2>See it in motion</h2>
+          </div>
+        </div>
+        <p>Short clips from earlier builds. These graphics generate automatically in CellScope Studio, so no editing step sits between the data and the frame.</p>
+        <div class="video-grid">
+          <figure>
+            <video controls muted loop playsinline preload="none" poster="assets/flood-poster.jpg" width="1280" height="720" aria-label="Flood outlook clip">
+              <source src="assets/videos/flood.mp4" type="video/mp4">
+            </video>
+            <figcaption>Flood outlook</figcaption>
+          </figure>
+          <figure>
+            <video controls muted loop playsinline preload="none" poster="assets/spc-outlook-poster.jpg" width="1280" height="720" aria-label="SPC outlook clip">
+              <source src="assets/videos/spc-outlook.mp4" type="video/mp4">
+            </video>
+            <figcaption>SPC outlook</figcaption>
+          </figure>
+          <figure>
+            <video controls muted loop playsinline preload="none" poster="assets/recap-poster.jpg" width="1280" height="720" aria-label="Storm recap clip">
+              <source src="assets/videos/recap.mp4" type="video/mp4">
+            </video>
+            <figcaption>Storm recap</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <section class="cta callout">
+        <h2>Want early access?</h2>
+        <p>Tell us which product you want first and we will let you know when it is ready.</p>
+        <a class="btn" href="contact.html">Join the waitlist <span class="arr">→</span></a>
+      </section>
     </div>
-    <img class="shot" src="assets/radar-3d.png" width="1035" height="709" alt="CellScope 3D storm visualization" onerror="this.remove()">
   </section>
-
-  <section id="graphs" class="product">
-    <p class="status">In development • Customizable for broadcast</p>
-    <div class="cs-banner"><span class="cs-logo">CS</span><div><strong>3D WEATHER GRAPHS</strong><span>38.96°N 98.00°W • SEP 26 – SEP 28 • BROADCAST-READY</span></div><em></em></div>
-    <h2>2. 3D Weather Graphs</h2>
-    <p>Timeline graphs with the CS banner, peak callouts, and a perspective grid. You pick the location, dates, units, colors, and logos.</p>
-    <ul class="checklist"><li>Cloud Cover: Clear to Overcast, peak 72%</li><li>Wind Speed: Calm to Extreme, peak 16 mph</li><li>Gust Meter: gust vs sustained, peak 26 mph</li><li>Temperature: 3D bars, peak 82 F</li><li>Feels Like: 3D bars, peak 86 F</li><li>Dewpoint: 3D bars, peak 71 F</li></ul>
-    <img class="shot" src="assets/cloud-cover.png" width="1313" height="830" alt="CellScope cloud cover graph" onerror="this.remove()">
-    <p style="height:8px"></p>
-    <img class="shot" src="assets/wind-speed.png" width="1286" height="904" alt="CellScope wind speed graph" onerror="this.remove()">
-    <p style="height:8px"></p>
-    <img class="shot" src="assets/gust-meter.png" width="1573" height="816" alt="CellScope gust meter graph" onerror="this.remove()">
-    <p style="height:8px"></p>
-    <img class="shot" src="assets/temperature.png" width="1417" height="812" alt="CellScope temperature bar graph" onerror="this.remove()">
-    <p style="height:8px"></p>
-    <img class="shot" src="assets/feels-like.png" width="1475" height="854" alt="CellScope feels like bar graph" onerror="this.remove()">
-    <p style="height:8px"></p>
-    <img class="shot" src="assets/dewpoint.png" width="1170" height="862" alt="CellScope dewpoint bar graph" onerror="this.remove()">
-  </section>
-
-  <section id="models" class="product">
-    <p class="status">In development</p>
-    <div class="cs-banner"><span class="cs-logo">CS</span><div><strong>MODEL VISUALIZATION SUITE</strong><span>MODELS ONLY DESK</span></div><em></em></div>
-    <h2>Model fields on a clean map</h2>
-    <p>HRRR, NAM, GFS, ECMWF, ICON, and more, drawn as color-scaled map overlays with roads and city labels. Temperature, precipitation, CAPE, wind, and gusts. Step through forecast hours on the timeline slider. Ships as a separate models-only desk: CellScope-Models.exe.</p>
-    <ul class="checklist"><li>Global and regional models in one picker</li><li>Temp, precip, severe, and wind field groups</li><li>Timeline slider with valid time readout</li></ul>
-  </section>
-
-  <section id="cs1" class="product">
-    <p class="status">In development</p>
-    <div class="cs-banner"><span class="cs-logo">CS</span><div><strong>CS1.0 WEATHER AI MODEL</strong><span>IN-HOUSE FORECAST MODEL</span></div><em></em></div>
-    <h2>3. CS1.0</h2>
-    <p>CellScope's in-house weather AI model. It powers our visualizations with forecast guidance. Full specs are coming soon.</p>
-    <ul class="checklist"><li>Resolution, regions, and variables: coming soon</li><li>Test results and samples: coming soon</li><li>Access: <a href="contact.html">join the waitlist</a></li></ul>
-  </section>
-
-  <section id="app" class="product">
-    <p class="status">In development</p>
-    <div class="cs-banner"><span class="cs-logo">CS</span><div><strong>CELLSCOPE RADAR</strong><span>RADAR APPLICATION</span></div><em></em></div>
-    <h2>4. CellScope Radar</h2>
-    <p>Standalone radar application for live storm tracking. First release on Windows.</p>
-    <ul class="checklist"><li>Windows release first</li><li>Live radar layers and loops</li><li>Storm alerts</li></ul>
-    <div class="hero-actions">
-      <a class="btn" href="downloads/CellScope-Demo.exe" download>Download demo (67 MB, Windows)</a>
-    </div>
-    <div class="card muted">
-      <h3>System requirements</h3>
-      <ul class="checklist"><li>Windows 10/11, 64-bit</li><li>RAM and install size: coming soon</li></ul>
-    </div>
-    <img class="shot" src="assets/radar-app.png" alt="CellScope Radar app on Windows" onerror="this.remove()">
-    <p class="safety">CellScope is for planning and broadcast. It is not a substitute for official warnings. Follow the National Weather Service and local officials.</p>
-  </section>
-
-  <section id="motion" class="product">
-    <p class="status">In development</p>
-    <h2>See it in motion</h2>
-    <p>Short clips from CellScope renders. Older builds. These graphics generate automatically in CellScope Studio (For Broadcast). No editing required.</p>
-    <div class="video-grid">
-      <figure class="card">
-        <video controls muted loop playsinline preload="metadata" src="assets/videos/flood.mp4"></video>
-        <figcaption>Flood outlook</figcaption>
-      </figure>
-      <figure class="card">
-        <video controls muted loop playsinline preload="metadata" src="assets/videos/spc-outlook.mp4"></video>
-        <figcaption>SPC outlook</figcaption>
-      </figure>
-      <figure class="card">
-        <video controls muted loop playsinline preload="metadata" src="assets/videos/recap.mp4"></video>
-        <figcaption>Storm recap</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="cta"><h2>Want early access?</h2><p>Join the waitlist and tell us which product you want.</p><a class="btn" href="contact.html">Join waitlist</a></section>
 </main>
-<footer class="site-footer"><div class="container footer-inner"><span>© <span id="year"></span> CellScope Products • <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span><nav><a href="index.html">Home</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav></div><div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div></footer>
-<script src="assets/app.js"></script>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year"></span> CellScope Products · <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav aria-label="Footer">
+      <a href="index.html">Home</a><a href="products.html">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
+</footer>
+<script src="assets/app.js" defer></script>
 </body>
 </html>
