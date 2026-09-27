@@ -48,7 +48,7 @@ a{color:var(--cyan)}
 .opening-copy{position:relative;z-index:1;width:61%;display:flex;flex-direction:column;justify-content:center;padding:90px 70px 80px max(24px,calc((100vw - 1120px)/2 + 24px));background:linear-gradient(115deg,#0c1533 0%,#070c1f 82%);border-radius:0 240px 240px 0 / 0 50% 50% 0}
 .opening-actions{display:flex;align-items:center;gap:28px;margin:28px 0 16px;flex-wrap:wrap}
 .opening-link{color:#fff!important;font-size:1.05rem}
-.cs-tag{position:absolute;left:26px;bottom:26px;z-index:2;display:flex;align-items:center;gap:10px;margin:0;background:rgba(4,6,13,.78);border:1px solid var(--border);border-radius:999px;padding:7px 18px 7px 7px;font-size:.75rem;letter-spacing:1.5px;backdrop-filter:blur(6px)}
+.cs-tag{position:absolute;right:26px;bottom:26px;z-index:2;display:flex;align-items:center;gap:10px;margin:0;background:rgba(4,6,13,.78);border:1px solid var(--border);border-radius:999px;padding:7px 18px 7px 7px;font-size:.75rem;letter-spacing:1.5px;backdrop-filter:blur(6px);max-width:calc(100% - 52px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cs-tag .cs-logo{width:30px;height:30px;font-size:.62rem}
 @keyframes drop-in{from{opacity:0;transform:translateY(-42px)}to{opacity:1;transform:none}}
 @keyframes media-in{from{opacity:0;transform:translateX(48px) scale(1.04)}to{opacity:1;transform:none}}
