@@ -3,6 +3,10 @@
   'use strict';
   var d = document;
 
+  /* Mark page as entering so CSS can stagger top-level blocks */
+  var main = d.getElementById('main');
+  if (main) main.classList.add('page-in');
+
   /* Year */
   var y = d.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
@@ -48,7 +52,13 @@
         if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    d.querySelectorAll('.pcard, .product, .callout, .stat, .video-grid figure, .section-head, .cta, .split > *').forEach(function (el) {
+    // Blocks that already animate in on load must not also get the scroll reveal.
+    var onLoad = d.querySelectorAll(
+      '.page-in > .section > .container > *, .page-in > .container--tight > *, .page-in > .container > *'
+    );
+    var skip = new Set(onLoad);
+    d.querySelectorAll('.pcard, .product, .callout, .stat, .video-grid figure, .cta, .split > *').forEach(function (el) {
+      if (skip.has(el) || el.closest('footer')) return;
       el.classList.add('reveal');
       io.observe(el);
     });
