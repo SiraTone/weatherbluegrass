@@ -12,6 +12,15 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
+  // Re-assert anchor position after images/fonts settle (fixes stale anchor landings)
+  function snapToHash() {
+    if (!location.hash) return;
+    var el = document.querySelector(location.hash);
+    if (el) el.scrollIntoView();
+  }
+  window.addEventListener('load', function () { setTimeout(snapToHash, 50); });
+  window.addEventListener('hashchange', snapToHash);
+
   // Button ripple + press feedback
   document.addEventListener('pointerdown', function (e) {
     var btn = e.target.closest('.btn');

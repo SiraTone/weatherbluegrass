@@ -98,8 +98,8 @@ h1{font-size:clamp(2.1rem,4vw,3.1rem);line-height:1.08;margin:.15em 0 .3em;lette
 .checklist li{margin:8px 0;padding-left:26px;position:relative}
 .checklist li::before{content:"✓";position:absolute;left:0;color:var(--cyan);font-weight:800}
 code{background:rgba(148,184,255,.14);padding:2px 6px;border-radius:6px;font-size:.85em}
-.product{padding:26px 0;border-top:1px solid var(--border);margin-top:10px}
-.shot{width:100%;border-radius:12px;border:1px solid var(--border);background:#02040a;transition:transform .3s ease,box-shadow .3s ease}
+.product{padding:26px 0;border-top:1px solid var(--border);margin-top:10px;scroll-margin-top:78px}
+.shot{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:#02040a;transition:transform .3s ease,box-shadow .3s ease}
 img.shot:hover{transform:scale(1.008);box-shadow:var(--shadow)}
 .cta{text-align:center;padding:44px 24px;background:linear-gradient(180deg,rgba(53,224,255,.08),var(--panel));border:1px solid var(--border);border-radius:18px;margin:32px 0}
 .form{display:grid;gap:12px;margin:18px 0}
