@@ -69,8 +69,10 @@ h1{font-size:clamp(2.1rem,4vw,3.1rem);line-height:1.08;margin:.15em 0 .3em;lette
 .product-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .3s ease}
 .product-card:hover{transform:translateY(-6px) scale(1.015);border-color:rgba(53,224,255,.5);box-shadow:var(--glow)}
 .product-card:hover::before{opacity:1}
-.product-card .icon{font-size:2rem;display:block;margin-bottom:6px;filter:drop-shadow(0 4px 12px rgba(53,224,255,.4));transition:transform .3s ease}
-.product-card:hover .icon{transform:scale(1.15) rotate(-4deg)}
+.product-card .icon{display:grid;place-items:center;width:62px;height:62px;margin:0 auto 6px;border-radius:50%;border:1px solid rgba(53,224,255,.3);background:rgba(53,224,255,.06);color:var(--cyan);font-size:2rem;filter:drop-shadow(0 4px 12px rgba(53,224,255,.25));transition:transform .3s ease,box-shadow .3s ease}
+.product-card .icon svg{width:30px;height:30px;display:block}
+.product-card:hover .icon{transform:scale(1.08);box-shadow:var(--glow)}
+.card-dl{margin-top:10px}
 .product-card .status{margin:0 auto 10px}
 .product-card h2{margin:6px 0 8px}
 .card-link{display:inline-flex;align-items:center;gap:6px;font-weight:800;text-decoration:none;transition:gap .2s ease,filter .2s ease}
@@ -106,7 +108,9 @@ img.shot:hover{transform:scale(1.008);box-shadow:var(--shadow)}
 @media(max-width:860px){.stats{grid-template-columns:1fr 1fr}}
 .site-footer{border-top:1px solid var(--border);margin-top:36px;padding:20px 0 24px;color:var(--sub)}
 .safety{margin:12px 0 0;font-size:.8rem;color:var(--sub);max-width:760px}
-.status{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#3a2a00;background:linear-gradient(180deg,#ffe27a,var(--yellow));border-radius:999px;padding:4px 11px;margin:0 0 8px}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);background:rgba(255,210,63,.06);border:1px solid rgba(255,210,63,.32);border-radius:999px;padding:5px 14px;margin:0 0 10px}
+.status::before{content:"";width:6px;height:6px;flex:none;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow);animation:status-blink 2.2s ease-in-out infinite}
+@keyframes status-blink{50%{opacity:.35}}
 .perf{width:100%;border-collapse:collapse;margin:12px 0;font-size:.95rem}
 .perf th,.perf td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border)}
 .perf th{color:var(--cyan);text-transform:uppercase;font-size:.72rem;letter-spacing:1px}
