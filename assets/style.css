@@ -65,6 +65,7 @@ p:last-child{margin-bottom:0}
   box-shadow:0 0 0 2px rgba(63,224,255,.45),0 8px 24px rgba(63,224,255,.3);
   transition:transform .45s var(--ease),box-shadow .3s
 }
+.brand-badge>span{display:block;transform:translate(-1px,-2px)}
 .brand:hover .brand-badge{transform:rotate(-10deg);box-shadow:0 0 0 1px rgba(63,224,255,.5),0 8px 28px rgba(63,224,255,.32)}
 .brand-text{font:800 1.4rem/1 Inter,sans-serif;letter-spacing:.02em}
 .brand-text small{
