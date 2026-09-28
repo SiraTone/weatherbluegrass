@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Model | CellScope Products</title>
+<meta name="description" content="CS1: CellScope's in-house storm AI. Training benchmarks, honest holdout numbers, and current status. Not released.">
+<link rel="canonical" href="https://bluegrasstransport.site/model.html">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%2304060c' stroke='white' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='22' font-style='italic' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'%3ECS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CellScope Products">
+<meta property="og:title" content="AI Model | CellScope Products">
+<meta property="og:description" content="CS1: CellScope's in-house storm AI. Training benchmarks and current status. Not released.">
+<meta property="og:url" content="https://bluegrasstransport.site/model.html">
+<meta property="og:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@CellScopeRadar">
+<meta name="twitter:title" content="AI Model | CellScope Products">
+<meta name="twitter:description" content="CS1: CellScope's in-house storm AI. Training benchmarks and current status. Not released.">
+<meta name="twitter:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><span class="brand-badge" aria-hidden="true">CS</span><span class="brand-text">CELLSCOPE<small>WEATHER</small></span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNav">☰</button>
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <a href="index.html">Home</a><a href="products.html">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="model.html" aria-current="page">AI Model</a><a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">AI Model</p>
+        <div class="pills"><p class="pill pill--amber">In training</p><p class="pill">Not released</p></div>
+        <h1>CS: a small model learning to place storms</h1>
+        <p class="lede">842,436 parameters in a 3.4 MB file. For reference, GraphCast is 37M and DGMR is 50M+. The numbers below are dev benchmarks, including the runs that failed. Skill means better than persistence, which is repeating the last frame. Zero percent is a rock.</p>
+      </div>
+
+      <article class="product" id="now">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">Training now</p>
+            <h2><span class="product-no">01</span> CS1.2: same skill, better aim</h2>
+          </div>
+        </div>
+        <p>830-pair winter outbreak holdout it never trained on. Model MSE 0.0121 against persistence 0.0198. The headline: winter CSI went from 0.009 to 0.26, and false alarms dropped from 0.99 to 0.73 for the first time.</p>
+        <table class="perf">
+          <thead><tr><th>Run</th><th>Skill over persistence</th></tr></thead>
+          <tbody>
+            <tr><td>CS1.2 winter holdout</td><td>38.8%</td></tr>
+            <tr><td>CS1.0 honest holdout</td><td>38.3%</td></tr>
+          </tbody>
+        </table>
+        <table class="perf" style="margin-top:18px">
+          <thead><tr><th>Threshold</th><th>CSI</th><th>POD</th><th>FAR</th></tr></thead>
+          <tbody>
+            <tr><td>25 dBZ</td><td>0.43</td><td>0.90</td><td>0.55</td></tr>
+            <tr><td>35 dBZ</td><td>0.26</td><td>0.79</td><td>0.72</td></tr>
+            <tr><td>45 dBZ</td><td>0.15</td><td>0.42</td><td>0.81</td></tr>
+            <tr><td>55 dBZ</td><td>0.06</td><td>0.16</td><td>0.90</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px">Rain placement is solved. Severe placement is the work in progress. 55+ dBZ is still the frontier.</p>
+        <img class="shot" src="assets/model-cs12.png" loading="lazy" decoding="async" alt="CS1.2 benchmark charts" onerror="this.remove()">
+      </article>
+
+      <article class="product" id="cs10">
+        <div class="product-head">
+          <div>
+            <p class="pill">Graded</p>
+            <h2><span class="product-no">02</span> CS1.0: beats doing nothing</h2>
+          </div>
+        </div>
+        <p>Honest holdout number is 38.3%. The higher splits are reported with their caveats, not hidden: the national random split leaks, and the quad-state slice is one storm type.</p>
+        <table class="perf">
+          <thead><tr><th>Split</th><th>Skill over persistence</th><th>CSI at 35 dBZ</th></tr></thead>
+          <tbody>
+            <tr><td>Quad-state winter slice</td><td>52.4%</td><td>0.009</td></tr>
+            <tr><td>National random split (leaks)</td><td>49.7%</td><td>0.47</td></tr>
+            <tr><td>Run-1 honest holdout</td><td>38.3%</td><td>0.35</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px">Winter lines defeat everyone, including this model at 0.009. That gap is what CS1.2 exists to close.</p>
+        <img class="shot" src="assets/model-cs10.png" loading="lazy" decoding="async" alt="CS1.0 benchmark charts" onerror="this.remove()">
+      </article>
+
+      <article class="product" id="cs11">
+        <div class="product-head">
+          <div>
+            <p class="pill">Dead run</p>
+            <h2><span class="product-no">03</span> CS1.1: the run that died</h2>
+          </div>
+        </div>
+        <p>Mid-training pulses on one 20-pair winter slice. The run died at cycle 56 of 85 and never graded, so treat it as provisional. Skill fell as it specialized, 52.4 to 44.6 to 35.9. Detection started firing, POD climbing 0.157 to 0.201, but false alarms stuck at 0.99. The lesson survived: recall without aim. CS1.2 billed the false alarms.</p>
+        <table class="perf">
+          <thead><tr><th>Checkpoint</th><th>Skill</th><th>POD at 35</th><th>FAR</th></tr></thead>
+          <tbody>
+            <tr><td>CS1.0 weights</td><td>52.4%</td><td>0.157</td><td>0.99</td></tr>
+            <tr><td>CS1.1 cycle ~5</td><td>44.6%</td><td>0.114</td><td>0.99</td></tr>
+            <tr><td>CS1.1 cycle 56</td><td>35.9%</td><td>0.201</td><td>0.99</td></tr>
+          </tbody>
+        </table>
+        <img class="shot" src="assets/model-cs11.png" loading="lazy" decoding="async" alt="CS1.1 benchmark charts" onerror="this.remove()">
+      </article>
+
+      <article class="product" id="latest">
+        <div class="product-head">
+          <div>
+            <p class="pill pill--amber">Latest snapshot</p>
+            <h2><span class="product-no">04</span> Training log</h2>
+          </div>
+        </div>
+        <p>Last completed streaming cycle, 85 of 85, about 4 hours wall time. 61 new pairs plus 4096 replay, 830-pair holdout bank with 17 empty skipped.</p>
+        <table class="perf">
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Loss</td><td>0.01153</td></tr>
+            <tr><td>Skill over persistence</td><td>38.8%</td></tr>
+            <tr><td>Validation MSE</td><td>0.01213</td></tr>
+            <tr><td>Persistence MSE</td><td>0.01982</td></tr>
+            <tr><td>Validation CSI</td><td>0.2557</td></tr>
+            <tr><td>Validation POD</td><td>0.7918</td></tr>
+            <tr><td>Validation FAR</td><td>0.7259</td></tr>
+          </tbody>
+        </table>
+        <img class="shot" src="assets/model-training-log.png" loading="lazy" decoding="async" alt="Training log snapshot" onerror="this.remove()">
+      </article>
+
+      <section class="cta callout">
+        <h2>Follow the training</h2>
+        <p>We post updated numbers as runs complete. Nothing here is for sale yet.</p>
+        <a class="btn" href="https://x.com/CellScopeRadar">Follow @CellScopeRadar <span class="arr">→</span></a>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year"></span> CellScope Products · <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav aria-label="Footer"><a href="index.html">Home</a><a href="products.html">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="contact.html">Contact</a></nav>
+  </div>
+  <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
+</footer>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
