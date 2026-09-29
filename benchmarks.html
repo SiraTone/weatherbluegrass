@@ -73,6 +73,10 @@
           <button class="chip" style="--c:#f472b6" data-model="ukmo" aria-pressed="false"><span class="dot" aria-hidden="true"></span>UKMO</button>
           <button class="chip" style="--c:#facc15" data-model="gsm" aria-pressed="false"><span class="dot" aria-hidden="true"></span>GSM</button>
         </div>
+        <div class="chart-tools">
+          <button class="mini" id="showAll" type="button">Show all</button>
+          <button class="mini" id="resetView" type="button">Reset</button>
+        </div>
         <div class="chart-wrap">
           <svg id="accChart" viewBox="0 0 640 360" role="img" aria-labelledby="accTitle accDesc"><title id="accTitle">500 hPa anomaly correlation by lead day</title><desc id="accDesc">Line chart comparing model skill decay across days 5, 7, and 10. Point provenance is listed in the methodology note below the chart.</desc></svg>
           <div class="chart-tip" id="chartTip" hidden></div>
@@ -81,7 +85,7 @@
           <h3>ECMWF IFS</h3>
           <p>~9 km grid, 4 runs a day, 51-member ensemble. Cycle 49r1, November 2024.</p>
         </div>
-        <p class="chart-note">Method: filled dots mark published numbers. Open dots connect them or mark consensus estimates. The shapes invite comparison. Only the filled dots are measurements. Consensus values: September 2026.</p>
+        <p class="chart-note">Method: filled dots mark published numbers. Open dots connect them or mark consensus estimates. The shapes invite comparison. Only the filled dots are measurements. Consensus values: September 2026. Hover for the crosshair. Tap a dot to pin its value.</p>
       </article>
 
       <article class="product" id="ai">
@@ -290,6 +294,107 @@
   });
   render(true);
   showInfo('ecmwf');
+})();
+</script>
+<script>
+/* Explorer enhancements: skill band, value labels, area fills, crosshair, tap-to-pin. */
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 640, H = 360, ML = 46, MR = 16, MT = 18, MB = 38;
+  var svg = document.getElementById('accChart');
+  var tip = document.getElementById('chartTip');
+  if (!svg || !tip) return;
+  function Y(v) { return MT + (1 - (v - 0.70) / 0.30) * (H - MT - MB); }
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n);
+    return n;
+  }
+  function text(x, y, s) {
+    var t = el('text', { x: x, y: y, 'text-anchor': 'middle', 'class': 'chart-val', style: 'pointer-events:none' }, svg);
+    t.textContent = s;
+  }
+  var cross = null, pinned = null;
+  function dots() { return Array.prototype.slice.call(svg.querySelectorAll('circle.chart-dot')); }
+  function enhance() {
+    if (!svg.querySelector('path.chart-line')) return;
+    pinned = null;
+    tip.hidden = true;
+    el('rect', { x: ML, y: Y(1.0), width: W - ML - MR, height: Y(0.8) - Y(1.0), fill: 'rgba(63,224,255,.06)', style: 'pointer-events:none' }, svg);
+    [0.75, 0.85, 0.95].forEach(function (v) {
+      var y = Y(v);
+      el('line', { x1: ML, y1: y, x2: W - MR, y2: y, 'class': 'chart-grid', style: 'pointer-events:none' }, svg);
+      text(ML - 8, y + 4, v.toFixed(2));
+    });
+    svg.querySelectorAll('path.chart-line').forEach(function (p) {
+      el('path', {
+        d: p.getAttribute('d') + 'L' + (W - MR) + ' ' + Y(0.70) + 'L' + ML + ' ' + Y(0.70) + 'Z',
+        fill: p.getAttribute('stroke'), 'fill-opacity': 0.07, style: 'pointer-events:none'
+      }, svg);
+    });
+    dots().forEach(function (c) {
+      var m = (c.getAttribute('aria-label') || '').match(/(\d\.\d+)/);
+      text(parseFloat(c.getAttribute('cx')), parseFloat(c.getAttribute('cy')) - 11, m ? m[1] : '');
+    });
+    cross = el('line', { y1: MT, y2: H - MB, 'class': 'chart-cross', visibility: 'hidden', style: 'pointer-events:none' }, svg);
+  }
+  function nearest(mx) {
+    var best = null, bd = 1e9;
+    dots().forEach(function (c) {
+      var dx = Math.abs(parseFloat(c.getAttribute('cx')) - mx);
+      if (dx < bd) { bd = dx; best = c; }
+    });
+    return { c: best, d: bd };
+  }
+  function pinTip(c) {
+    var parts = (c.getAttribute('aria-label') || '').split(':');
+    tip.innerHTML = '<strong>' + parts[0] + '</strong>' + parts.slice(1).join(':');
+    tip.style.left = (parseFloat(c.getAttribute('cx')) / W * 100) + '%';
+    tip.style.top = (parseFloat(c.getAttribute('cy')) / H * 100) + '%';
+    tip.hidden = false;
+  }
+  if (!svg.dataset.enh) {
+    svg.dataset.enh = '1';
+    svg.addEventListener('mousemove', function (e) {
+      if (!cross || !cross.parentNode) return;
+      var r = svg.getBoundingClientRect();
+      var n = nearest((e.clientX - r.left) / r.width * W);
+      if (n.c && n.d < 50) {
+        cross.setAttribute('x1', n.c.getAttribute('cx'));
+        cross.setAttribute('x2', n.c.getAttribute('cx'));
+        cross.setAttribute('visibility', 'visible');
+      } else cross.setAttribute('visibility', 'hidden');
+    });
+    svg.addEventListener('mouseleave', function () {
+      if (cross && cross.parentNode) cross.setAttribute('visibility', 'hidden');
+    });
+    svg.addEventListener('click', function (e) {
+      var r = svg.getBoundingClientRect();
+      var n = nearest((e.clientX - r.left) / r.width * W);
+      if (!n.c || n.d > 60) return;
+      if (pinned === n.c) { pinned = null; tip.hidden = true; }
+      else { pinned = n.c; pinTip(n.c); }
+    });
+    document.querySelectorAll('.chip[data-model]').forEach(function (ch) {
+      ch.addEventListener('click', function () { setTimeout(enhance, 0); });
+    });
+    var all = document.getElementById('showAll'), rs = document.getElementById('resetView');
+    if (all) all.addEventListener('click', function () {
+      document.querySelectorAll('.chip[data-model]').forEach(function (c) {
+        if (c.getAttribute('aria-pressed') !== 'true') c.click();
+      });
+    });
+    if (rs) rs.addEventListener('click', function () {
+      document.querySelectorAll('.chip[data-model]').forEach(function (c) {
+        var k = c.getAttribute('data-model');
+        var want = (k === 'ecmwf' || k === 'gfs') ? 'true' : 'false';
+        if (c.getAttribute('aria-pressed') !== want) c.click();
+      });
+    });
+  }
+  enhance();
 })();
 </script>
 <script src="assets/app.js" defer></script>
