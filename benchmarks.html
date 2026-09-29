@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmarks | CellScope Products</title>
+<meta name="description" content="Global weather models ranked on public WMO verification scores. ECMWF, GFS, ICON, UKMO, GSM, and AI models. Sources cited, updated September 2026.">
+<link rel="canonical" href="https://bluegrasstransport.site/benchmarks.html">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%2304060c' stroke='white' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='22' font-style='italic' font-weight='900' text-anchor='middle' fill='white' font-family='Arial'%3ECS%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CellScope Products">
+<meta property="og:title" content="Benchmarks | CellScope Products">
+<meta property="og:description" content="Global weather models ranked on public WMO verification scores. Sources cited, updated September 2026.">
+<meta property="og:url" content="https://bluegrasstransport.site/benchmarks.html">
+<meta property="og:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@CellScopeRadar">
+<meta name="twitter:title" content="Benchmarks | CellScope Products">
+<meta name="twitter:description" content="Global weather models ranked on public WMO verification scores. Sources cited, updated September 2026.">
+<meta name="twitter:image" content="https://bluegrasstransport.site/assets/radar-3d.png">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><span class="brand-badge" aria-hidden="true"><span>CS</span></span><span class="brand-text">CELLSCOPE<small>WEATHER</small></span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNav">☰</button>
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <a href="index.html">Home</a><a href="products.html">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="benchmarks.html" aria-current="page">Benchmarks</a><a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Independent board</p>
+        <div class="pills"><p class="pill">Updated September 2026</p></div>
+        <h1>Global models, ranked on public scores</h1>
+        <p class="lede">No house model on this board, so nothing to sell. Order follows the World Meteorological Organization verification framework: anomaly correlation of 500 hPa geopotential for the extratropical Northern Hemisphere. First place is stable. Everything below it rotates with the variable, the region, and the season.</p>
+      </div>
+
+      <article class="product" id="board">
+        <table class="perf">
+          <thead><tr><th>Rank</th><th>Model</th><th>Center</th><th>Grid</th><th>Runs/day</th><th>The record</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>ECMWF IFS</td><td>ECMWF</td><td>~9 km</td><td>4</td><td>Leads WMO 500 hPa verification. Holds skill past day 10 with about one day of advantage over the field. Cycle 49r1, November 2024.</td></tr>
+            <tr><td>T2</td><td>GFS</td><td>NOAA NCEP</td><td>~28 km base, 16-day range</td><td>4</td><td>Closest public challenger. Individual cycles have scored above ECMWF at 500 hPa. Fully free and open data.</td></tr>
+            <tr><td>T2</td><td>ICON</td><td>DWD</td><td>~13 km</td><td>4</td><td>Matches the leaders at short range over Europe. Open source since January 2024.</td></tr>
+            <tr><td>T2</td><td>UKMO</td><td>Met Office</td><td>~10 km</td><td>4</td><td>Strong on the North Atlantic and frontal systems. Frequently blended into ensembles.</td></tr>
+            <tr><td>5</td><td>GSM</td><td>JMA</td><td>~20 km</td><td>4</td><td>Steady global, with its best work in West Pacific typhoon season.</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px">Tied ranks are honest ties. Any fixed order past first place would overstate what the data supports.</p>
+      </article>
+
+      <article class="product" id="ai">
+        <div class="product-head">
+          <div>
+            <p class="pill">Separate class</p>
+            <h2><span class="product-no">02</span> AI models</h2>
+          </div>
+        </div>
+        <p>Machine-learned models compete on a different footing, so they sit outside the physics ranking. Reported results: GenCast beat the ECMWF ensemble on 97.2% of verification targets, 99.8% past 36 hours. AIFS now posts lower error than physics models on upper-air fields. Physics models still lead on heavy precipitation scores. All three claims need their own caveats, which the sources carry.</p>
+      </article>
+
+      <article class="product" id="reading">
+        <div class="product-head">
+          <div>
+            <p class="pill">Method</p>
+            <h2><span class="product-no">03</span> How to read this</h2>
+          </div>
+        </div>
+        <ul class="checks">
+          <li>Anomaly correlation above 0.8 counts as skillful. Below 0.6 a model has no useful skill left.</li>
+          <li>Scores move with the season and with events. A bad month, like the debated 2025 dip, does not rewrite the ranking alone.</li>
+          <li>One variable never tells the whole story. Rain, wind, and upper air each crown different winners.</li>
+          <li>Sources below. If a number here goes stale, the source is where the fresh one lives.</li>
+        </ul>
+      </article>
+
+      <article class="product" id="sources">
+        <div class="product-head">
+          <div>
+            <p class="pill">Receipts</p>
+            <h2><span class="product-no">04</span> Sources</h2>
+          </div>
+        </div>
+        <ul class="checks">
+          <li>ECMWF forecast quality and WMO comparison procedures: ecmwf.int, Forecasts, Quality of our forecasts.</li>
+          <li>GFS specs, 28 km base grid and 16-day range: NCEI, Global Forecast System product page.</li>
+          <li>ICON 13 km operational grid: DWD numerical modeling description.</li>
+          <li>ICON, UKMO, and GSM resolutions and cycle counts: RainViewer forecast model guide.</li>
+          <li>Anomaly correlation behavior and GFS maintenance episodes: OpenClimate verification notes.</li>
+          <li>GenCast, AIFS, Cycle 49r1, and the 2026 accuracy roundup: Ambee best-models review.</li>
+          <li>2025 skill decline debate and useful-skill definitions: Balanced Weather verification analysis.</li>
+        </ul>
+      </article>
+
+      <section class="cta callout">
+        <h2>Disagree with the order?</h2>
+        <p>Bring a public score and we will update the board.</p>
+        <a class="btn" href="contact.html">Contact us <span class="arr">→</span></a>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year"></span> CellScope Products · <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav aria-label="Footer"><a href="index.html">Home</a><a href="products.html">Products</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="benchmarks.html">Benchmarks</a><a href="contact.html">Contact</a></nav>
+  </div>
+  <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
+</footer>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
