@@ -57,11 +57,38 @@
         <p style="margin-top:14px">Tied ranks are honest ties. Any fixed order past first place would overstate what the data supports.</p>
       </article>
 
+      <article class="product" id="explorer">
+        <div class="product-head">
+          <div>
+            <p class="pill">Interactive</p>
+            <h2><span class="product-no">02</span> Accuracy explorer</h2>
+          </div>
+        </div>
+        <p>500 hPa anomaly correlation against lead day. Pick models to compare. Filled dots are published numbers. Open dots are interpolated or estimated, and say so on hover or focus.</p>
+        <div class="chips" role="group" aria-label="Models to compare">
+          <button class="chip" style="--c:#3fe0ff" data-model="ecmwf" aria-pressed="true"><span class="dot" aria-hidden="true"></span>ECMWF IFS</button>
+          <button class="chip" style="--c:#ff9f43" data-model="gfs" aria-pressed="true"><span class="dot" aria-hidden="true"></span>GFS</button>
+          <button class="chip" style="--c:#c084fc" data-model="aifs" aria-pressed="false"><span class="dot" aria-hidden="true"></span>AIFS</button>
+          <button class="chip" style="--c:#4ade80" data-model="icon" aria-pressed="false"><span class="dot" aria-hidden="true"></span>ICON</button>
+          <button class="chip" style="--c:#f472b6" data-model="ukmo" aria-pressed="false"><span class="dot" aria-hidden="true"></span>UKMO</button>
+          <button class="chip" style="--c:#facc15" data-model="gsm" aria-pressed="false"><span class="dot" aria-hidden="true"></span>GSM</button>
+        </div>
+        <div class="chart-wrap">
+          <svg id="accChart" viewBox="0 0 640 360" role="img" aria-labelledby="accTitle accDesc"><title id="accTitle">500 hPa anomaly correlation by lead day</title><desc id="accDesc">Line chart comparing model skill decay across days 5, 7, and 10. Point provenance is listed in the methodology note below the chart.</desc></svg>
+          <div class="chart-tip" id="chartTip" hidden></div>
+        </div>
+        <div class="model-info callout callout--solid" id="modelInfo">
+          <h3>ECMWF IFS</h3>
+          <p>~9 km grid, 4 runs a day, 51-member ensemble. Cycle 49r1, November 2024.</p>
+        </div>
+        <p class="chart-note">Method: filled dots mark published numbers. Open dots connect them or mark consensus estimates. The shapes invite comparison. Only the filled dots are measurements. Consensus values: September 2026.</p>
+      </article>
+
       <article class="product" id="ai">
         <div class="product-head">
           <div>
             <p class="pill">Separate class</p>
-            <h2><span class="product-no">02</span> AI models</h2>
+            <h2><span class="product-no">03</span> AI models</h2>
           </div>
         </div>
         <p>Machine-learned models compete on a different footing, so they sit outside the physics ranking. Reported results: GenCast beat the ECMWF ensemble on 97.2% of verification targets, 99.8% past 36 hours. AIFS now posts lower error than physics models on upper-air fields. Physics models still lead on heavy precipitation scores. All three claims need their own caveats, which the sources carry.</p>
@@ -71,7 +98,7 @@
         <div class="product-head">
           <div>
             <p class="pill">Method</p>
-            <h2><span class="product-no">03</span> How to read this</h2>
+            <h2><span class="product-no">04</span> How to read this</h2>
           </div>
         </div>
         <ul class="checks">
@@ -86,7 +113,7 @@
         <div class="product-head">
           <div>
             <p class="pill">Receipts</p>
-            <h2><span class="product-no">04</span> Sources</h2>
+            <h2><span class="product-no">05</span> Sources</h2>
           </div>
         </div>
         <ul class="checks">
@@ -116,6 +143,155 @@
   </div>
   <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
 </footer>
+<script>
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 640, H = 360, ML = 46, MR = 16, MT = 18, MB = 38;
+  var YMIN = 0.70, YMAX = 1.00;
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function X(d) { return ML + (d - 5) / 5 * (W - ML - MR); }
+  function Y(v) { return MT + (1 - (v - YMIN) / (YMAX - YMIN)) * (H - MT - MB); }
+  var MODELS = {
+    ecmwf: { name: 'ECMWF IFS', color: '#3fe0ff',
+      facts: ['~9 km grid, 4 runs a day', '51-member ensemble', 'Cycle 49r1, November 2024'],
+      pts: [
+        { d: 5, v: 0.93, k: 'pub', s: 'Maue, Apr 2025: rarely below 0.90 at day 5' },
+        { d: 7, v: 0.87, k: 'gap', s: 'Interpolated between published endpoints' },
+        { d: 10, v: 0.80, k: 'pub', s: 'ECMWF headline scores: 80% threshold reached past day 10' } ] },
+    gfs: { name: 'GFS', color: '#ff9f43',
+      facts: ['~28 km base grid, 16-day range', '4 runs a day', 'Free and open data'],
+      pts: [
+        { d: 5, v: 0.905, k: 'pub', s: 'Maue, Apr 2025: regularly dips below 0.90' },
+        { d: 7, v: 0.84, k: 'gap', s: 'Interpolated between endpoints' },
+        { d: 10, v: 0.76, k: 'est', s: 'Consensus estimate, see method' } ] },
+    aifs: { name: 'AIFS', color: '#c084fc',
+      facts: ['ECMWF AI system', 'Beats IFS narrowly at day 5, April 2025', 'Lower error than physics systems aloft'],
+      pts: [
+        { d: 5, v: 0.935, k: 'est', s: 'Placed just above IFS: Maue reports a narrow win' },
+        { d: 7, v: 0.875, k: 'gap', s: 'Interpolated' },
+        { d: 10, v: 0.81, k: 'est', s: 'Consensus estimate, see method' } ] },
+    icon: { name: 'ICON', color: '#4ade80',
+      facts: ['~13 km grid, run by DWD', 'Open source since January 2024', 'Matches the leaders at short range over Europe'],
+      pts: [], note: 'No fixed published curve. It trades places with GFS week to week, so drawing a line would invent a ranking.' },
+    ukmo: { name: 'UKMO', color: '#f472b6',
+      facts: ['~10 km grid, run by the Met Office', '4 runs a day', 'Strong on the North Atlantic and frontal systems'],
+      pts: [], note: 'No fixed published curve. It trades places with GFS week to week, so drawing a line would invent a ranking.' },
+    gsm: { name: 'GSM', color: '#facc15',
+      facts: ['~20 km grid, run by JMA', '4 runs a day', 'Steady global, best in West Pacific typhoon season'],
+      pts: [], note: 'No fixed published curve at this metric. Ranked fifth on multi-year consensus, not on one number.' }
+  };
+  var KIND = { pub: 'published', gap: 'interpolated', est: 'estimate' };
+  var svg = document.getElementById('accChart');
+  var tip = document.getElementById('chartTip');
+  var info = document.getElementById('modelInfo');
+  if (!svg || !tip || !info) return;
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n);
+    return n;
+  }
+  function smooth(pts) {
+    if (pts.length < 2) return '';
+    var p = 'M' + pts[0].x + ' ' + pts[0].y;
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+      p += 'C' + (p1.x + (p2.x - p0.x) / 6) + ' ' + (p1.y + (p2.y - p0.y) / 6) +
+           ' ' + (p2.x - (p3.x - p1.x) / 6) + ' ' + (p2.y - (p3.y - p1.y) / 6) +
+           ' ' + p2.x + ' ' + p2.y;
+    }
+    return p;
+  }
+  function showTip(m, pt, x, y) {
+    tip.innerHTML = '<strong>' + m.name + ' · Day ' + pt.d + '</strong>' +
+      pt.v.toFixed(pt.v < 0.9 && pt.v % 1 !== 0 ? 3 : 2).replace(/0$/, '') +
+      ' · ' + KIND[pt.k] + '<br><span class="src">' + pt.s + '</span>';
+    tip.style.left = (x / W * 100) + '%';
+    tip.style.top = (y / H * 100) + '%';
+    tip.hidden = false;
+  }
+  function hideTip() { tip.hidden = true; }
+  function showInfo(key) {
+    var m = MODELS[key];
+    var h = '<h3>' + m.name + '</h3><p>' + m.facts.join(' · ') + '.</p>';
+    if (m.note) h += '<p>' + m.note + '</p>';
+    else {
+      var bits = m.pts.map(function (p) { return 'Day ' + p.d + ': ' + p.v.toFixed(2) + ' (' + KIND[p.k] + ')'; });
+      h += '<p>' + bits.join(' · ') + '.</p>';
+    }
+    info.innerHTML = h;
+  }
+  function activeKeys() {
+    var out = [];
+    document.querySelectorAll('.chip[data-model]').forEach(function (c) {
+      if (c.getAttribute('aria-pressed') === 'true') out.push(c.getAttribute('data-model'));
+    });
+    return out;
+  }
+  function render(animate) {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var g;
+    for (g = 0; g <= 6; g++) {
+      var gv = YMIN + g * 0.05, gy = Y(gv);
+      el('line', { x1: ML, y1: gy, x2: W - MR, y2: gy, 'class': 'chart-grid' }, svg);
+      if (g % 2 === 0) {
+        var t = el('text', { x: ML - 8, y: gy + 4, 'text-anchor': 'end', 'class': 'chart-axis' }, svg);
+        t.textContent = gv.toFixed(2);
+      }
+    }
+    var ty = Y(0.80);
+    el('line', { x1: ML, y1: ty, x2: W - MR, y2: ty, 'class': 'chart-thresh' }, svg);
+    var tl = el('text', { x: W - MR, y: ty - 6, 'text-anchor': 'end', 'class': 'chart-axis' }, svg);
+    tl.textContent = 'skillful';
+    [5, 7, 10].forEach(function (d) {
+      var t = el('text', { x: X(d), y: H - 12, 'text-anchor': 'middle', 'class': 'chart-axis' }, svg);
+      t.textContent = 'Day ' + d;
+    });
+    activeKeys().forEach(function (key) {
+      var m = MODELS[key];
+      if (!m || m.pts.length < 2) return;
+      var pts = m.pts.map(function (p) { return { x: X(p.d), y: Y(p.v), p: p }; });
+      var path = el('path', { d: smooth(pts), 'class': 'chart-line', stroke: m.color }, svg);
+      if (animate && !RM && path.getTotalLength) {
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = String(len);
+        path.style.strokeDashoffset = String(len);
+        path.getBoundingClientRect();
+        path.style.transition = 'stroke-dashoffset 1s cubic-bezier(.22,.8,.28,1)';
+        path.style.strokeDashoffset = '0';
+      }
+      pts.forEach(function (pt) {
+        var c = el('circle', {
+          cx: pt.x, cy: pt.y, r: 5.5, 'class': 'chart-dot', tabindex: '0', role: 'img',
+          fill: pt.p.k === 'pub' ? m.color : '#0a1120',
+          stroke: pt.p.k === 'pub' ? '#04060c' : m.color, 'stroke-width': pt.p.k === 'pub' ? 1.5 : 2.5,
+          'aria-label': m.name + ' day ' + pt.p.d + ': ' + pt.p.v + ', ' + KIND[pt.p.k]
+        }, svg);
+        var s = pt.p.s;
+        var title = document.createElementNS(NS, 'title');
+        title.textContent = m.name + ' day ' + pt.p.d + ': ' + pt.p.v + ' (' + KIND[pt.p.k] + '). ' + s;
+        c.appendChild(title);
+        c.addEventListener('mouseenter', function () { showTip(m, pt.p, pt.x, pt.y); });
+        c.addEventListener('mouseleave', hideTip);
+        c.addEventListener('focus', function () { showTip(m, pt.p, pt.x, pt.y); });
+        c.addEventListener('blur', hideTip);
+      });
+    });
+  }
+  document.querySelectorAll('.chip[data-model]').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var on = chip.getAttribute('aria-pressed') === 'true';
+      chip.setAttribute('aria-pressed', on ? 'false' : 'true');
+      hideTip();
+      render(false);
+      showInfo(chip.getAttribute('data-model'));
+    });
+  });
+  render(true);
+  showInfo('ecmwf');
+})();
+</script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>
