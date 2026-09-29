@@ -226,7 +226,7 @@ p:last-child{margin-bottom:0}
 .chart-tools{display:flex;gap:8px;margin:0 0 14px}
 .mini{background:none;border:1px solid var(--line-2);color:var(--sub);font:700 .78rem/1 Inter,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;transition:color .2s,border-color .2s}
 .mini:hover{color:var(--text);border-color:var(--cyan)}
-.chart-val{font:600 10.5px ui-monospace,Consolas,monospace;fill:var(--sub);pointer-events:none}
+.chart-val{font:600 10.5px ui-monospace,Consolas,monospace;fill:#cdd6ee;pointer-events:none;paint-order:stroke;stroke:#0a1120;stroke-width:3px}
 .chart-cross{stroke:rgba(255,255,255,.35);stroke-width:1;stroke-dasharray:3 3}
 
 /* Video */
