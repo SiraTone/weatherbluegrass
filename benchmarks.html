@@ -309,6 +309,7 @@
   function el(tag, attrs, parent) {
     var n = document.createElementNS(NS, tag);
     for (var k in attrs) n.setAttribute(k, attrs[k]);
+    n.setAttribute('data-enh', '1');
     parent.appendChild(n);
     return n;
   }
@@ -319,6 +320,7 @@
   var cross = null, pinned = null;
   function dots() { return Array.prototype.slice.call(svg.querySelectorAll('circle.chart-dot')); }
   function enhance() {
+    Array.prototype.slice.call(svg.querySelectorAll('[data-enh]')).forEach(function (n) { n.remove(); });
     if (!svg.querySelector('path.chart-line')) return;
     pinned = null;
     tip.hidden = true;
