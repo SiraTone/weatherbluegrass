@@ -246,10 +246,10 @@
     }
     var ty = Y(0.80);
     el('line', { x1: ML, y1: ty, x2: W - MR, y2: ty, 'class': 'chart-thresh' }, svg);
-    var tl = el('text', { x: W - MR, y: ty - 6, 'text-anchor': 'end', 'class': 'chart-axis' }, svg);
+    var tl = el('text', { x: ML + 4, y: ty - 6, 'text-anchor': 'start', 'class': 'chart-axis' }, svg);
     tl.textContent = 'skillful';
     [5, 7, 10].forEach(function (d) {
-      var t = el('text', { x: X(d), y: H - 12, 'text-anchor': 'middle', 'class': 'chart-axis' }, svg);
+      var t = el('text', { x: X(d) + (d === 5 ? 4 : d === 10 ? -4 : 0), y: H - 12, 'text-anchor': d === 5 ? 'start' : d === 10 ? 'end' : 'middle', 'class': 'chart-axis' }, svg);
       t.textContent = 'Day ' + d;
     });
     activeKeys().forEach(function (key) {
@@ -331,12 +331,20 @@
     svg.querySelectorAll('path.chart-line').forEach(function (p) {
       el('path', {
         d: p.getAttribute('d') + 'L' + (W - MR) + ' ' + Y(0.70) + 'L' + ML + ' ' + Y(0.70) + 'Z',
-        fill: p.getAttribute('stroke'), 'fill-opacity': 0.07, style: 'pointer-events:none'
+        fill: p.getAttribute('stroke'), 'fill-opacity': 0.05, style: 'pointer-events:none'
       }, svg);
     });
     dots().forEach(function (c) {
-      var m = (c.getAttribute('aria-label') || '').match(/(\d\.\d+)/);
-      text(parseFloat(c.getAttribute('cx')), parseFloat(c.getAttribute('cy')) - 11, m ? m[1] : '');
+      var lab = c.getAttribute('aria-label') || '';
+      var m = lab.match(/(\d\.\d+)/);
+      var last = /day 10/.test(lab);
+      var t = el('text', {
+        x: parseFloat(c.getAttribute('cx')) + (last ? -10 : 10),
+        y: parseFloat(c.getAttribute('cy')) + 4,
+        'text-anchor': last ? 'end' : 'start',
+        'class': 'chart-val', style: 'pointer-events:none'
+      }, svg);
+      t.textContent = m ? m[1] : '';
     });
     cross = el('line', { y1: MT, y2: H - MB, 'class': 'chart-cross', visibility: 'hidden', style: 'pointer-events:none' }, svg);
   }
