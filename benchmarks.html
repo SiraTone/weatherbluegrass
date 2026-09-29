@@ -328,12 +328,7 @@
       el('line', { x1: ML, y1: y, x2: W - MR, y2: y, 'class': 'chart-grid', style: 'pointer-events:none' }, svg);
       text(ML - 8, y + 4, v.toFixed(2));
     });
-    svg.querySelectorAll('path.chart-line').forEach(function (p) {
-      el('path', {
-        d: p.getAttribute('d') + 'L' + (W - MR) + ' ' + Y(0.70) + 'L' + ML + ' ' + Y(0.70) + 'Z',
-        fill: p.getAttribute('stroke'), 'fill-opacity': 0.05, style: 'pointer-events:none'
-      }, svg);
-    });
+    /* area fills removed: overlapping washes muddied multi-line views */
     dots().forEach(function (c) {
       var lab = c.getAttribute('aria-label') || '';
       var m = lab.match(/(\d\.\d+)/);
@@ -342,10 +337,27 @@
         x: parseFloat(c.getAttribute('cx')) + (last ? -10 : 10),
         y: parseFloat(c.getAttribute('cy')) + 4,
         'text-anchor': last ? 'end' : 'start',
-        'class': 'chart-val', style: 'pointer-events:none'
+        'class': 'chart-val', style: 'pointer-events:none',
+        'data-day': /day (\d+)/.test(lab) ? /day (\d+)/.exec(lab)[1] : ''
       }, svg);
-      t.textContent = m ? m[1] : '';
+      t.textContent = m ? Number(m[1]).toFixed(3) : '';
     });
+    (function spread() {
+      var labels = Array.prototype.slice.call(svg.querySelectorAll('text.chart-val'));
+      var byDay = {};
+      labels.forEach(function (t) {
+        var d = t.getAttribute('data-day') || '';
+        (byDay[d] = byDay[d] || []).push(t);
+      });
+      Object.keys(byDay).forEach(function (d) {
+        var group = byDay[d].sort(function (a, b) { return parseFloat(a.getAttribute('y')) - parseFloat(b.getAttribute('y')); });
+        for (var i = 1; i < group.length; i++) {
+          var prev = parseFloat(group[i - 1].getAttribute('y'));
+          var cur = group[i];
+          if (parseFloat(cur.getAttribute('y')) - prev < 16) cur.setAttribute('y', prev + 16);
+        }
+      });
+    })();
     cross = el('line', { y1: MT, y2: H - MB, 'class': 'chart-cross', visibility: 'hidden', style: 'pointer-events:none' }, svg);
   }
   function nearest(mx) {
