@@ -29,6 +29,10 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 - `downloads/CellScope-Demo.exe` — Windows demo, linked from home and products
 - `downloads/CellScope-Trailer.mp4` — 30 s 1080p60 render of the intro with music; rebuild with
   `FFMPEG=/path/to/ffmpeg node tools/render-trailer.js` after changing the intro (needs Playwright)
+- `downloads/CellScope-Canada-Radar-Trailer.mp4` — 34 s trailer for the 2026-09-30 Canadian radar update,
+  rendered from `trailers/canada-radar.html` with
+  `FFMPEG=... node tools/render-seek-trailer.js trailers/canada-radar.html downloads/CellScope-Canada-Radar-Trailer.mp4`.
+  Map and precipitation are a stylized illustration, labeled on screen; the ECCC credit line is shown throughout.
 
 ## Conventions
 

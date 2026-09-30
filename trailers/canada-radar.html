@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CellScope update: Canadian radar coverage</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<!--
+  Trailer for the 2026-09-30 Canadian radar update.
+  Every frame is a pure function of time: window.TRAILER.seek(ms) draws it.
+  Open this page to watch it live; tools/render-seek-trailer.js renders it to MP4.
+  The map and precipitation are a stylized illustration, not live ECCC data.
+-->
+<style>
+  :root{
+    --bg:#02040a; --cyan:#3fe0ff; --text:#f2f6ff; --sub:#b6c1dc; --sub-2:#8d99b8;
+    --line:rgba(150,180,240,.14); --line-2:rgba(150,180,240,.28); --panel:rgba(8,13,28,.86);
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--bg)}
+  .layer{position:absolute;inset:0}
+  #world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+  #world svg,#world canvas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+  .badge{position:absolute;left:0;top:0;display:flex;align-items:center;gap:8px;transform-origin:0 0;white-space:nowrap}
+  .badge i{display:block;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#0a1120;border:2.5px solid var(--cyan);box-shadow:0 0 0 4px rgba(63,224,255,.18),0 0 18px rgba(63,224,255,.55)}
+  .badge b{margin-top:-11px;padding:5px 9px;border-radius:6px;background:rgba(4,6,12,.88);border:1px solid var(--line-2);font:800 15px/1 ui-monospace,Consolas,monospace;letter-spacing:.08em;color:var(--cyan)}
+  .badge b small{margin-left:8px;font:700 13px/1 Inter,sans-serif;letter-spacing:0;color:var(--text)}
+  .badge.left{flex-direction:row-reverse}
+  .badge.left i{margin:-11px -11px 0 0}
+  .ring{position:absolute;left:0;top:0;width:0;height:0}
+  .ring::after{content:"";position:absolute;left:-60px;top:-60px;width:120px;height:120px;border-radius:50%;border:2px solid var(--cyan)}
+  .vignette{background:radial-gradient(ellipse at center,transparent 45%,rgba(2,4,10,.92) 100%);pointer-events:none}
+  .radar{position:absolute;left:50%;top:50%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px;pointer-events:none}
+  .radar .rings{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 149px,rgba(63,224,255,.09) 149px 150px)}
+  .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(63,224,255,.03) 310deg,rgba(63,224,255,.2) 359deg,transparent 360deg)}
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+  .logo{width:150px;height:150px;border-radius:50%;box-shadow:0 0 0 2px rgba(63,224,255,.35),0 0 80px rgba(63,224,255,.35)}
+  .word{font:900 124px/1 Inter,sans-serif;letter-spacing:.08em}
+  .kicker{font:800 22px/1 ui-monospace,Consolas,monospace;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan)}
+  .date{font:700 18px/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--sub-2)}
+  .cap{position:absolute;left:96px;bottom:110px;max-width:900px}
+  .cap .no{font:800 20px/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--cyan)}
+  .cap h2{margin-top:14px;font:800 76px/1.02 Inter,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 30px rgba(0,0,0,.9)}
+  .cap p{margin-top:18px;font:600 24px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.03em;color:var(--sub);text-shadow:0 2px 16px rgba(0,0,0,.9)}
+  .tag{position:absolute;padding:8px 14px;border-radius:999px;background:rgba(4,6,12,.82);border:1px solid var(--line-2);font:800 16px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--text)}
+  .tag em{font-style:normal;color:var(--cyan)}
+  .panel{position:absolute;padding:22px 26px;border-radius:16px;background:var(--panel);border:1px solid var(--line-2);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .loopbar{right:96px;bottom:110px;width:560px}
+  .loopbar .row{display:flex;justify-content:space-between;font:700 16px/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;color:var(--sub);text-transform:uppercase}
+  .loopbar .row strong{color:var(--cyan);font-size:26px;letter-spacing:.04em}
+  .ticks{display:flex;gap:8px;margin-top:18px}
+  .ticks span{flex:1;height:12px;border-radius:4px;background:rgba(150,180,240,.16)}
+  .ticks span.on{background:var(--cyan);box-shadow:0 0 12px rgba(63,224,255,.6)}
+  .ticks span.past{background:rgba(63,224,255,.45)}
+  .switch{right:96px;bottom:110px;display:flex;flex-direction:column;gap:18px;width:460px}
+  .sw{display:flex;align-items:center;justify-content:space-between;font:800 24px/1 Inter,sans-serif}
+  .knob{position:relative;width:78px;height:42px;border-radius:999px;background:rgba(150,180,240,.2)}
+  .knob::after{content:"";position:absolute;left:5px;top:5px;width:32px;height:32px;border-radius:50%;background:#fff;transform:translateX(var(--k,0px))}
+  .legend{display:flex;height:14px;border-radius:4px;overflow:hidden}
+  .legend span{flex:1}
+  .legend-l{display:flex;justify-content:space-between;font:700 14px/1 ui-monospace,Consolas,monospace;color:var(--sub-2);letter-spacing:.08em}
+  .menu{left:50%;top:50%;width:760px;margin-left:-380px;margin-top:-190px;padding:0;overflow:hidden}
+  .menu .bar{display:flex;gap:10px;padding:16px 22px;border-bottom:1px solid var(--line);font:800 22px/1 Inter,sans-serif;color:var(--sub)}
+  .menu .bar span:not(:last-child)::after{content:"›";margin-left:10px;color:var(--sub-2)}
+  .menu .bar span.hi{color:var(--text)}
+  .menu ul{list-style:none;padding:10px 0}
+  .menu li{display:flex;align-items:center;gap:16px;padding:16px 22px;font:700 24px/1 Inter,sans-serif;color:var(--sub)}
+  .menu li.sel{color:var(--text);background:rgba(63,224,255,.1)}
+  .menu li .cb{width:26px;height:26px;border-radius:6px;border:2px solid var(--line-2);display:grid;place-items:center;font:900 18px/1 Inter,sans-serif;color:#02040a}
+  .menu li.sel .cb{border-color:var(--cyan);background:var(--cyan)}
+  .free{position:absolute;left:0;right:0;top:250px;text-align:center}
+  .free h2{font:900 110px/1 Inter,sans-serif;letter-spacing:-.03em}
+  .free p{margin-top:18px;font:700 28px/1 ui-monospace,Consolas,monospace;letter-spacing:.2em;color:var(--cyan);text-transform:uppercase}
+  .cursor{position:absolute;left:0;top:0;width:34px;height:34px}
+  .fine{font:600 17px/1.5 ui-monospace,Consolas,monospace;color:var(--sub-2);max-width:1300px}
+  .credit{position:absolute;right:40px;bottom:30px;font:600 17px/1 ui-monospace,Consolas,monospace;color:var(--sub-2)}
+  .illus{position:absolute;left:40px;bottom:30px;font:600 15px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em;color:rgba(141,153,184,.75);text-transform:uppercase}
+  .blurb{font:600 28px/1.45 Inter,sans-serif;color:var(--sub);max-width:1100px}
+  [data-o]{opacity:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg"><div class="radar"><div class="rings"></div><div class="sweep" id="sweep"></div></div></div>
+
+  <div class="layer" id="map" data-o>
+    <div id="world">
+      <svg id="geo" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+      <canvas id="wx" width="480" height="270"></canvas>
+      <svg id="geoTop" viewBox="0 0 1920 1080" aria-hidden="true"></svg>
+      <div id="sites"></div>
+      <div class="ring" id="ring" data-o></div>
+    </div>
+    <div class="tag" id="tagCA" style="left:96px;top:90px" data-o><em>ECCC</em> CANADA COMPOSITE · 1 KM · 6 MIN</div>
+    <div class="tag" id="tagUS" style="left:96px;top:140px" data-o><em>NEXRAD</em> UNITED STATES</div>
+    <svg class="cursor" id="cursor" viewBox="0 0 24 24" data-o><path d="M3 2l7 19 2.6-7.4L20 11z" fill="#fff" stroke="#02040a" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    <div class="illus" id="illus">Illustrative imagery · not live data</div>
+  </div>
+
+  <div class="layer vignette"></div>
+
+  <!-- 0: title -->
+  <div class="center" id="sTitle" data-o>
+    <img class="logo" id="logo1" src="../assets/logo.svg" alt="">
+    <p class="kicker">CellScope update</p>
+    <p class="word" style="font-size:100px">NOW COVERING CANADA</p>
+    <p class="date">2026 · 09 · 30</p>
+  </div>
+
+  <!-- 1: composite -->
+  <div class="cap" id="c1" data-o>
+    <p class="no">01</p>
+    <h2>Canadian radar,<br>right next to NEXRAD.</h2>
+    <p>Environment and Climate Change Canada national composite.<br>1 km resolution. Updated every 6 minutes.</p>
+  </div>
+
+  <!-- 2: border -->
+  <div class="cap" id="c2" data-o>
+    <p class="no">02</p>
+    <h2>Clipped at the border.</h2>
+    <p>The Canadian layer only draws inside Canada,<br>so it never covers or conflicts with US data.</p>
+  </div>
+
+  <!-- 3: loop -->
+  <div class="cap" id="c3" data-o>
+    <p class="no">03</p>
+    <h2>Loop the last hour.</h2>
+    <p>10 frames, 6 minutes apart.<br>Or switch it off for a still image.</p>
+  </div>
+  <div class="panel loopbar" id="loop" data-o>
+    <div class="row"><span>Loop · last hour</span><strong id="loopT">−54 min</strong></div>
+    <div class="ticks" id="ticks"></div>
+  </div>
+
+  <!-- 4: snow -->
+  <div class="cap" id="c4" data-o>
+    <p class="no">04</p>
+    <h2>Rain or snow.</h2>
+    <p>One switch changes the display<br>to ECCC's snowfall product.</p>
+  </div>
+  <div class="panel switch" id="sw" data-o>
+    <div class="sw"><span id="swLabel">Snow rate</span><span class="knob" id="knob"></span></div>
+    <div class="legend" id="legend"></div>
+    <div class="legend-l"><span>Light</span><span id="legUnit">Rain</span><span>Heavy</span></div>
+  </div>
+
+  <!-- 5: sites -->
+  <div class="cap" id="c5" data-o>
+    <p class="no">05</p>
+    <h2><span id="siteCount">31</span> Canadian<br>radar sites.</h2>
+    <p>From Aldergrove BC to Holyrood NL. Official ECCC IDs.<br>Hover for the name. Click to zoom to the radar.</p>
+  </div>
+
+  <!-- 6: how to -->
+  <div class="panel menu" id="menu" data-o>
+    <div class="bar"><span class="hi">Radar</span><span class="hi">Area</span><span id="crumb">…</span></div>
+    <ul>
+      <li class="sel"><span class="cb">✓</span>CONUS (NEXRAD)</li>
+      <li id="caItem"><span class="cb" id="caCb"></span>Canada radar (ECCC)</li>
+    </ul>
+  </div>
+  <div class="free" id="free" data-o>
+    <h2>Free.</h2>
+    <p>No account · No API key</p>
+  </div>
+
+  <!-- 7: end -->
+  <div class="center" id="sEnd" data-o>
+    <img class="logo" src="../assets/logo.svg" alt="">
+    <p class="word" style="font-size:112px">CELLSCOPE</p>
+    <p class="blurb">Now covering Canada. Environment Canada's national radar composite plus all 31 Canadian radar sites, meeting NEXRAD cleanly at the border.</p>
+    <p class="fine">Canadian radar is imagery only. Velocity, storm tracking, 3D storm views and impact analysis remain US-only.</p>
+  </div>
+  <div class="credit" id="credit" data-o>Radar data: Environment and Climate Change Canada.</div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var W = 1920, H = 1080, GW = 480, GH = 270, LEN = 34000;
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- projection: equirectangular, lon -128..-52 ---------- */
+  var LON0 = -128, LAT0 = 62.6, PX = W / 76, PY = PX / Math.cos(48 * Math.PI / 180);
+  function xy(lon, lat) { return [(lon - LON0) * PX, (LAT0 - lat) * PY]; }
+  function ll(x, y) { return [LON0 + x / PX, LAT0 - y / PY]; }
+
+  // Stylized US-Canada border, west to east (lon, lat)
+  var BORDER = [[-128,48.3],[-123.3,48.3],[-123.1,49],[-95.15,49],[-95.15,49.4],[-94.8,49.3],[-94.6,48.7],[-93.2,48.6],
+    [-91.5,48.1],[-89.6,48.0],[-88.4,48.3],[-84.8,46.9],[-84.1,46.5],[-83.5,46.1],[-82.4,45.3],[-82.4,43.0],[-83.1,42.3],
+    [-82.5,41.7],[-81,42.2],[-79.1,42.8],[-79.05,43.3],[-76.8,43.6],[-76.3,44.1],[-75.3,44.9],[-74.7,45.0],[-71.5,45.0],
+    [-71.1,45.3],[-70.3,45.9],[-70,46.7],[-69.2,47.45],[-68.3,47.35],[-67.8,47.05],[-67.8,45.7],[-67.4,45.2],[-67,44.8],[-66.5,43.5],[-52,43]];
+  var CANADA = BORDER.concat([[-52,64],[-128,64]]);
+  function inPoly(lon, lat, poly) {
+    var inside = false;
+    for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if ((yi > lat) !== (yj > lat) && lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+  var MASK = new Uint8Array(GW * GH);
+  for (var gy = 0; gy < GH; gy++) for (var gx = 0; gx < GW; gx++) {
+    var p = ll((gx + .5) * W / GW, (gy + .5) * H / GH);
+    MASK[gy * GW + gx] = inPoly(p[0], p[1], CANADA) ? 1 : 0;
+  }
+
+  /* ---------- static map ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(parent, tag, a) { var n = document.createElementNS(NS, tag); for (var k in a) n.setAttribute(k, a[k]); parent.appendChild(n); return n; }
+  var geo = $('geo'), top = $('geoTop');
+  var caPath = 'M' + CANADA.map(function (p) { return xy(p[0], p[1]).join(' '); }).join('L') + 'Z';
+  el(geo, 'rect', { x: 0, y: 0, width: W, height: H, fill: '#060b18' });
+  el(geo, 'path', { d: caPath, fill: '#0a1326' });
+  for (var lo = -125; lo <= -55; lo += 5) { var a = xy(lo, 30), b = xy(lo, 64); el(geo, 'line', { x1: a[0], y1: 0, x2: b[0], y2: H, stroke: 'rgba(150,180,240,.06)', 'vector-effect': 'non-scaling-stroke' }); }
+  for (var la = 35; la <= 60; la += 5) { var c = xy(-128, la); el(geo, 'line', { x1: 0, y1: c[1], x2: W, y2: c[1], stroke: 'rgba(150,180,240,.06)', 'vector-effect': 'non-scaling-stroke' }); }
+  var bPath = 'M' + BORDER.map(function (p) { return xy(p[0], p[1]).join(' '); }).join('L');
+  var borderGlow = el(top, 'path', { d: bPath, fill: 'none', stroke: 'rgba(63,224,255,.35)', 'stroke-width': 9, 'vector-effect': 'non-scaling-stroke', opacity: 0 });
+  el(top, 'path', { d: bPath, fill: 'none', stroke: 'rgba(242,246,255,.55)', 'stroke-width': 1.6, 'stroke-dasharray': '7 6', 'vector-effect': 'non-scaling-stroke' });
+  [['CANADA', -104, 56.5], ['UNITED STATES', -72, 39.2]].forEach(function (t) {
+    var q = xy(t[1], t[2]);
+    var n = el(top, 'text', { x: q[0], y: q[1], 'text-anchor': 'middle', fill: 'rgba(242,246,255,.13)', 'font-family': 'Inter,sans-serif', 'font-weight': 900, 'font-size': 54, 'letter-spacing': 18 });
+    n.textContent = t[0];
+  });
+
+  // Sites named in the release notes (approximate positions)
+  var SITES = [
+    { id: '', name: 'Aldergrove BC', lon: -122.5, lat: 49.0 },
+    { id: 'CASKR', name: 'King City', lon: -79.57, lat: 43.96 },
+    { id: 'CASFT', name: 'Franktown', lon: -76.12, lat: 45.04 },
+    { id: '', name: 'Holyrood NL', lon: -53.0, lat: 47.3, left: true }
+  ];
+  SITES.forEach(function (s) {
+    var d = document.createElement('div');
+    d.className = 'badge' + (s.left ? ' left' : '');
+    d.innerHTML = '<i></i><b>' + s.id + '<small' + (s.id ? '' : ' style="margin:0"') + '>' + s.name + '</small></b>';
+    d.style.opacity = 0;
+    $('sites').appendChild(d);
+    s.el = d; s.label = d.querySelector('small'); s.p = xy(s.lon, s.lat);
+  });
+  var KING = SITES[1];
+
+  /* ---------- precipitation ---------- */
+  function hash(x, y) { var h = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return h - Math.floor(h); }
+  function vnoise(x, y) {
+    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    var a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  // Storm systems in lon/lat, drifting east (deg per field-second)
+  var STORMS = [
+    { lon: -84, lat: 45.2, rx: 7.5, ry: 2.6, amp: 1.05, rot: -.35, vx: .22, vy: .03 },   // Great Lakes band across the border
+    { lon: -74, lat: 46.4, rx: 5.5, ry: 2.2, amp: .9, rot: -.2, vx: .2, vy: .02 },
+    { lon: -104, lat: 51, rx: 6, ry: 3, amp: .8, rot: .25, vx: .25, vy: -.02 },
+    { lon: -96, lat: 41, rx: 4, ry: 2.4, amp: .95, rot: -.5, vx: .24, vy: .05 },
+    { lon: -121, lat: 49.5, rx: 3.5, ry: 2.5, amp: .75, rot: .5, vx: .15, vy: 0 },
+    { lon: -63, lat: 45.5, rx: 4.5, ry: 2.4, amp: .8, rot: -.15, vx: .18, vy: .03 },
+    { lon: -88, lat: 38.8, rx: 3.2, ry: 1.8, amp: .85, rot: -.6, vx: .22, vy: .05 }
+  ];
+  var RAIN = [[74,222,128],[34,197,94],[22,163,74],[250,204,21],[251,146,60],[239,68,68],[217,70,239]];
+  var SNOW = [[191,219,254],[147,197,253],[96,165,250],[59,130,246],[37,99,235],[165,180,252],[255,255,255]];
+  function pal(P, v) { var i = Math.min(P.length - 1, Math.floor(v * P.length)); return P[i]; }
+
+  var cv = $('wx'), cx = cv.getContext('2d'), img = cx.createImageData(GW, GH), px = img.data;
+  var FIELD = new Float32Array(GW * GH);
+  function computeField(ft) {
+    for (var gy = 0; gy < GH; gy++) for (var gx = 0; gx < GW; gx++) {
+      var p = ll((gx + .5) * W / GW, (gy + .5) * H / GH), lon = p[0], lat = p[1], f = 0;
+      for (var k = 0; k < STORMS.length; k++) {
+        var s = STORMS[k], dx = lon - (s.lon + s.vx * ft), dy = lat - (s.lat + s.vy * ft);
+        var cr = Math.cos(s.rot), sr = Math.sin(s.rot), u = (dx * cr - dy * sr) / s.rx, w = (dx * sr + dy * cr) / s.ry;
+        f = Math.max(f, s.amp * Math.exp(-(u * u + w * w) * 1.6));
+      }
+      var n = vnoise((lon - .2 * ft) * .9, lat * .9) * .6 + vnoise((lon - .2 * ft) * 2.3, lat * 2.3) * .3 + vnoise(lon * 5.1, lat * 5.1 + ft * .3) * .1;
+      FIELD[gy * GW + gx] = f * (.45 + .85 * n) - .18;
+    }
+  }
+  function drawField(caAlpha, usAlpha, wipeX, snow) {
+    var wipeG = wipeX / W * GW;
+    for (var i = 0, n = GW * GH; i < n; i++) {
+      var v = FIELD[i], o = i * 4;
+      if (v <= 0) { px[o + 3] = 0; continue; }
+      var ca = MASK[i], alpha = ca ? ((i % GW) < wipeG ? caAlpha : 0) : usAlpha;
+      if (!alpha) { px[o + 3] = 0; continue; }
+      var cr = pal(RAIN, v), c = cr;
+      if (ca && snow > 0) {
+        var cs = pal(SNOW, v);
+        c = [cr[0] + (cs[0] - cr[0]) * snow, cr[1] + (cs[1] - cr[1]) * snow, cr[2] + (cs[2] - cr[2]) * snow];
+      }
+      px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2];
+      px[o + 3] = Math.round(255 * alpha * Math.min(1, .55 + v * 1.4));
+    }
+    cx.putImageData(img, 0, 0);
+  }
+
+  /* ---------- UI bits ---------- */
+  var ticks = $('ticks');
+  for (var t = 0; t < 10; t++) ticks.appendChild(document.createElement('span'));
+  $('legend').innerHTML = RAIN.map(function () { return '<span></span>'; }).join('');
+  var legendSpans = $('legend').children;
+
+  /* ---------- timeline helpers ---------- */
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function sm(v) { v = clamp(v); return v * v * (3 - 2 * v); }
+  function win(t, a, b, fi, fo) { return sm((t - a) / (fi || 600)) * (1 - sm((t - (b - (fo || 600))) / (fo || 600))); }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+  function op(id, v, dy) {
+    var e = typeof id === 'string' ? $(id) : id;
+    e.style.opacity = v.toFixed(3);
+    e.style.transform = dy ? 'translateY(' + ((1 - v) * dy).toFixed(1) + 'px)' : '';
+    e.style.visibility = v > 0.001 ? 'visible' : 'hidden';
+  }
+
+  // Camera keyframes: [ms, lon, lat, zoom]
+  var CAM = [[0,-92,49,1],[3500,-92,49,1],[9000,-90,48.5,1.08],[11000,-80.5,44.6,2.6],[13200,-80.5,44.6,2.7],[14800,-86,47.5,1.7],
+    [18000,-86,47.5,1.75],[22000,-84,47.5,1.8],[23400,-89.5,49,1],[25400,-89.5,49,1],[26800,KING.lon,KING.lat,3.6],
+    [27600,KING.lon,KING.lat,3.7],[28600,-92,49,1],[34000,-92,49,1]];
+  function camAt(t) {
+    for (var i = 0; i < CAM.length - 1; i++) if (t <= CAM[i + 1][0]) {
+      var a = CAM[i], b = CAM[i + 1], k = sm((t - a[0]) / (b[0] - a[0]));
+      var za = Math.log(a[3]), zb = Math.log(b[3]);
+      return [lerp(a[1], b[1], k), lerp(a[2], b[2], k), Math.exp(lerp(za, zb, k))];
+    }
+    var l = CAM[CAM.length - 1]; return [l[1], l[2], l[3]];
+  }
+
+  /* ---------- the frame ---------- */
+  var SCENE_TIMES = [3.5, 9, 13.5, 18.2, 22.5, 28.6, 31];
+  function seek(t) {
+    t = Math.max(0, Math.min(LEN, t));
+    $('sweep').style.transform = 'rotate(' + (t / 5000 * 360 % 360).toFixed(2) + 'deg)';
+
+    // title and end cards
+    op('sTitle', win(t, 200, 3700, 700, 600), 0);
+    $('logo1').style.transform = 'rotateY(' + ((1 - sm(t / 1500)) * -540).toFixed(1) + 'deg) scale(' + lerp(.4, 1, sm(t / 1500)).toFixed(3) + ')';
+    op('sEnd', win(t, 31000, LEN + 2000, 900), 20);
+    op('credit', win(t, 3600, LEN + 2000, 700), 0);
+
+    // map
+    var mapO = win(t, 2600, 31600, 1200, 900) * (t > 28600 && t < 31000 ? lerp(1, .3, sm((t - 28600) / 500)) : 1);
+    op('map', mapO, 0);
+    var cam = camAt(t), c = xy(cam[0], cam[1]), z = cam[2];
+    $('world').style.transform = 'translate(' + (W / 2 - c[0] * z).toFixed(2) + 'px,' + (H / 2 - c[1] * z).toFixed(2) + 'px) scale(' + z.toFixed(4) + ')';
+
+    // field time: continuous drift, except a stepped 10-frame loop in scene 3
+    var loopA = 13600, step = 440, ft;
+    var frame = -1;
+    if (t >= loopA && t < loopA + step * 10) {
+      frame = Math.floor((t - loopA) / step);
+      ft = 3.4 + frame * .9;
+    } else ft = t < loopA ? t / 4000 : 3.4 + 9 * .9 + (t - (loopA + step * 10)) / 4000;
+    computeField(ft);
+
+    var usA = sm((t - 3400) / 900), caA = sm((t - 5200) / 300), wipe = sm((t - 5200) / 2000) * W * 1.02;
+    var snow = sm((t - 19600) / 700) * (1 - sm((t - 22300) / 500));
+    drawField(caA, usA, wipe, snow);
+
+    op('tagUS', win(t, 3700, 13000, 600), 0);
+    op('tagCA', win(t, 6200, 13000, 600), 0);
+    borderGlow.setAttribute('opacity', (win(t, 10200, 13400, 700) * (.6 + .4 * Math.sin(t / 180))).toFixed(3));
+    op('illus', 1, 0);
+
+    op('c1', win(t, 4200, 9000, 700), 30);
+    op('c2', win(t, 9600, 13400, 700), 30);
+    op('c3', win(t, 13900, 18200, 700), 30);
+    op('loop', win(t, 13900, 18200, 700), 30);
+    if (frame >= 0 || t < loopA) {
+      var f = frame < 0 ? 0 : frame;
+      $('loopT').textContent = f === 9 ? 'Now' : '−' + (54 - f * 6) + ' min';
+      for (var k = 0; k < 10; k++) ticks.children[k].className = k === f ? 'on' : k < f ? 'past' : '';
+    }
+
+    op('c4', win(t, 18500, 22500, 700), 30);
+    op('sw', win(t, 18500, 22500, 700), 30);
+    var sk = sm((t - 19600) / 400);
+    $('knob').style.setProperty('--k', (sk * 36).toFixed(1) + 'px');
+    $('knob').style.background = sk > .5 ? 'var(--cyan)' : 'rgba(150,180,240,.2)';
+    $('legUnit').textContent = snow > .5 ? 'Snow · cm/h' : 'Rain · mm/h';
+    for (var j = 0; j < legendSpans.length; j++) { var cc = snow > .5 ? SNOW[j] : RAIN[j]; legendSpans[j].style.background = 'rgb(' + cc.join(',') + ')'; }
+
+    // sites
+    op('c5', win(t, 22900, 28500, 700), 30);
+    var siteVis = win(t, 22800, 28700, 500);
+    SITES.forEach(function (s, i) {
+      var v = siteVis * sm((t - 23000 - i * 220) / 400);
+      s.el.style.opacity = v.toFixed(3);
+      s.el.style.transform = 'translate(' + s.p[0] + 'px,' + s.p[1] + 'px) scale(' + (1 / z).toFixed(4) + ')' + (s.left ? ' translateX(-100%)' : '');
+    });
+    $('siteCount').textContent = Math.round(lerp(0, 31, sm((t - 22900) / 1200)));
+
+    // cursor hovers King City, clicks, map zooms (camera keyframes)
+    var kp = KING.p, sx = W / 2 + (kp[0] - c[0]) * z, sy = H / 2 + (kp[1] - c[1]) * z;
+    var cin = sm((t - 24300) / 900);
+    var curX = lerp(1500, sx, cin), curY = lerp(900, sy, cin);
+    op('cursor', win(t, 24200, 27800, 300, 400), 0);
+    $('cursor').style.transform = 'translate(' + (curX - 4).toFixed(1) + 'px,' + (curY - 2).toFixed(1) + 'px) scale(' + (t > 25300 && t < 25480 ? .85 : 1) + ')';
+    var ringK = clamp((t - 25350) / 700);
+    op('ring', ringK > 0 && ringK < 1 ? 1 - ringK : 0, 0);
+    $('ring').style.transform = 'translate(' + kp[0] + 'px,' + kp[1] + 'px) scale(' + ((.2 + ringK * 1.3) / z).toFixed(4) + ')';
+
+    // how-to menu and "Free."
+    op('menu', win(t, 28900, 30300, 500, 400), 30);
+    var sel = t > 29500;
+    $('caItem').className = sel ? 'sel' : '';
+    $('caCb').textContent = sel ? '✓' : '';
+    $('crumb').textContent = sel ? 'Canada radar (ECCC)' : '…';
+    op('free', win(t, 30300, 31300, 400, 400), 30);
+  }
+
+  window.TRAILER = { length: LEN, seek: seek, scenes: SCENE_TIMES };
+
+  /* ---------- live playback (skipped when a renderer drives seek) ---------- */
+  function fit() {
+    var s = Math.min(innerWidth / W, innerHeight / H);
+    $('stage').style.transform = 'translate(' + (-W * s / 2) + 'px,' + (-H * s / 2) + 'px) scale(' + s + ')';
+  }
+  fit(); addEventListener('resize', fit);
+  seek(0);
+  if (!window.__TRAILER_CAPTURE) {
+    var start = performance.now();
+    (function loop(now) { seek(now - start); if (now - start < LEN) requestAnimationFrame(loop); })(start);
+    addEventListener('click', function () { start = performance.now(); requestAnimationFrame(function l(n) { seek(n - start); if (n - start < LEN) requestAnimationFrame(l); }); });
+  }
+})();
+</script>
+</body>
+</html>
