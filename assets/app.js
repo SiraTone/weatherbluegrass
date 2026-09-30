@@ -8,20 +8,15 @@
   if (main) main.classList.add('page-in');
 
 
-  /* Headline word rotator (storm / reflectivity / velocity) */
+  /* Headline word rotator: all words are stacked in one grid cell sized to the
+     longest, so swapping them never reflows the sentence */
   var rot = d.getElementById('rotator');
   if (rot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var words = ['storm', 'reflectivity', 'velocity'], wi = 0;
+    var words = rot.children, wi = 0;
     setInterval(function () {
-      rot.classList.add('is-out');
-      setTimeout(function () {
-        wi = (wi + 1) % words.length;
-        rot.textContent = words[wi];
-        rot.classList.remove('is-out');
-        rot.classList.add('is-pre');
-        void rot.offsetWidth;
-        rot.classList.remove('is-pre');
-      }, 360);
+      words[wi].classList.remove('is-on');
+      wi = (wi + 1) % words.length;
+      words[wi].classList.add('is-on');
     }, 2600);
   }
 
@@ -42,21 +37,6 @@
       if (e.target.closest('a')) { nav.removeAttribute('data-open'); toggle.setAttribute('aria-expanded', 'false'); }
     });
   }
-
-  /* Buttons: sheen sweep + ripple (transform only, compositor-friendly) */
-  d.querySelectorAll('.btn').forEach(function (btn) {
-    btn.addEventListener('pointerenter', function () { btn.classList.add('is-hot'); });
-    btn.addEventListener('pointerleave', function () { btn.classList.remove('is-hot'); });
-    btn.addEventListener('pointerdown', function (e) {
-      var r = btn.getBoundingClientRect();
-      var s = Math.max(r.width, r.height);
-      var span = d.createElement('span');
-      span.className = 'ripple';
-      span.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
-      btn.appendChild(span);
-      span.addEventListener('animationend', function () { span.remove(); });
-    });
-  });
 
   /* Anchor landing: re-snap after images/fonts settle */
   function snap() {
