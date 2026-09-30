@@ -7,6 +7,24 @@
   var main = d.getElementById('main');
   if (main) main.classList.add('page-in');
 
+
+  /* Headline word rotator (storm / reflectivity / velocity) */
+  var rot = d.getElementById('rotator');
+  if (rot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var words = ['storm', 'reflectivity', 'velocity'], wi = 0;
+    setInterval(function () {
+      rot.classList.add('is-out');
+      setTimeout(function () {
+        wi = (wi + 1) % words.length;
+        rot.textContent = words[wi];
+        rot.classList.remove('is-out');
+        rot.classList.add('is-pre');
+        void rot.offsetWidth;
+        rot.classList.remove('is-pre');
+      }, 360);
+    }, 2600);
+  }
+
   /* Year */
   var y = d.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
