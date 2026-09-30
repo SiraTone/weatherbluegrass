@@ -334,3 +334,18 @@ p:last-child{margin-bottom:0}
   .opening-media img{height:260px}
   .eyebrow{font-size:.85rem;letter-spacing:.14em}
 }
+
+/* Calmer gradients: mostly solid color, keep only faint ambient depth */
+.opening h1{background:none;color:var(--text)}
+.pcard{background:var(--panel)}
+.callout{background:var(--panel)}
+.grad{background:none;color:var(--cyan)}
+.btn,.site-nav .btn{background-image:none;background-color:var(--cyan);box-shadow:0 4px 14px rgba(63,224,255,.18)}
+.site-nav .btn{box-shadow:0 4px 14px rgba(63,224,255,.18)}
+.btn:hover,.site-nav .btn:hover{box-shadow:0 6px 20px rgba(63,224,255,.3)}
+.btn-ghost{background:transparent;background-color:transparent}
+.site-footer{background:none}
+.cs-banner{background:var(--panel)}
+body::before{background:
+  radial-gradient(900px 480px at 12% -8%,rgba(37,64,160,.16),transparent 70%),
+  var(--bg)}
