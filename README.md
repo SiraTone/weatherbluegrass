@@ -18,6 +18,8 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
 - `assets/style.css` — single stylesheet, ~14 KB, no webfonts
 - `assets/app.js` — nav, reveal-on-scroll, button sheen, mailto form
+- `assets/intro.js` — skippable first-release intro (homepage only)
+- `assets/intro-music.js` — quiet Web Audio score for the intro, no audio files
 - `assets/logo.svg` — CellScope radar mark with animated sweep (header badge)
 - `assets/favicon.svg` — static radar mark (favicon, inline `.cs-logo` badges)
 - `assets/apple-touch-icon.png` — 180px render of the favicon for iOS home screens
@@ -25,6 +27,8 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 - `assets/*.png` — graph renders
 - `assets/videos/*.mp4` — clips, `preload="none"` with poster frames
 - `downloads/CellScope-Demo.exe` — Windows demo, linked from home and products
+- `downloads/CellScope-Trailer.mp4` — 30 s 1080p60 render of the intro with music; rebuild with
+  `FFMPEG=/path/to/ffmpeg node tools/render-trailer.js` after changing the intro (needs Playwright)
 
 ## Conventions
 

@@ -110,6 +110,7 @@
 
     '</div>' +
     '<div class="intro-progress" aria-hidden="true"><span></span></div>' +
+    '<button class="intro-sound" type="button" aria-pressed="false"><span class="intro-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="intro-sound-label">Sound off</span></button>' +
     '<button class="intro-skip" type="button">Skip intro ›</button>';
 
   d.body.appendChild(root);
@@ -136,8 +137,66 @@
     current = id;
   }
   // Start on the next frame so the first scene's transition actually runs.
+  /* ---------- music (assets/intro-music.js) ---------- */
+  // Quiet by design: master level stays well under the page's other audio.
+  var VOLUME = 0.35, PREF = 'cs-intro-sound';
+  var music = window.CellScopeIntroMusic, AC = window.AudioContext || window.webkitAudioContext;
+  var soundBtn = root.querySelector('.intro-sound'), soundLabel = root.querySelector('.intro-sound-label');
+  var actx = null, master = null, scored = false, started = 0, wantSound = true;
+  try { wantSound = localStorage.getItem(PREF) !== 'off'; } catch (e) {}
+  if (!music || !AC) soundBtn.hidden = true;
+
+  function setSoundUI(on) {
+    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    soundLabel.textContent = on ? 'Sound on' : 'Sound off';
+    root.classList.toggle('is-sound', on);
+  }
+  function startMusic() {
+    if (!music || !AC || done) return;
+    if (!actx) {
+      actx = new AC();
+      master = actx.createGain();
+      master.gain.value = 0;
+      master.connect(actx.destination);
+    }
+    var go = function () {
+      if (actx.state !== 'running' || done) return;
+      if (!scored) { scored = true; music.score(actx, master, performance.now() - started); }
+      master.gain.cancelScheduledValues(actx.currentTime);
+      master.gain.setValueAtTime(master.gain.value, actx.currentTime);
+      master.gain.linearRampToValueAtTime(VOLUME, actx.currentTime + 1.5);
+      setSoundUI(true);
+    };
+    if (actx.state === 'running') go(); else actx.resume().then(go, function () {});
+  }
+  function fadeMusic(secs) {
+    if (!actx || !master) return;
+    master.gain.cancelScheduledValues(actx.currentTime);
+    master.gain.setValueAtTime(master.gain.value, actx.currentTime);
+    master.gain.linearRampToValueAtTime(0, actx.currentTime + secs);
+  }
+  soundBtn.addEventListener('click', function () {
+    var on = soundBtn.getAttribute('aria-pressed') !== 'true';
+    wantSound = on;
+    try { localStorage.setItem(PREF, on ? 'on' : 'off'); } catch (e) {}
+    if (on) startMusic(); else { fadeMusic(0.4); setSoundUI(false); }
+  });
+  // Browsers block audio until the visitor interacts, so the first click or key
+  // inside the intro starts it (unless they turned it off before).
+  function firstGesture(e) {
+    if (e.target.closest && e.target.closest('.intro-sound, .intro-skip, .intro-enter')) return;
+    if (e.key === 'Escape') return;
+    root.removeEventListener('pointerdown', firstGesture);
+    removeEventListener('keydown', firstGesture);
+    if (wantSound) startMusic();
+  }
+  root.addEventListener('pointerdown', firstGesture);
+  addEventListener('keydown', firstGesture);
+
   requestAnimationFrame(function () {
     root.classList.add('is-playing');
+    started = performance.now();
+    if (wantSound) startMusic();
     SCENES.forEach(function (s) { timers.push(setTimeout(function () { show(s.id); }, s.at)); });
     timers.push(setTimeout(close, END));
   });
@@ -147,6 +206,9 @@
     done = true;
     timers.forEach(clearTimeout);
     root.classList.add('is-leaving');
+    removeEventListener('keydown', firstGesture);
+    fadeMusic(1.2);
+    if (actx) setTimeout(function () { actx.close(); }, 1400);
     d.documentElement.classList.remove('intro-open');
     removeEventListener('keydown', onKey);
     setTimeout(function () { root.remove(); }, 700);
