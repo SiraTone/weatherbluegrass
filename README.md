@@ -18,6 +18,8 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
 - `assets/style.css` — single stylesheet, ~14 KB, no webfonts
 - `assets/app.js` — nav, reveal-on-scroll, button sheen, mailto form
+- `assets/intro.js` — skippable first-release intro (homepage only)
+- `assets/intro-music.js` — quiet Web Audio score for the intro, no audio files
 - `assets/logo.svg` — CellScope radar mark with animated sweep (header badge)
 - `assets/favicon.svg` — static radar mark (favicon, inline `.cs-logo` badges)
 - `assets/apple-touch-icon.png` — 180px render of the favicon for iOS home screens
