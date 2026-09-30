@@ -351,36 +351,76 @@ body::before{background:
 .rotator.is-out{opacity:0;transform:translateY(-.25em)}
 .rotator.is-pre{opacity:0;transform:translateY(.25em);transition:none}
 
-/* First-release intro (assets/intro.js) */
+/* First-release intro (assets/intro.js)
+   Motion is transform and opacity only, so it composites on the GPU at display rate. */
 .intro-open,.intro-open body{overflow:hidden}
 .intro{position:fixed;inset:0;z-index:1000;background:#02040a;color:var(--text);overflow:hidden;perspective:1100px;transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .intro.is-leaving{opacity:0;transform:scale(1.04);pointer-events:none}
-.intro-storm{position:absolute;inset:0;width:100%;height:100%}
-.intro-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(2,4,10,.85) 100%);pointer-events:none}
+.intro-radar{position:absolute;left:50%;top:50%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;opacity:.55;pointer-events:none}
+.intro-rings{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 calc(8vmax - 1px),rgba(63,224,255,.09) calc(8vmax - 1px) 8vmax)}
+.intro-sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(63,224,255,.03) 310deg,rgba(63,224,255,.2) 359deg,transparent 360deg);will-change:transform;animation:introSweep 5s linear infinite}
+@keyframes introSweep{to{transform:rotate(360deg)}}
+.intro-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(2,4,10,.9) 100%);pointer-events:none}
 .intro-stage{position:absolute;inset:0;transform-style:preserve-3d}
-.iscene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;transform-style:preserve-3d;opacity:0;visibility:hidden;transform:translateZ(-420px) rotateX(18deg);transition:opacity .8s var(--ease),transform 1s var(--ease),visibility 0s .9s}
+.iscene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;transform-style:preserve-3d;opacity:0;visibility:hidden;transform:translateZ(-420px) rotateX(18deg);transition:opacity .8s var(--ease),transform 1s var(--ease),visibility 0s 1s}
+.iscene.on,.iscene.off{will-change:transform,opacity}
 .iscene.on{opacity:1;visibility:visible;transform:none;transition:opacity .8s var(--ease),transform 1s var(--ease),visibility 0s}
 .iscene.off{opacity:0;transform:translateZ(260px) rotateX(-10deg)}
-.iscene--left{align-items:flex-start;justify-content:flex-end;text-align:left;padding:0 0 12vh max(24px,6vw)}
-.iscene h2{font-size:clamp(1.8rem,5vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;max-width:18ch;text-shadow:0 4px 30px rgba(0,0,0,.8)}
+.iscene h2{font-size:clamp(1.8rem,5vw,3.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;max-width:18ch;text-shadow:0 4px 24px rgba(0,0,0,.8)}
+.iscene h2,.intro-no{position:relative;z-index:2;transform:translateZ(200px)}
 .intro-no{margin:0;font:800 .9rem/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--cyan)}
 .intro-sub{margin:0;color:var(--sub);font:600 1rem/1.4 ui-monospace,Consolas,monospace;letter-spacing:.06em}
 .intro-kicker{margin:0;font:800 .85rem/1 ui-monospace,Consolas,monospace;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan)}
 .intro-word{margin:0;font:900 clamp(2.6rem,9vw,6.5rem)/1 Inter,sans-serif;letter-spacing:.08em}
-.iscene.on .intro-word{animation:introTrack 2.8s var(--ease) both}
-@keyframes introTrack{from{letter-spacing:.6em;opacity:0}to{letter-spacing:.08em;opacity:1}}
+.iscene.on .intro-word{animation:introTrack 1.8s var(--ease) both}
+@keyframes introTrack{from{opacity:0;transform:scale(1.35,1.1) translateZ(0)}to{opacity:1;transform:none}}
+.iscene.on .intro-kicker{animation:introUp .9s .5s var(--ease) both}
+@keyframes introUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .intro-badge{display:block;width:120px;height:120px;border-radius:50%;box-shadow:0 0 0 2px rgba(63,224,255,.35),0 0 60px rgba(63,224,255,.35)}
 .iscene.on .intro-badge{animation:introSpin 1.6s var(--ease) both}
 @keyframes introSpin{from{transform:rotateY(-540deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
 .intro-badge--sm{width:72px;height:72px}
-.intro-ring{position:relative;width:min(300px,56vw);aspect-ratio:16/10;margin-top:40px;transform-style:preserve-3d}
-.iscene.on .intro-ring{animation:introRing 3.8s linear both}
-@keyframes introRing{from{transform:rotateX(-8deg) rotateY(0)}to{transform:rotateX(-8deg) rotateY(-120deg)}}
-.intro-ring img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:1px solid var(--line-2);border-radius:10px;backface-visibility:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);transform:rotateY(calc(var(--i) * 60deg)) translateZ(min(330px,60vw))}
-.intro-stack{position:relative;width:min(420px,72vw);aspect-ratio:16/10;margin-top:clamp(40px,8vh,90px);transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-24deg)}
+
+/* Graphs: a full turn of a six-card carousel */
+.iscene--graphs{gap:10px}
+.intro-carousel{--w:min(440px,58vw);--r:calc(var(--w) * .96);position:relative;width:var(--w);aspect-ratio:16/10;margin:clamp(16px,4vh,40px) 0;transform-style:preserve-3d;transform:translateZ(calc(var(--r) * -1)) rotateX(-7deg)}
+.intro-ring{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.iscene.on .intro-ring{animation:introRing 6s cubic-bezier(.45,.05,.55,.95) both}
+@keyframes introRing{from{transform:rotateY(40deg)}to{transform:rotateY(-360deg)}}
+.intro-ring figure{position:absolute;inset:0;margin:0;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;background:#03050c;backface-visibility:hidden;box-shadow:0 16px 44px rgba(0,0,0,.6);transform:rotateY(calc(var(--i) * 60deg)) translateZ(var(--r))}
+.intro-ring img{width:100%;height:100%;object-fit:cover}
+.intro-ring figcaption{position:absolute;left:10px;bottom:10px;padding:5px 10px;border-radius:999px;background:rgba(4,6,12,.82);font:700 .72rem/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan)}
+
+/* CS1.0: layered model output */
+.intro-stack{position:relative;width:min(420px,72vw);aspect-ratio:16/10;margin-top:clamp(70px,13vh,140px);transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-24deg)}
 .intro-stack img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:1px solid rgba(63,224,255,.5);border-radius:8px;box-shadow:0 20px 50px rgba(0,0,0,.6);opacity:.92;transform:translateZ(0)}
 .iscene.on .intro-stack img{animation:introLayer 1.4s var(--ease) both;animation-delay:calc(var(--i) * .25s)}
 @keyframes introLayer{to{transform:translateZ(calc(var(--i) * 70px))}}
+
+/* Benchmarks: bars grow with scaleX */
+.intro-bench{width:min(640px,88vw);margin-top:clamp(12px,3vh,28px);padding:20px 22px 16px;border:1px solid var(--line-2);border-radius:16px;background:rgba(8,13,28,.82);box-shadow:0 30px 80px rgba(0,0,0,.6);text-align:left}
+.iscene.on .intro-bench{animation:introCard 1s var(--ease) both}
+@keyframes introCard{from{opacity:0;transform:translateZ(-240px) rotateX(24deg)}to{opacity:1;transform:none}}
+.intro-bench-head,.intro-bench-foot{display:flex;justify-content:space-between;gap:12px;margin:0;font:700 .72rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--sub-2)}
+.intro-bench-head{margin-bottom:16px;color:var(--sub)}
+.intro-bench-foot{margin-top:12px;padding-left:calc(96px + 14px);padding-right:calc(72px + 14px)}
+.intro-bench-foot span:nth-child(2){text-align:center}
+.ib-row{display:grid;grid-template-columns:96px 1fr 72px;align-items:center;gap:14px;margin:12px 0}
+.ib-name{font:800 .95rem/1 Inter,sans-serif}
+.ib-track{position:relative;height:18px;border-radius:999px;background:rgba(150,180,240,.1);overflow:hidden}
+.ib-bar{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 45%,transparent),var(--c));transform:scaleX(0);transform-origin:left;will-change:transform}
+.iscene.on .ib-bar{animation:introBar 1.3s var(--ease) both;animation-delay:calc(.55s + var(--i) * .22s)}
+@keyframes introBar{to{transform:scaleX(var(--p))}}
+.ib-val{font:800 1rem/1 ui-monospace,Consolas,monospace;color:var(--c);text-align:right;opacity:0}
+.ib-val small{font-size:.65rem;color:var(--sub-2)}
+.iscene.on .ib-val{animation:introUp .6s both;animation-delay:calc(1.3s + var(--i) * .22s)}
+@media(max-width:600px){
+  .ib-row{grid-template-columns:72px 1fr 58px;gap:10px}
+  .intro-bench-foot{padding-left:82px;padding-right:68px}
+  .intro-bench-foot span:nth-child(2){display:none}
+}
+
+/* Model suite and app */
 .intro-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:560px;margin-top:18px;transform-style:preserve-3d}
 .intro-tags span{padding:10px 20px;border:1px solid var(--line-2);border-radius:999px;background:rgba(10,17,32,.8);font:800 1rem/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--cyan)}
 .iscene.on .intro-tags span{animation:introTag .9s var(--ease) both;animation-delay:calc(.2s + var(--i) * .15s)}
@@ -393,9 +433,11 @@ body::before{background:
 .intro-bar i{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
 .intro-bar span{margin-left:8px}
 .intro-enter{margin-top:14px}
-.intro-skip{position:absolute;right:20px;bottom:24px;z-index:2;padding:10px 18px;border:1px solid var(--line-2);border-radius:999px;background:rgba(4,6,12,.7);color:var(--text);font:700 .9rem/1 Inter,sans-serif;cursor:pointer;backdrop-filter:blur(6px);transition:border-color .2s,background .2s}
-.intro-skip:hover{border-color:var(--cyan);background:rgba(63,224,255,.12)}
+
+/* Chrome: skip button and progress */
+.intro-skip{position:absolute;right:20px;bottom:24px;z-index:2;padding:10px 18px;border:1px solid var(--line-2);border-radius:999px;background:rgba(4,6,12,.9);color:var(--text);font:700 .9rem/1 Inter,sans-serif;cursor:pointer;transition:border-color .2s,background .2s}
+.intro-skip:hover{border-color:var(--cyan);background:rgba(20,40,60,.95)}
 .intro-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.06)}
-.intro-progress span{display:block;height:100%;background:var(--cyan);transform:scaleX(0);transform-origin:left}
-@media(max-width:600px){.iscene--left{align-items:center;text-align:center;padding:0 24px 16vh}}
-.iscene h2,.intro-no{position:relative;z-index:2;transform:translateZ(200px)}
+.intro-progress span{display:block;height:100%;background:var(--cyan);transform:scaleX(0);transform-origin:left;will-change:transform}
+.intro.is-playing .intro-progress span{animation:introProgress var(--intro-len) linear both}
+@keyframes introProgress{to{transform:scaleX(1)}}
