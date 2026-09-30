@@ -18,6 +18,9 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
 - `assets/style.css` — single stylesheet, ~14 KB, no webfonts
 - `assets/app.js` — nav, reveal-on-scroll, button sheen, mailto form
+- `assets/logo.svg` — CellScope radar mark with animated sweep (header badge)
+- `assets/favicon.svg` — static radar mark (favicon, inline `.cs-logo` badges)
+- `assets/apple-touch-icon.png` — 180px render of the favicon for iOS home screens
 - `assets/radar-3d.png` — 3D storm render (used for OG previews too)
 - `assets/*.png` — graph renders
 - `assets/videos/*.mp4` — clips, `preload="none"` with poster frames
