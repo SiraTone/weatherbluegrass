@@ -244,9 +244,9 @@ p:last-child{margin-bottom:0}
 .lb tbody tr:hover{background:rgba(63,224,255,.05)}
 .lb tbody tr.is-on{background:rgba(63,224,255,.04);box-shadow:inset 3px 0 0 var(--cyan)}
 .lb-rank{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 6px;border-radius:8px;font:800 .85rem ui-monospace,Consolas,monospace;color:var(--sub);background:rgba(255,255,255,.04)}
-.lb-rank--1{color:#1a1300;background:linear-gradient(135deg,#ffe27a,#f5b90b);box-shadow:0 0 16px rgba(255,210,63,.35)}
-.lb-rank--2{color:#10151f;background:linear-gradient(135deg,#eef2f8,#aab4c4)}
-.lb-rank--3{color:#1f1206;background:linear-gradient(135deg,#f0b27a,#b8712f)}
+.lb-rank--1{color:#e8c872;background:rgba(232,200,114,.12);box-shadow:inset 0 0 0 1px rgba(232,200,114,.32)}
+.lb-rank--2{color:#c3cbd8;background:rgba(195,203,216,.1);box-shadow:inset 0 0 0 1px rgba(195,203,216,.28)}
+.lb-rank--3{color:#d69a66;background:rgba(214,154,102,.11);box-shadow:inset 0 0 0 1px rgba(214,154,102,.3)}
 .lb-model{display:flex;align-items:center;gap:10px}
 .lb-model strong{display:block;line-height:1.2}
 .lb-model small{color:var(--sub-2);font-size:.78rem}
