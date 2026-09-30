@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CellScope 3D storm view trailer</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<!--
+  Trailer for the revamped 3D / volumetric storm view.
+  Every frame is a pure function of time: window.TRAILER.seek(ms) draws it.
+  Open this page to watch it live; tools/render-seek-trailer.js renders it to MP4.
+  All storm imagery is real output from the 3D system (screenshots).
+-->
+<style>
+  :root{--bg:#02040a;--cyan:#3fe0ff;--text:#f2f6ff;--sub:#b6c1dc;--sub-2:#8d99b8;--line-2:rgba(150,180,240,.28)}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--bg);perspective:1800px}
+  .layer{position:absolute;inset:0}
+  .radar{position:absolute;left:50%;top:50%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px}
+  .radar .rings{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 149px,rgba(63,224,255,.08) 149px 150px)}
+  .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(63,224,255,.03) 310deg,rgba(63,224,255,.18) 359deg,transparent 360deg)}
+  .vignette{background:radial-gradient(ellipse at center,transparent 40%,rgba(2,4,10,.92) 100%);pointer-events:none}
+  .shot{position:absolute;left:50%;top:47%;width:1500px;transform-style:preserve-3d;visibility:hidden}
+  .shot img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid var(--line-2);box-shadow:0 40px 120px rgba(0,0,0,.75),0 0 0 1px rgba(63,224,255,.12)}
+  .shot .glint{position:absolute;inset:0;border-radius:18px;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.09) 50%,transparent 60%);background-size:300% 100%;pointer-events:none}
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+  .logo{width:150px;height:150px;border-radius:50%;box-shadow:0 0 0 2px rgba(63,224,255,.35),0 0 80px rgba(63,224,255,.35)}
+  .word{font:900 104px/1 Inter,sans-serif;letter-spacing:.08em}
+  .kicker{font:800 22px/1 ui-monospace,Consolas,monospace;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan)}
+  .cap{position:absolute;left:96px;bottom:84px;max-width:1300px;padding:26px 30px 24px;border-radius:18px;background:linear-gradient(90deg,rgba(2,4,10,.88),rgba(2,4,10,.55) 70%,transparent)}
+  .cap .no{font:800 20px/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--cyan)}
+  .cap h2{margin-top:12px;font:800 70px/1.02 Inter,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 30px rgba(0,0,0,.9)}
+  .cap p{margin-top:14px;font:600 24px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.03em;color:var(--sub)}
+  .grid{position:absolute;left:50%;top:47%;width:1640px;margin-left:-820px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;transform:translateY(-50%)}
+  .grid img{width:100%;aspect-ratio:16/9.6;object-fit:cover;border-radius:12px;border:1px solid var(--line-2);box-shadow:0 24px 60px rgba(0,0,0,.6)}
+  .grid .wide{grid-column:span 1}
+  .tagline{font:800 60px/1.05 Inter,sans-serif;letter-spacing:-.03em;max-width:1700px}
+  .sub{font:700 24px/1 ui-monospace,Consolas,monospace;letter-spacing:.2em;color:var(--sub);text-transform:uppercase}
+  [data-o]{opacity:0;visibility:hidden}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer"><div class="radar"><div class="rings"></div><div class="sweep" id="sweep"></div></div></div>
+
+  <div class="shot" id="s1"><img src="3d/volume-south.png" alt=""><div class="glint"></div></div>
+  <div class="shot" id="s2"><img src="../assets/radar-3d-volume.png" alt=""><div class="glint"></div></div>
+  <div class="shot" id="s3"><img src="../assets/radar-3d-cores.png" alt=""><div class="glint"></div></div>
+  <div class="shot" id="s4"><img src="3d/envelope.png" alt=""><div class="glint"></div></div>
+  <div class="shot" id="s5"><img src="3d/layers.png" alt=""><div class="glint"></div></div>
+
+  <div class="grid" id="grid" data-o>
+    <img src="3d/volume-south.png" alt=""><img src="../assets/radar-3d-volume.png" alt=""><img src="../assets/radar-3d-cores.png" alt="">
+    <img src="3d/envelope.png" alt=""><img src="3d/layers.png" alt="">
+    <div style="display:grid;place-items:center;border:1px dashed var(--line-2);border-radius:12px;font:800 26px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--cyan);text-align:center">ANY STORM<br>ANY TIME WINDOW</div>
+  </div>
+
+  <div class="layer vignette"></div>
+
+  <div class="center" id="title" data-o>
+    <img class="logo" id="logo1" src="../assets/logo.svg" alt="">
+    <p class="kicker">CellScope · Revamped</p>
+    <p class="word">3D STORM VIEW</p>
+  </div>
+
+  <div class="cap" id="c1" data-o><p class="no">01</p><h2>Reflectivity in true 3D.</h2><p>Level-II volume on a real dBZ scale.<br>Height axis from 10 to 50 kft.</p></div>
+  <div class="cap" id="c2" data-o><p class="no">02</p><h2>Red cores. Gold anvils.</h2><p>See where the storm is strongest,<br>and how high it reaches.</p></div>
+  <div class="cap" id="c3" data-o><p class="no">03</p><h2>Cores as solid shapes.</h2><p>Isosurfaces over a satellite basemap.</p></div>
+  <div class="cap" id="c4" data-o><p class="no">04</p><h2>The whole storm, in one shape.</h2><p>Every lobe and edge, from any side.</p></div>
+  <div class="cap" id="c5" data-o><p class="no">05</p><h2>Layer it up.</h2><p>A surface field below,<br>3D structure floating above it.</p></div>
+
+  <div class="center" id="gridCap" data-o style="justify-content:flex-end;padding-bottom:70px">
+    <p class="sub">Still frames · Turntable loops · Every angle</p>
+  </div>
+
+  <div class="center" id="end" data-o>
+    <img class="logo" src="../assets/logo.svg" alt="">
+    <p class="word" style="font-size:96px">CELLSCOPE</p>
+    <p class="tagline">See the storm the way the atmosphere sees it.</p>
+    <p class="sub" style="margin-top:10px">3D Storm Visualization</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var W = 1920, H = 1080, LEN = 37000;
+  var $ = function (id) { return document.getElementById(id); };
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function sm(v) { v = clamp(v); return v * v * (3 - 2 * v); }
+  function lerp(a, b, k) { return a + (b - a) * k; }
+  function win(t, a, b, fi, fo) { fi = fi || 600; fo = fo || 600; return sm((t - a) / fi) * (1 - sm((t - (b - fo)) / fo)); }
+  function op(id, v, dy) {
+    var e = $(id);
+    e.style.opacity = v.toFixed(3);
+    e.style.visibility = v > 0.001 ? 'visible' : 'hidden';
+    if (dy !== undefined) e.style.transform = 'translateY(' + ((1 - v) * dy).toFixed(1) + 'px)';
+  }
+
+  // Shots: [id, start, end, from{ry, rx, s, x, y}, to{...}] — slow camera moves on each render
+  var SHOTS = [
+    ['s1', 3000, 9400,  { ry: -14, rx: 10, s: .94, x: 60,  y: 20 },  { ry: 6,   rx: 4,  s: 1.06, x: -40, y: 0 }],
+    ['s2', 9000, 14800, { ry: 12,  rx: 6,  s: 1.14, x: -60, y: 10 }, { ry: -4,  rx: 2,  s: 1.0,  x: 40,  y: -10 }],
+    ['s3', 14400, 20200,{ ry: -8,  rx: 14, s: .96, x: 40,  y: 30 },  { ry: 10,  rx: 3,  s: 1.1,  x: -30, y: 0 }],
+    ['s4', 19800, 25600,{ ry: 10,  rx: 4,  s: 1.08, x: -40, y: 0 },  { ry: -10, rx: 8,  s: .98, x: 30,  y: 10 }],
+    ['s5', 25200, 30800,{ ry: -6,  rx: 12, s: .95, x: 30,  y: 20 },  { ry: 8,   rx: 2,  s: 1.08, x: -20, y: -10 }]
+  ];
+  var CAPS = [['c1', 3600, 9200], ['c2', 9500, 14600], ['c3', 14900, 20000], ['c4', 20300, 25400], ['c5', 25700, 30600]];
+
+  function seek(t) {
+    t = Math.max(0, Math.min(LEN, t));
+    $('sweep').style.transform = 'rotate(' + (t / 5000 * 360 % 360).toFixed(2) + 'deg)';
+
+    op('title', win(t, 150, 3300, 700, 600));
+    var lk = sm(t / 1500);
+    $('logo1').style.transform = 'rotateY(' + ((1 - lk) * -540).toFixed(1) + 'deg) scale(' + lerp(.4, 1, lk).toFixed(3) + ')';
+
+    SHOTS.forEach(function (sh) {
+      var e = $(sh[0]), a = sh[1], b = sh[2], v = win(t, a, b, 700, 700);
+      e.style.visibility = v > 0.001 ? 'visible' : 'hidden';
+      if (v <= 0.001) return;
+      var k = clamp((t - a) / (b - a)), f = sh[3], g = sh[4];
+      // ease-in-out camera, plus a push from depth on entry and toward camera on exit
+      var kk = k * k * (3 - 2 * k);
+      var z = (1 - sm((t - a) / 900)) * -500 + sm((t - (b - 700)) / 700) * 260;
+      e.style.opacity = v.toFixed(3);
+      e.style.transform = 'translate(-50%,-50%) translate3d(' + lerp(f.x, g.x, kk).toFixed(1) + 'px,' + lerp(f.y, g.y, kk).toFixed(1) + 'px,' + z.toFixed(1) + 'px)' +
+        ' rotateX(' + lerp(f.rx, g.rx, kk).toFixed(2) + 'deg) rotateY(' + lerp(f.ry, g.ry, kk).toFixed(2) + 'deg) scale(' + lerp(f.s, g.s, kk).toFixed(4) + ')';
+      e.querySelector('.glint').style.backgroundPosition = (lerp(120, -20, k)).toFixed(1) + '% 0';
+    });
+    CAPS.forEach(function (c) { op(c[0], win(t, c[1], c[2], 600, 500), 30); });
+
+    // Grid of every view
+    var gv = win(t, 30800, 33900, 700, 600);
+    op('grid', gv);
+    $('grid').style.transform = 'translateY(-50%) scale(' + lerp(.9, 1, sm((t - 30800) / 1200)).toFixed(4) + ')';
+    [].forEach.call($('grid').children, function (el, i) {
+      var k = sm((t - 30900 - i * 120) / 600);
+      el.style.opacity = k.toFixed(3);
+      el.style.transform = 'translateY(' + ((1 - k) * 40).toFixed(1) + 'px)';
+    });
+    op('gridCap', win(t, 31400, 33900, 600, 500));
+
+    op('end', win(t, 33900, LEN + 2000, 900), 20);
+  }
+
+  window.TRAILER = { length: LEN, seek: seek, scenes: [3, 9, 14.4, 19.8, 25.2, 30.8, 33.9] };
+
+  function fit() {
+    var s = Math.min(innerWidth / W, innerHeight / H);
+    $('stage').style.transform = 'translate(' + (-W * s / 2) + 'px,' + (-H * s / 2) + 'px) scale(' + s + ')';
+  }
+  fit(); addEventListener('resize', fit);
+  seek(0);
+  if (!window.__TRAILER_CAPTURE) {
+    var start = performance.now();
+    var play = function (now) { seek(now - start); if (now - start < LEN) requestAnimationFrame(play); };
+    requestAnimationFrame(play);
+    addEventListener('click', function () { start = performance.now(); requestAnimationFrame(play); });
+  }
+})();
+</script>
+</body>
+</html>
