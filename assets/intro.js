@@ -97,7 +97,7 @@
       '<p class="intro-no">05</p>' +
       '<h2>CellScope Radar App</h2>' +
       '<div class="intro-window"><div class="intro-bar"><i></i><i></i><i></i><span>CellScope Radar</span></div>' +
-        '<img src="assets/radar-3d.png" alt="" decoding="async"></div>' +
+        '<img src="assets/radar-3d-volume.png" alt="" decoding="async"></div>' +
       '<p class="intro-sub">Windows demo available now</p>' +
     '</section>' +
 
