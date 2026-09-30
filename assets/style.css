@@ -109,6 +109,8 @@ p:last-child{margin-bottom:0}
 .pill--green{color:var(--green);border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.06)}
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .pills .pill{margin:0}
+.news-pill{width:fit-content;justify-self:start;align-self:flex-start;margin-bottom:18px;max-width:100%;overflow:hidden;text-overflow:ellipsis;transition:background .2s,border-color .2s}
+.news-pill:hover{background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.6)}
 @keyframes blink{50%{opacity:.4}}
 
 /* Opening */
