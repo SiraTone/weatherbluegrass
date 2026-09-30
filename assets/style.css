@@ -303,3 +303,34 @@ p:last-child{margin-bottom:0}
   .product-head{align-items:flex-start}
   .callout{padding:28px 24px}
 }
+
+/* Polish pass */
+/* 5-card grids: center the orphaned last row instead of leaving a hole */
+.grid-3{grid-template-columns:repeat(6,1fr)}
+.grid-3>*{grid-column:span 2}
+.grid-3>:last-child:nth-child(3n+2){grid-column:span 2}
+.grid-3>:nth-last-child(2):nth-child(3n+1){grid-column:2 / span 2}
+.grid-3>:last-child:nth-child(3n+2){grid-column:4 / span 2}
+.grid-3>:last-child:nth-child(3n+1){grid-column:3 / span 2}
+.grid-3>:nth-last-child(2):nth-child(3n+1):nth-child(1){grid-column:span 2}
+
+.pcard{background:radial-gradient(120% 80% at 50% 0,rgba(63,224,255,.07),transparent 60%),linear-gradient(180deg,var(--panel-2),var(--panel))}
+.pcard p.pill{margin:0}
+.section-head h2,.split h2{margin-bottom:14px}
+.split .lede{margin-bottom:0}
+.opening h1{background:linear-gradient(180deg,#fff 30%,#b9c8ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.opening-copy .eyebrow{font-size:.85rem}
+.callout{box-shadow:var(--shadow)}
+.site-header{box-shadow:0 1px 30px rgba(0,0,0,.35)}
+.section{padding:88px 0}
+.site-footer{background:linear-gradient(180deg,transparent,rgba(7,11,22,.8))}
+
+@media(max-width:820px){
+  .grid-3>*,.grid-3>:last-child:nth-child(n),.grid-3>:nth-last-child(2):nth-child(n){grid-column:1 / -1!important}
+  .grid-3{grid-template-columns:1fr}
+  .section{padding:60px 0}
+  .cs-tag{position:static;margin:0;border-radius:0;border:0;border-top:1px solid var(--line);white-space:normal;max-width:none;font-size:.7rem;letter-spacing:.1em;background:rgba(4,6,12,.9)}
+  .opening-media{height:auto;display:flex;flex-direction:column}
+  .opening-media img{height:260px}
+  .eyebrow{font-size:.85rem;letter-spacing:.14em}
+}
