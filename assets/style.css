@@ -369,10 +369,10 @@ body::before{background:
 .intro-word{margin:0;font:900 clamp(2.6rem,9vw,6.5rem)/1 Inter,sans-serif;letter-spacing:.08em}
 .iscene.on .intro-word{animation:introTrack 2.8s var(--ease) both}
 @keyframes introTrack{from{letter-spacing:.6em;opacity:0}to{letter-spacing:.08em;opacity:1}}
-.intro-badge{display:grid;place-items:center;width:120px;height:120px;border-radius:50%;border:4px solid #fff;background:radial-gradient(circle at 32% 28%,#232f5c,#04060c 72%);font:900 italic 2.8rem/1 Inter,sans-serif;box-shadow:0 0 0 3px rgba(63,224,255,.45),0 0 60px rgba(63,224,255,.35)}
+.intro-badge{display:block;width:120px;height:120px;border-radius:50%;box-shadow:0 0 0 2px rgba(63,224,255,.35),0 0 60px rgba(63,224,255,.35)}
 .iscene.on .intro-badge{animation:introSpin 1.6s var(--ease) both}
 @keyframes introSpin{from{transform:rotateY(-540deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
-.intro-badge--sm{width:72px;height:72px;font-size:1.6rem;border-width:3px}
+.intro-badge--sm{width:72px;height:72px}
 .intro-ring{position:relative;width:min(300px,56vw);aspect-ratio:16/10;margin-top:40px;transform-style:preserve-3d}
 .iscene.on .intro-ring{animation:introRing 3.8s linear both}
 @keyframes introRing{from{transform:rotateX(-8deg) rotateY(0)}to{transform:rotateX(-8deg) rotateY(-120deg)}}

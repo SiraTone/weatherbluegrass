@@ -26,7 +26,7 @@
     '<div class="intro-stage">' +
 
     '<section class="iscene" data-id="logo">' +
-      '<div class="intro-badge"><span>CS</span></div>' +
+      '<img class="intro-badge" src="assets/logo.svg" width="120" height="120" alt="">' +
       '<p class="intro-word">CELLSCOPE</p>' +
       '<p class="intro-kicker">First release · 2026</p>' +
     '</section>' +
@@ -76,7 +76,7 @@
     '</section>' +
 
     '<section class="iscene" data-id="final">' +
-      '<div class="intro-badge intro-badge--sm"><span>CS</span></div>' +
+      '<img class="intro-badge intro-badge--sm" src="assets/logo.svg" width="72" height="72" alt="">' +
       '<h2>See the storm the way the atmosphere sees it.</h2>' +
       '<p class="intro-sub">Five products. One look. First release.</p>' +
       '<button class="btn intro-enter" type="button">Enter site <span class="arr">→</span></button>' +
