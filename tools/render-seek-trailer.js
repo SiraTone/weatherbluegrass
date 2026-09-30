@@ -1,5 +1,7 @@
-// Renders a trailer page that exposes window.TRAILER = { length, seek(ms), scenes } to MP4
-// (1080p60, H.264 + AAC) with the CellScope score from assets/intro-music.js.
+// Renders a trailer page that exposes window.TRAILER = { length, seek(ms), scenes, music? } to MP4
+// (1080p60, H.264 + AAC). Audio is the CellScope score from assets/intro-music.js unless the page
+// sets TRAILER.music = { src, global, peakDb, fadeIn }: src is a script path relative to the repo
+// root exposing window[global].score(ctx, dest, fromMs), rendered then normalized to peakDb.
 // seek(ms) must draw the whole frame for that time, so capture is frame-exact.
 //
 // Usage: FFMPEG=/path/to/ffmpeg node tools/render-seek-trailer.js trailers/canada-radar.html downloads/Out.mp4
@@ -37,7 +39,7 @@ function run(args, feed) {
   await page.goto('file://' + PAGE);
   await page.waitForFunction(() => window.TRAILER);
   await page.evaluate(() => Promise.all([...document.images].map(i => i.decode().catch(() => {}))));
-  const { length, scenes } = await page.evaluate(() => ({ length: TRAILER.length, scenes: TRAILER.scenes || [] }));
+  const { length, scenes, music } = await page.evaluate(() => ({ length: TRAILER.length, scenes: TRAILER.scenes || [], music: TRAILER.music || null }));
 
   const frames = Math.round(length / 1000 * FPS);
   const video = path.join(tmp, 'video.mp4');
@@ -52,17 +54,25 @@ function run(args, feed) {
     stdin.end();
   });
 
-  await page.addScriptTag({ path: path.join(ROOT, 'assets', 'intro-music.js') });
-  const wav = await page.evaluate(async ({ length, scenes, VOLUME }) => {
+  await page.addScriptTag({ path: path.join(ROOT, music ? music.src : 'assets/intro-music.js') });
+  const wav = await page.evaluate(async ({ length, scenes, VOLUME, music }) => {
     const sr = 48000, secs = length / 1000, ctx = new OfflineAudioContext(2, Math.round(sr * secs), sr);
     const g = ctx.createGain();
-    g.gain.setValueAtTime(0, 0);
-    g.gain.linearRampToValueAtTime(VOLUME, 1.5);
-    g.gain.setValueAtTime(VOLUME, secs - 2);
+    const vol = music ? 1 : VOLUME, fadeIn = music ? (music.fadeIn || 0) : 1.5;
+    g.gain.setValueAtTime(fadeIn ? 0 : vol, 0);
+    if (fadeIn) g.gain.linearRampToValueAtTime(vol, fadeIn);
+    g.gain.setValueAtTime(vol, secs - 2);
     g.gain.linearRampToValueAtTime(0, secs);
     g.connect(ctx.destination);
-    CellScopeIntroMusic.score(ctx, g, 0, { length: secs - 2, scenes });
+    if (music) window[music.global].score(ctx, g, 0);
+    else CellScopeIntroMusic.score(ctx, g, 0, { length: secs - 2, scenes });
     const buf = await ctx.startRendering(), n = buf.length, L = buf.getChannelData(0), R = buf.getChannelData(1);
+    if (music && music.peakDb !== undefined) {
+      let pk = 0;
+      for (let i = 0; i < n; i++) pk = Math.max(pk, Math.abs(L[i]), Math.abs(R[i]));
+      const k = pk ? Math.pow(10, music.peakDb / 20) / pk : 1;
+      for (let i = 0; i < n; i++) { L[i] *= k; R[i] *= k; }
+    }
     const out = new DataView(new ArrayBuffer(44 + n * 4));
     const w = (o, s) => { for (let i = 0; i < s.length; i++) out.setUint8(o + i, s.charCodeAt(i)); };
     w(0, 'RIFF'); out.setUint32(4, 36 + n * 4, true); w(8, 'WAVEfmt '); out.setUint32(16, 16, true);
@@ -73,7 +83,7 @@ function run(args, feed) {
       out.setInt16(46 + i * 4, Math.max(-1, Math.min(1, R[i])) * 32767, true);
     }
     return Array.from(new Uint8Array(out.buffer));
-  }, { length, scenes, VOLUME });
+  }, { length, scenes, VOLUME, music });
   const audio = path.join(tmp, 'audio.wav');
   fs.writeFileSync(audio, Buffer.from(wav));
   await browser.close();

@@ -7,146 +7,296 @@
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <!--
-  Trailer for the revamped 3D / volumetric storm view.
+  Social trailer for the revamped 3D / volumetric storm view. Not linked from the site.
+  Cut to trailers/music-upbeat.js at 128 BPM: every cut, punch and word lands on a beat.
   Every frame is a pure function of time: window.TRAILER.seek(ms) draws it.
-  Open this page to watch it live; tools/render-seek-trailer.js renders it to MP4.
+  Open this page to watch it (click to restart); tools/render-seek-trailer.js renders it to MP4.
   All storm imagery is real output from the 3D system (screenshots).
 -->
 <style>
-  :root{--bg:#02040a;--cyan:#3fe0ff;--text:#f2f6ff;--sub:#b6c1dc;--sub-2:#8d99b8;--line-2:rgba(150,180,240,.28)}
+  :root{--bg:#02040a;--cyan:#3fe0ff;--text:#f2f6ff;--sub:#b6c1dc;--line-2:rgba(150,180,240,.28)}
   *{box-sizing:border-box;margin:0}
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
-  #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--bg);perspective:1800px}
-  .layer{position:absolute;inset:0}
+  html,body{height:100%;background:#000;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+  #stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;background:var(--bg);perspective:1600px}
+  .layer{position:absolute;inset:0;pointer-events:none}
   .radar{position:absolute;left:50%;top:50%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px}
-  .radar .rings{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 149px,rgba(63,224,255,.08) 149px 150px)}
-  .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(63,224,255,.03) 310deg,rgba(63,224,255,.18) 359deg,transparent 360deg)}
-  .vignette{background:radial-gradient(ellipse at center,transparent 40%,rgba(2,4,10,.92) 100%);pointer-events:none}
-  .shot{position:absolute;left:50%;top:47%;width:1500px;transform-style:preserve-3d;visibility:hidden}
-  .shot img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid var(--line-2);box-shadow:0 40px 120px rgba(0,0,0,.75),0 0 0 1px rgba(63,224,255,.12)}
-  .shot .glint{position:absolute;inset:0;border-radius:18px;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.09) 50%,transparent 60%);background-size:300% 100%;pointer-events:none}
-  .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
-  .logo{width:150px;height:150px;border-radius:50%;box-shadow:0 0 0 2px rgba(63,224,255,.35),0 0 80px rgba(63,224,255,.35)}
-  .word{font:900 104px/1 Inter,sans-serif;letter-spacing:.08em}
-  .kicker{font:800 22px/1 ui-monospace,Consolas,monospace;letter-spacing:.4em;text-transform:uppercase;color:var(--cyan)}
-  .cap{position:absolute;left:96px;bottom:84px;max-width:1300px;padding:26px 30px 24px;border-radius:18px;background:linear-gradient(90deg,rgba(2,4,10,.88),rgba(2,4,10,.55) 70%,transparent)}
-  .cap .no{font:800 20px/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--cyan)}
-  .cap h2{margin-top:12px;font:800 70px/1.02 Inter,sans-serif;letter-spacing:-.03em;text-shadow:0 4px 30px rgba(0,0,0,.9)}
-  .cap p{margin-top:14px;font:600 24px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.03em;color:var(--sub)}
-  .grid{position:absolute;left:50%;top:47%;width:1640px;margin-left:-820px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;transform:translateY(-50%)}
-  .grid img{width:100%;aspect-ratio:16/9.6;object-fit:cover;border-radius:12px;border:1px solid var(--line-2);box-shadow:0 24px 60px rgba(0,0,0,.6)}
-  .grid .wide{grid-column:span 1}
-  .tagline{font:800 60px/1.05 Inter,sans-serif;letter-spacing:-.03em;max-width:1700px}
-  .sub{font:700 24px/1 ui-monospace,Consolas,monospace;letter-spacing:.2em;color:var(--sub);text-transform:uppercase}
-  [data-o]{opacity:0;visibility:hidden}
+  .radar .rings{position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,transparent 0 149px,rgba(63,224,255,.1) 149px 150px)}
+  .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 290deg,rgba(63,224,255,.03) 310deg,rgba(63,224,255,.2) 359deg,transparent 360deg)}
+  .glow{background:radial-gradient(ellipse at 50% 55%,rgba(63,224,255,.16),transparent 60%)}
+  .vignette{background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.85) 100%)}
+  .flash{background:#e8fbff;opacity:0}
+  .bars{background:linear-gradient(#000 0 70px,transparent 70px calc(100% - 70px),#000 calc(100% - 70px))}
+  .shot{position:absolute;left:50%;top:50%;width:1760px;transform-style:preserve-3d;visibility:hidden;will-change:transform}
+  .shot img{display:block;width:100%;height:auto;border-radius:20px;box-shadow:0 50px 140px rgba(0,0,0,.8),0 0 0 1px rgba(63,224,255,.18)}
+  /* kinetic type */
+  .kin{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:.28em;font:900 150px/1 Inter,sans-serif;letter-spacing:-.04em;text-transform:uppercase;text-shadow:0 8px 60px rgba(0,0,0,.9);visibility:hidden}
+  .kin span{display:inline-block;opacity:0;will-change:transform}
+  .kin .c{color:var(--cyan)}
+  .kin--mid{top:50%;margin-top:-75px}
+  .kin--sm{font-size:112px;margin-top:-56px}
+  .cap{position:absolute;left:110px;bottom:130px;visibility:hidden}
+  .cap .no{font:800 24px/1 ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--cyan)}
+  .cap h2{margin-top:14px;font:900 132px/.92 Inter,sans-serif;letter-spacing:-.045em;text-transform:uppercase;text-shadow:0 8px 60px rgba(0,0,0,.95)}
+  .cap p{margin-top:18px;display:inline-block;padding:10px 16px;border-radius:8px;background:rgba(2,4,10,.78);font:700 26px/1 ui-monospace,Consolas,monospace;letter-spacing:.08em;color:var(--sub)}
+  .lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;visibility:hidden}
+  .lock img{width:190px;height:190px;border-radius:50%}
+  .lock .word{font:900 150px/1 Inter,sans-serif;letter-spacing:.06em;text-shadow:0 10px 60px rgba(0,0,0,.9)}
+  .lock .word b{color:var(--cyan);font-weight:900}
+  .lock .kick{font:800 26px/1 ui-monospace,Consolas,monospace;letter-spacing:.42em;color:var(--cyan)}
+  .mosaic{position:absolute;left:50%;top:50%;width:1680px;margin:-400px 0 0 -840px;display:flex;flex-wrap:wrap;justify-content:center;gap:24px;visibility:hidden}
+  .mosaic img{width:544px;aspect-ratio:16/9.6;object-fit:cover;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 0 1px rgba(63,224,255,.2);opacity:0}
+  .q{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;visibility:hidden}
+  .q .line{font:900 150px/1 Inter,sans-serif;letter-spacing:-.04em;text-transform:uppercase;opacity:0}
+  .q .line.c{color:var(--cyan)}
+  .q .ask{margin-top:34px;padding:16px 30px;border-radius:999px;border:2px solid var(--cyan);font:800 34px/1 Inter,sans-serif;color:var(--text);background:rgba(63,224,255,.1);opacity:0}
+  .cta{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;visibility:hidden}
+  .cta img{width:170px;height:170px;border-radius:50%}
+  .cta .word{font:900 128px/1 Inter,sans-serif;letter-spacing:.08em}
+  .cta .tag{font:800 50px/1.1 Inter,sans-serif;letter-spacing:-.02em;color:var(--sub)}
+  .cta .row{display:flex;gap:18px;margin-top:26px}
+  .cta .pill{padding:16px 28px;border-radius:999px;font:800 30px/1 Inter,sans-serif;opacity:0}
+  .cta .pill.pri{background:var(--cyan);color:#02040a}
+  .cta .pill.sec{border:2px solid var(--line-2);color:var(--text);background:rgba(10,17,32,.8)}
+  .cta .url{margin-top:6px;font:700 26px/1 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--sub)}
 </style>
 </head>
 <body>
 <div id="stage">
-  <div class="layer"><div class="radar"><div class="rings"></div><div class="sweep" id="sweep"></div></div></div>
+  <div class="layer" id="bgWrap"><div class="radar" id="radar"><div class="rings"></div><div class="sweep" id="sweep"></div></div></div>
+  <div class="layer glow" id="glow"></div>
 
-  <div class="shot" id="s1"><img src="3d/volume-south.png" alt=""><div class="glint"></div></div>
-  <div class="shot" id="s2"><img src="../assets/radar-3d-volume.png" alt=""><div class="glint"></div></div>
-  <div class="shot" id="s3"><img src="../assets/radar-3d-cores.png" alt=""><div class="glint"></div></div>
-  <div class="shot" id="s4"><img src="3d/envelope.png" alt=""><div class="glint"></div></div>
-  <div class="shot" id="s5"><img src="3d/layers.png" alt=""><div class="glint"></div></div>
+  <div class="shot" id="s1"><img src="3d/volume-south.png" alt=""></div>
+  <div class="shot" id="s2"><img src="../assets/radar-3d-volume.png" alt=""></div>
+  <div class="shot" id="s3"><img src="../assets/radar-3d-cores.png" alt=""></div>
+  <div class="shot" id="s4"><img src="3d/envelope.png" alt=""></div>
+  <div class="shot" id="s5"><img src="3d/layers.png" alt=""></div>
 
-  <div class="grid" id="grid" data-o>
+  <div class="mosaic" id="mosaic">
     <img src="3d/volume-south.png" alt=""><img src="../assets/radar-3d-volume.png" alt=""><img src="../assets/radar-3d-cores.png" alt="">
     <img src="3d/envelope.png" alt=""><img src="3d/layers.png" alt="">
-    <div style="display:grid;place-items:center;border:1px dashed var(--line-2);border-radius:12px;font:800 26px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--cyan);text-align:center">ANY STORM<br>ANY TIME WINDOW</div>
   </div>
 
   <div class="layer vignette"></div>
 
-  <div class="center" id="title" data-o>
-    <img class="logo" id="logo1" src="../assets/logo.svg" alt="">
-    <p class="kicker">CellScope · Revamped</p>
-    <p class="word">3D STORM VIEW</p>
+  <!-- kinetic lines: data-b = beat each word lands on -->
+  <div class="kin kin--mid" id="k1"><span data-b="0">This</span><span data-b="1">is</span><span data-b="2">a</span><span data-b="3" class="c">storm.</span></div>
+  <div class="kin kin--mid" id="k2"><span data-b="4">From</span><span data-b="5">the</span><span data-b="6" class="c">inside.</span></div>
+  <div class="kin kin--mid" id="k3"><span data-b="8">Most</span><span data-b="9">radar</span><span data-b="10">is</span><span data-b="11" class="c">flat.</span></div>
+  <div class="kin kin--mid kin--sm" id="k4"><span data-b="12">We</span><span data-b="12.5">added</span><span data-b="13">a</span><span data-b="13.5">third</span><span data-b="14" class="c">dimension.</span></div>
+
+  <div class="lock" id="lock">
+    <img id="lockLogo" src="../assets/logo.svg" alt="">
+    <p class="word" id="lockWord">CELLSCOPE <b>3D</b></p>
+    <p class="kick" id="lockKick">3D STORM VISUALIZATION</p>
   </div>
 
-  <div class="cap" id="c1" data-o><p class="no">01</p><h2>Reflectivity in true 3D.</h2><p>Level-II volume on a real dBZ scale.<br>Height axis from 10 to 50 kft.</p></div>
-  <div class="cap" id="c2" data-o><p class="no">02</p><h2>Red cores. Gold anvils.</h2><p>See where the storm is strongest,<br>and how high it reaches.</p></div>
-  <div class="cap" id="c3" data-o><p class="no">03</p><h2>Cores as solid shapes.</h2><p>Isosurfaces over a satellite basemap.</p></div>
-  <div class="cap" id="c4" data-o><p class="no">04</p><h2>The whole storm, in one shape.</h2><p>Every lobe and edge, from any side.</p></div>
-  <div class="cap" id="c5" data-o><p class="no">05</p><h2>Layer it up.</h2><p>A surface field below,<br>3D structure floating above it.</p></div>
+  <div class="layer" id="capShade" style="background:linear-gradient(35deg,rgba(0,0,0,.82) 0,rgba(0,0,0,.45) 30%,transparent 55%);opacity:0"></div>
+  <div class="cap" id="c1"><p class="no">01 / 05</p><h2>10 to 50<br>kft.</h2><p>Height-tagged reflectivity</p></div>
+  <div class="cap" id="c2"><p class="no">02 / 05</p><h2>See the<br>core.</h2><p>Real dBZ scale</p></div>
+  <div class="cap" id="c3"><p class="no">03 / 05</p><h2>Solid<br>shapes.</h2><p>Isosurfaces over satellite</p></div>
+  <div class="cap" id="c4"><p class="no">04 / 05</p><h2>The whole<br>storm.</h2><p>Every lobe. Every edge.</p></div>
+  <div class="cap" id="c5"><p class="no">05 / 05</p><h2>Layer<br>it up.</h2><p>Surface below. Structure above.</p></div>
 
-  <div class="center" id="gridCap" data-o style="justify-content:flex-end;padding-bottom:70px">
-    <p class="sub">Still frames · Turntable loops · Every angle</p>
+  <div class="kin kin--mid" id="kAngle" style="top:auto;bottom:70px;margin:0;font-size:120px"><span data-b="46" class="c">Every</span><span data-b="47">angle.</span></div>
+
+  <div class="q" id="q">
+    <p class="line" data-b="48">Which storm</p>
+    <p class="line" data-b="50">should we</p>
+    <p class="line c" data-b="52">render next?</p>
+    <p class="ask" data-b="54">Tell us in the comments</p>
   </div>
 
-  <div class="center" id="end" data-o>
-    <img class="logo" src="../assets/logo.svg" alt="">
-    <p class="word" style="font-size:96px">CELLSCOPE</p>
-    <p class="tagline">See the storm the way the atmosphere sees it.</p>
-    <p class="sub" style="margin-top:10px">3D Storm Visualization</p>
+  <div class="cta" id="cta">
+    <img id="ctaLogo" src="../assets/logo.svg" alt="">
+    <p class="word">CELLSCOPE</p>
+    <p class="tag">See the storm the way the atmosphere sees it.</p>
+    <div class="row">
+      <span class="pill pri" data-b="58">Try the Windows demo</span>
+      <span class="pill sec" data-b="59">Follow @CellScopeRadar</span>
+    </div>
+    <p class="url" id="ctaUrl">bluegrasstransport.site</p>
   </div>
+
+  <div class="layer bars"></div>
+  <div class="layer flash" id="flash"></div>
 </div>
 
 <script>
 (function () {
   'use strict';
-  var W = 1920, H = 1080, LEN = 37000;
+  var W = 1920, H = 1080;
+  var B = 60000 / 128, BAR = 4 * B;            // 468.75 ms beat, 1875 ms bar
+  var LEN = 16 * BAR + 1500;                    // 31.5 s
   var $ = function (id) { return document.getElementById(id); };
   function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
-  function sm(v) { v = clamp(v); return v * v * (3 - 2 * v); }
   function lerp(a, b, k) { return a + (b - a) * k; }
-  function win(t, a, b, fi, fo) { fi = fi || 600; fo = fo || 600; return sm((t - a) / fi) * (1 - sm((t - (b - fo)) / fo)); }
-  function op(id, v, dy) {
-    var e = $(id);
-    e.style.opacity = v.toFixed(3);
-    e.style.visibility = v > 0.001 ? 'visible' : 'hidden';
-    if (dy !== undefined) e.style.transform = 'translateY(' + ((1 - v) * dy).toFixed(1) + 'px)';
+  function outCubic(k) { k = clamp(k); return 1 - Math.pow(1 - k, 3); }
+  function outBack(k) { k = clamp(k); var c = 1.9; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }
+  function inOut(k) { k = clamp(k); return k * k * (3 - 2 * k); }
+  function beat(n) { return n * B; }
+  function show(el, v) { el.style.visibility = v ? 'visible' : 'hidden'; }
+
+  // Drop sections (for beat pulses): bars 4-11 and 14-15
+  function inDrop(t) { var b = t / BAR; return (b >= 4 && b < 12) || (b >= 14 && b < 15.25); }
+  function pulse(t) { if (!inDrop(t)) return 0; return Math.exp(-(t % B) / 110); }
+
+  // Word slam: scale from big to 1 with overshoot, quick fade in
+  function slam(el, t, at) {
+    var k = (t - at) / 190;
+    if (k < 0) { el.style.opacity = 0; return; }
+    el.style.opacity = clamp(k * 2.5).toFixed(3);
+    var s = lerp(1.9, 1, outBack(k));
+    el.style.transform = 'scale(' + s.toFixed(4) + ') translateY(' + ((1 - outCubic(k)) * -20).toFixed(1) + 'px)';
+  }
+  function kin(id, t, from, to) {
+    var el = $(id), vis = t >= from && t < to;
+    show(el, vis);
+    if (!vis) return;
+    var out = clamp((t - (to - 140)) / 140);
+    el.style.opacity = (1 - out).toFixed(3);
+    el.style.transform = 'scale(' + (1 + out * 0.12).toFixed(4) + ')';
+    [].forEach.call(el.children, function (s) { slam(s, t, beat(+s.getAttribute('data-b'))); });
   }
 
-  // Shots: [id, start, end, from{ry, rx, s, x, y}, to{...}] — slow camera moves on each render
-  var SHOTS = [
-    ['s1', 3000, 9400,  { ry: -14, rx: 10, s: .94, x: 60,  y: 20 },  { ry: 6,   rx: 4,  s: 1.06, x: -40, y: 0 }],
-    ['s2', 9000, 14800, { ry: 12,  rx: 6,  s: 1.14, x: -60, y: 10 }, { ry: -4,  rx: 2,  s: 1.0,  x: 40,  y: -10 }],
-    ['s3', 14400, 20200,{ ry: -8,  rx: 14, s: .96, x: 40,  y: 30 },  { ry: 10,  rx: 3,  s: 1.1,  x: -30, y: 0 }],
-    ['s4', 19800, 25600,{ ry: 10,  rx: 4,  s: 1.08, x: -40, y: 0 },  { ry: -10, rx: 8,  s: .98, x: 30,  y: 10 }],
-    ['s5', 25200, 30800,{ ry: -6,  rx: 12, s: .95, x: 30,  y: 20 },  { ry: 8,   rx: 2,  s: 1.08, x: -20, y: -10 }]
-  ];
-  var CAPS = [['c1', 3600, 9200], ['c2', 9500, 14600], ['c3', 14900, 20000], ['c4', 20300, 25400], ['c5', 25700, 30600]];
+  // Shot camera: punch in on the cut, drift across the bar, bump on beats
+  function shot(id, t, from, to, cam, extra) {
+    var el = $(id), vis = t >= from && t < to;
+    if (!vis) return;
+    show(el, true);
+    var k = (t - from) / (to - from), punch = 1 - outCubic((t - from) / 320);
+    var s = lerp(cam.s0, cam.s1, inOut(k)) + punch * 0.16 + pulse(t) * 0.012;
+    var ry = lerp(cam.ry0, cam.ry1, inOut(k)), rx = lerp(cam.rx0, cam.rx1, inOut(k));
+    var x = lerp(cam.x0, cam.x1, inOut(k)) + punch * (cam.px || 0);
+    var tr = 'translate(-50%,-50%) translate3d(' + x.toFixed(1) + 'px,' + (cam.y || 0) + 'px,0) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) scale(' + s.toFixed(4) + ')';
+    if (extra) tr += extra;
+    el.style.transform = tr;
+    el.style.opacity = 1;
+  }
+  function cap(id, t, from, to) {
+    var el = $(id), vis = t >= from && t < to;
+    show(el, vis);
+    if (!vis) return;
+    var k = (t - from) / 260, out = clamp((t - (to - 150)) / 150);
+    el.style.opacity = (clamp(k * 2) * (1 - out)).toFixed(3);
+    el.style.transform = 'translateX(' + ((1 - outCubic(k)) * -120 + out * -60).toFixed(1) + 'px)';
+    var h = el.querySelector('h2');
+    h.style.transform = 'scale(' + lerp(1.25, 1, outBack((t - from) / 260)).toFixed(4) + ')';
+    h.style.transformOrigin = '0 100%';
+  }
+
+  var CUTS = [0, 4 * BAR, 6 * BAR, 7 * BAR, 8 * BAR, 9 * BAR, 10 * BAR, 11 * BAR, 12 * BAR, 14 * BAR];
 
   function seek(t) {
     t = Math.max(0, Math.min(LEN, t));
-    $('sweep').style.transform = 'rotate(' + (t / 5000 * 360 % 360).toFixed(2) + 'deg)';
+    ['s1', 's2', 's3', 's4', 's5'].forEach(function (id) { show($(id), false); });
 
-    op('title', win(t, 150, 3300, 700, 600));
-    var lk = sm(t / 1500);
-    $('logo1').style.transform = 'rotateY(' + ((1 - lk) * -540).toFixed(1) + 'deg) scale(' + lerp(.4, 1, lk).toFixed(3) + ')';
+    // background: sweep, beat-pumped rings and glow
+    var p = pulse(t);
+    $('sweep').style.transform = 'rotate(' + (t / 3500 * 360 % 360).toFixed(2) + 'deg)';
+    $('radar').style.transform = 'scale(' + (1 + p * 0.035).toFixed(4) + ')';
+    $('glow').style.opacity = (0.35 + p * 0.65).toFixed(3);
 
-    SHOTS.forEach(function (sh) {
-      var e = $(sh[0]), a = sh[1], b = sh[2], v = win(t, a, b, 700, 700);
-      e.style.visibility = v > 0.001 ? 'visible' : 'hidden';
-      if (v <= 0.001) return;
-      var k = clamp((t - a) / (b - a)), f = sh[3], g = sh[4];
-      // ease-in-out camera, plus a push from depth on entry and toward camera on exit
-      var kk = k * k * (3 - 2 * k);
-      var z = (1 - sm((t - a) / 900)) * -500 + sm((t - (b - 700)) / 700) * 260;
-      e.style.opacity = v.toFixed(3);
-      e.style.transform = 'translate(-50%,-50%) translate3d(' + lerp(f.x, g.x, kk).toFixed(1) + 'px,' + lerp(f.y, g.y, kk).toFixed(1) + 'px,' + z.toFixed(1) + 'px)' +
-        ' rotateX(' + lerp(f.rx, g.rx, kk).toFixed(2) + 'deg) rotateY(' + lerp(f.ry, g.ry, kk).toFixed(2) + 'deg) scale(' + lerp(f.s, g.s, kk).toFixed(4) + ')';
-      e.querySelector('.glint').style.backgroundPosition = (lerp(120, -20, k)).toFixed(1) + '% 0';
+    // flash on every cut
+    var f = 0;
+    CUTS.forEach(function (c) { if (t >= c) f = Math.max(f, Math.exp(-(t - c) / 90) * (c === 4 * BAR || c === 14 * BAR ? 0.85 : 0.45)); });
+    $('flash').style.opacity = f.toFixed(3);
+
+    // --- 0-2 bars: hook. Storm on screen from frame one.
+    var hookEnd = 2 * BAR, flatEnd = 4 * BAR;
+    shot('s1', t, 0, flatEnd, { s0: 1.02, s1: 1.1, ry0: -10, ry1: 6, rx0: 8, rx1: 4, x0: 40, x1: -40, y: 30 },
+      t >= hookEnd ? flatten(t) : '');
+    $('s1').querySelector('img').style.filter = t < hookEnd ? 'brightness(.62)' : 'brightness(.5) grayscale(' + clamp((t - hookEnd) / 400).toFixed(2) + ')';
+    kin('k1', t, 0, BAR);
+    kin('k2', t, BAR, 2 * BAR);
+    // --- 2-4: "most radar is flat" — storm squashes to a sliver
+    kin('k3', t, 2 * BAR, 3 * BAR);
+    kin('k4', t, 3 * BAR, 4 * BAR - 60);
+
+    // --- 4-6: the drop. Storm springs back into 3D, logo lockup.
+    shot('s2', t, 4 * BAR, 6 * BAR, { s0: 1.0, s1: 1.08, ry0: 8, ry1: -6, rx0: 6, rx1: 2, x0: 0, x1: 0, y: 40 },
+      ' scaleY(' + lerp(0.05, 1, outBack((t - 4 * BAR) / 520)).toFixed(4) + ')');
+    $('s2').querySelector('img').style.filter = 'brightness(' + lerp(1, 0.42, clamp((t - 4 * BAR - 700) / 500)).toFixed(3) + ')';
+    var lv = t >= 4 * BAR + 700 && t < 6 * BAR;
+    show($('lock'), lv);
+    if (lv) {
+      var lk = (t - (4 * BAR + 700)) / 600, out = clamp((t - (6 * BAR - 150)) / 150);
+      $('lock').style.opacity = (1 - out).toFixed(3);
+      $('lockLogo').style.transform = 'rotateY(' + ((1 - outCubic(lk)) * -540).toFixed(1) + 'deg) scale(' + (lerp(0.3, 1, outBack(lk)) + pulse(t) * 0.05).toFixed(4) + ')';
+      $('lockLogo').style.boxShadow = '0 0 0 3px rgba(63,224,255,.4),0 0 ' + (60 + pulse(t) * 90).toFixed(0) + 'px rgba(63,224,255,.55)';
+      slam($('lockWord'), t, 5 * BAR - B * 2);
+      $('lockKick').style.opacity = clamp((t - 5 * BAR) / 300).toFixed(3);
+    }
+
+    // --- 6-11: montage, one render per bar
+    var M = [['s1', 'c1', { s0: 1.08, s1: 1.0, ry0: -12, ry1: 4, rx0: 10, rx1: 5, x0: 80, x1: 200, y: -40, px: 60 }],
+             ['s2', 'c2', { s0: 1.25, s1: 1.14, ry0: 10, ry1: -4, rx0: 4, rx1: 2, x0: 140, x1: 60, y: 0, px: -80 }],
+             ['s3', 'c3', { s0: 1.0, s1: 1.1, ry0: -6, ry1: 10, rx0: 12, rx1: 4, x0: 220, x1: 120, y: -20, px: 60 }],
+             ['s4', 'c4', { s0: 1.1, s1: 1.0, ry0: 12, ry1: -8, rx0: 4, rx1: 8, x0: 160, x1: 240, y: -30, px: -60 }],
+             ['s5', 'c5', { s0: 1.0, s1: 1.1, ry0: -8, ry1: 8, rx0: 10, rx1: 3, x0: 240, x1: 140, y: -40, px: 60 }]];
+    M.forEach(function (m, i) {
+      var a = (6 + i) * BAR, b = a + BAR;
+      if (t >= a && t < b) {
+        shot(m[0], t, a, b, m[2]);
+        $(m[0]).querySelector('img').style.filter = 'brightness(1)';
+      }
+      cap(m[1], t, a, b);
     });
-    CAPS.forEach(function (c) { op(c[0], win(t, c[1], c[2], 600, 500), 30); });
 
-    // Grid of every view
-    var gv = win(t, 30800, 33900, 700, 600);
-    op('grid', gv);
-    $('grid').style.transform = 'translateY(-50%) scale(' + lerp(.9, 1, sm((t - 30800) / 1200)).toFixed(4) + ')';
-    [].forEach.call($('grid').children, function (el, i) {
-      var k = sm((t - 30900 - i * 120) / 600);
-      el.style.opacity = k.toFixed(3);
-      el.style.transform = 'translateY(' + ((1 - k) * 40).toFixed(1) + 'px)';
-    });
-    op('gridCap', win(t, 31400, 33900, 600, 500));
+    var sh = clamp((t - 6 * BAR) / 200) * (1 - clamp((t - (11 * BAR - 150)) / 150));
+    $('capShade').style.opacity = sh.toFixed(3);
 
-    op('end', win(t, 33900, LEN + 2000, 900), 20);
+    // --- 11: mosaic, tiles land on eighth notes; "Every angle."
+    var ma = 11 * BAR, mb = 12 * BAR, mv = t >= ma && t < mb;
+    show($('mosaic'), mv);
+    if (mv) {
+      var mo = clamp((t - (mb - 200)) / 200);
+      $('mosaic').style.transform = 'scale(' + (1 + mo * 0.25 + pulse(t) * 0.01).toFixed(4) + ')';
+      $('mosaic').style.opacity = (1 - mo).toFixed(3);
+      [].forEach.call($('mosaic').children, function (el, i) {
+        var k = (t - (ma + i * B / 2)) / 240;
+        el.style.opacity = clamp(k * 2).toFixed(3);
+        el.style.transform = 'translateY(' + ((1 - outCubic(k)) * 80).toFixed(1) + 'px) scale(' + lerp(0.8, 1, outBack(k)).toFixed(4) + ')';
+      });
+    }
+    kin('kAngle', t, 11 * BAR + B * 2, mb);
+
+    // --- 12-14: breakdown, the question
+    var qa = 12 * BAR, qb = 14 * BAR, qv = t >= qa && t < qb;
+    show($('q'), qv);
+    if (qv) {
+      var qo = clamp((t - (qb - 160)) / 160);
+      $('q').style.opacity = (1 - qo).toFixed(3);
+      $('q').style.transform = 'scale(' + (1 + (t - qa) / (qb - qa) * 0.05).toFixed(4) + ')';
+      [].forEach.call($('q').children, function (el) { slam(el, t, beat(+el.getAttribute('data-b'))); });
+    }
+
+    // --- 14-16+: call to action
+    var ca = 14 * BAR, cv = t >= ca;
+    show($('cta'), cv);
+    if (cv) {
+      var ck = (t - ca) / 500;
+      $('cta').style.opacity = clamp(ck * 3).toFixed(3);
+      $('cta').style.transform = 'scale(' + lerp(1.15, 1, outCubic(ck)).toFixed(4) + ')';
+      $('ctaLogo').style.transform = 'scale(' + (1 + pulse(t) * 0.06).toFixed(4) + ')';
+      $('ctaLogo').style.boxShadow = '0 0 0 3px rgba(63,224,255,.4),0 0 ' + (50 + pulse(t) * 80).toFixed(0) + 'px rgba(63,224,255,.5)';
+      [].forEach.call(document.querySelectorAll('.cta .pill'), function (el) { slam(el, t, beat(+el.getAttribute('data-b'))); });
+      $('ctaUrl').style.opacity = clamp((t - beat(60)) / 300).toFixed(3);
+    }
   }
 
-  window.TRAILER = { length: LEN, seek: seek, scenes: [3, 9, 14.4, 19.8, 25.2, 30.8, 33.9] };
+  // "Flat radar": squash the storm toward a sliver over bars 2-4, snapping on beats
+  function flatten(t) {
+    var b = (t - 2 * BAR) / B, step = Math.min(4, Math.floor(b) + 1);
+    var k = clamp((b - Math.floor(b)) / 0.35);
+    var target = [1, 0.62, 0.36, 0.18, 0.07][step], prev = [1, 1, 0.62, 0.36, 0.18][step];
+    var sy = b >= 4 ? 0.07 : lerp(prev, target, outCubic(k));
+    return ' scaleY(' + sy.toFixed(4) + ')';
+  }
+
+  window.TRAILER = {
+    length: LEN, seek: seek,
+    music: { src: 'trailers/music-upbeat.js', global: 'CellScopeUpbeat', peakDb: -1, fadeIn: 0 }
+  };
 
   function fit() {
     var s = Math.min(innerWidth / W, innerHeight / H);
@@ -155,10 +305,20 @@
   fit(); addEventListener('resize', fit);
   seek(0);
   if (!window.__TRAILER_CAPTURE) {
-    var start = performance.now();
-    var play = function (now) { seek(now - start); if (now - start < LEN) requestAnimationFrame(play); };
-    requestAnimationFrame(play);
-    addEventListener('click', function () { start = performance.now(); requestAnimationFrame(play); });
+    var start = null, actx = null;
+    function play(now) { seek(now - start); if (now - start < LEN) requestAnimationFrame(play); }
+    // Click to play with sound (browsers block autoplay audio)
+    addEventListener('click', function () {
+      if (actx) actx.close();
+      var s = document.createElement('script');
+      s.src = 'music-upbeat.js';
+      s.onload = function () {
+        actx = new (window.AudioContext || window.webkitAudioContext)();
+        window.CellScopeUpbeat.score(actx, actx.destination, 0);
+        start = performance.now(); requestAnimationFrame(play);
+      };
+      if (window.CellScopeUpbeat) s.onload(); else document.head.appendChild(s);
+    });
   }
 })();
 </script>
