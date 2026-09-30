@@ -27,6 +27,8 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 - `assets/*.png` — graph renders
 - `assets/videos/*.mp4` — clips, `preload="none"` with poster frames
 - `downloads/CellScope-Demo.exe` — Windows demo, linked from home and products
+- `downloads/CellScope-Trailer.mp4` — 30 s 1080p60 render of the intro with music; rebuild with
+  `FFMPEG=/path/to/ffmpeg node tools/render-trailer.js` after changing the intro (needs Playwright)
 
 ## Conventions
 
