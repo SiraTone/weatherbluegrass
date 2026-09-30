@@ -43,21 +43,6 @@
     });
   }
 
-  /* Buttons: sheen sweep + ripple (transform only, compositor-friendly) */
-  d.querySelectorAll('.btn').forEach(function (btn) {
-    btn.addEventListener('pointerenter', function () { btn.classList.add('is-hot'); });
-    btn.addEventListener('pointerleave', function () { btn.classList.remove('is-hot'); });
-    btn.addEventListener('pointerdown', function (e) {
-      var r = btn.getBoundingClientRect();
-      var s = Math.max(r.width, r.height);
-      var span = d.createElement('span');
-      span.className = 'ripple';
-      span.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
-      btn.appendChild(span);
-      span.addEventListener('animationend', function () { span.remove(); });
-    });
-  });
-
   /* Anchor landing: re-snap after images/fonts settle */
   function snap() {
     if (!location.hash) return;

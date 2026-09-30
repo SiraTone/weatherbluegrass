@@ -74,44 +74,29 @@ p:last-child{margin-bottom:0}
 }
 .site-nav{display:flex;align-items:center;gap:26px}
 .site-nav a{position:relative;padding:6px 0;color:var(--sub);font-weight:600;font-size:.95rem;transition:color .2s}
-.site-nav a:not(.btn)::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue));transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.site-nav a:not(.btn)::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;border-radius:2px;background:var(--cyan);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
 .site-nav a:hover{color:var(--text)}
 .site-nav a:hover::after,.site-nav a[aria-current]::after{transform:scaleX(1)}
 .site-nav a[aria-current]{color:var(--text)}
-.site-nav .btn{
-  color:#03242e!important;font-weight:900;font-size:1rem;padding:11px 22px;
-  background-color:#3fe0ff;background-image:linear-gradient(120deg,#5ff0ff 0%,#3f8cff 100%);
-  border:0;box-shadow:0 0 0 1.5px rgba(63,224,255,.6),0 10px 32px rgba(63,224,255,.4);
-}
-.site-nav .btn:hover{color:#03242e!important;box-shadow:0 0 0 2px rgba(63,224,255,.8),0 14px 44px rgba(63,224,255,.55)}
+.site-nav .btn{color:#0a1120;font-size:.92rem;padding:8px 16px}
+.site-nav .btn:hover{color:#0a1120}
 .nav-toggle{display:none;background:none;border:1px solid var(--line-2);color:var(--text);border-radius:8px;padding:8px 10px;cursor:pointer}
 .nav-toggle:hover{border-color:var(--cyan)}
 
-/* Buttons */
+/* Buttons: flat, neutral fill; cyan stays for focus and links only */
 .btn{
-  position:relative;overflow:hidden;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:13px 22px;border:0;border-radius:10px;background:linear-gradient(120deg,var(--cyan),var(--blue));
-  color:#04202a;font-weight:800;letter-spacing:.01em;box-shadow:0 8px 24px rgba(63,224,255,.2);
-  transition:transform .2s var(--ease),box-shadow .25s var(--ease),filter .2s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border:1px solid transparent;border-radius:10px;
+  background:#eef2fb;color:#0a1120;font-weight:700;letter-spacing:.01em;
+  transition:background-color .2s,border-color .2s,transform .2s var(--ease);
 }
-.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hi);filter:brightness(1.05)}
-.btn:active{transform:translateY(0) scale(.98)}
-.btn-ghost{background:rgba(63,224,255,.08);color:var(--text);border:1px solid var(--line-2);box-shadow:none}
-.btn-ghost:hover{background:rgba(63,224,255,.14)}
-.btn-sm{padding:9px 15px;font-size:.9rem;border-radius:8px}
-.btn .arr{transition:transform .25s var(--ease)}
+.btn:hover{background:#fff;transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--line-2)}
+.btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.35)}
+.btn-sm{padding:8px 14px;font-size:.9rem;border-radius:8px}
+.btn .arr{transition:transform .2s var(--ease)}
 .btn:hover .arr{transform:translateX(3px)}
-/* sheen sweep on hover, transform only so it stays off the layout path */
-.btn::before{
-  content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.32),transparent);
-  transform:skewX(-18deg) translateX(0);pointer-events:none;z-index:0;
-  transition:transform .55s var(--ease)
-}
-.btn:hover::before,.btn.is-hot::before{transform:skewX(-18deg) translateX(420%)}
-.btn>*{position:relative;z-index:1}
-.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:ripple .55s ease-out;pointer-events:none;z-index:1}
-@keyframes ripple{to{transform:scale(3.5);opacity:0}}
 
 /* Section furniture */
 .section{padding:72px 0;border-top:1px solid var(--line)}
@@ -340,10 +325,6 @@ p:last-child{margin-bottom:0}
 .pcard{background:var(--panel)}
 .callout{background:var(--panel)}
 .grad{background:none;color:var(--cyan)}
-.btn,.site-nav .btn{background-image:none;background-color:var(--cyan);box-shadow:0 4px 14px rgba(63,224,255,.18)}
-.site-nav .btn{box-shadow:0 4px 14px rgba(63,224,255,.18)}
-.btn:hover,.site-nav .btn:hover{box-shadow:0 6px 20px rgba(63,224,255,.3)}
-.btn-ghost{background:transparent;background-color:transparent}
 .site-footer{background:none}
 .cs-banner{background:var(--panel)}
 body::before{background:
