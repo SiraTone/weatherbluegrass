@@ -499,3 +499,9 @@ h3+p,h3+ul{margin-top:10px}
 .model-info h3{margin-bottom:8px}
 .product-head h2+p{margin-top:12px}
 .stat strong{margin-bottom:6px}
+
+/* Terms page */
+.terms h2{font-size:1.2rem;margin-top:40px}
+.terms>p,.terms li{color:var(--sub)}
+.terms-alert{border-left:3px solid var(--amber);margin-bottom:8px}
+.terms-alert h3{color:var(--amber)}
