@@ -69,6 +69,7 @@
     '<section class="iscene" data-id="bench">' +
       '<p class="intro-no">03</p>' +
       '<h2>AI Model Benchmarks</h2>' +
+      '<p class="intro-sub">The models behind your TV forecast, scored</p>' +
       '<div class="intro-bench">' +
         '<p class="intro-bench-head"><span>Day 5 · 500 hPa anomaly correlation</span><span>higher is better</span></p>' +
         BENCH.map(function (b, i) {
