@@ -1,7 +1,8 @@
 // Quiet ambient score for the intro, synthesized with Web Audio (no audio files).
 // Soft pad + sub bass + sparse arpeggio, a low chime on each scene change.
-// score(ctx, dest, fromMs) schedules everything from fromMs into the 28 s timeline,
+// score(ctx, dest, fromMs, opts) schedules everything from fromMs into the timeline,
 // so it works with a live AudioContext or an OfflineAudioContext for testing.
+// opts.length (s) and opts.scenes (chime times, s) let other trailers reuse the score.
 (function () {
   'use strict';
   var BAR = 3.5;                       // seconds per chord
@@ -11,8 +12,8 @@
     [48, [60, 64, 67, 74]],            // Cadd9
     [43, [59, 62, 67, 64]]             // G6
   ];
-  var LEN = 28;                        // seconds, matches intro END
-  var SCENES = [3, 9, 12.4, 17.2, 20, 23];
+  var DEFAULT_LEN = 28;                // seconds, matches intro END
+  var DEFAULT_SCENES = [3, 9, 12.4, 17.2, 20, 23];
 
   function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
 
@@ -37,8 +38,9 @@
     g.gain.exponentialRampToValueAtTime(0.0001, t + a + hold + r);
   }
 
-  function score(ctx, dest, fromMs) {
+  function score(ctx, dest, fromMs, opts) {
     var from = (fromMs || 0) / 1000, t0 = ctx.currentTime - from;
+    var LEN = (opts && opts.length) || DEFAULT_LEN, SCENES = (opts && opts.scenes) || DEFAULT_SCENES;
 
     var bus = ctx.createGain(); bus.gain.value = 1;
     var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
@@ -102,5 +104,5 @@
     });
   }
 
-  window.CellScopeIntroMusic = { score: score, length: LEN };
+  window.CellScopeIntroMusic = { score: score, length: DEFAULT_LEN };
 })();

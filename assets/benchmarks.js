@@ -7,14 +7,14 @@
   var MODELS = [
     { id: 'ecmwf', name: 'ECMWF IFS', center: 'ECMWF', type: 'physics', grid: '~9 km', color: '#3fe0ff', d5: 0.930, d10: 0.800, pub: ['d5', 'd10'],
       note: 'Cycle 49r1, 51-member ensemble. Leads WMO 500 hPa verification among physics models.' },
-    { id: 'aifs', name: 'AIFS', center: 'ECMWF', type: 'ai', grid: '~28 km', color: '#c084fc', d5: 0.935, d10: 0.810, pub: [],
-      note: 'ECMWF operational AI system. Narrow edge over IFS aloft; weaker on heavy precipitation.' },
+    { id: 'aifs', name: 'AIFS', center: 'ECMWF', type: 'ai', grid: '0.25°', color: '#c084fc', d5: 0.935, d10: 0.810, pub: [],
+      note: 'The ECMWF AI system, operational since 25 February 2025. Reported 5–15% lower errors than IFS in the medium range.' },
     { id: 'graphcast', name: 'GraphCast', center: 'Google DeepMind', type: 'ai', grid: '0.25°', color: '#60a5fa', d5: 0.934, d10: 0.805, pub: [],
       note: 'Graph neural network. Beat HRES on ~90% of targets in its 2023 Science paper.' },
     { id: 'aurora', name: 'Aurora', center: 'Microsoft', type: 'ai', grid: '0.1°', color: '#2dd4bf', d5: 0.933, d10: 0.803, pub: [],
-      note: 'Foundation model fine-tuned for weather. Reported gains over IFS HRES at 0.1°.' },
+      note: 'Foundation model for the Earth system (Nature, 2025). Beat IFS HRES on more than 92% of targets at 0.1°.' },
     { id: 'fuxi', name: 'FuXi', center: 'Fudan University', type: 'ai', grid: '0.25°', color: '#f87171', d5: 0.930, d10: 0.808, pub: [],
-      note: 'Cascaded ML model tuned for 15-day range; strongest relative skill past day 9.' },
+      note: 'Cascade of three ML models for a 15-day range (npj Climate and Atmospheric Science, 2023).' },
     { id: 'pangu', name: 'Pangu-Weather', center: 'Huawei', type: 'ai', grid: '0.25°', color: '#fb923c', d5: 0.925, d10: 0.790, pub: [],
       note: '3D Earth-specific transformer. First ML model to match IFS at medium range (Nature, 2023).' },
     { id: 'ukmo', name: 'UKMO UM', center: 'Met Office', type: 'physics', grid: '~10 km', color: '#f472b6', d5: 0.915, d10: 0.775, pub: [],
@@ -22,7 +22,7 @@
     { id: 'gfs', name: 'GFS', center: 'NOAA NCEP', type: 'physics', grid: '~13 km', color: '#ff9f43', d5: 0.905, d10: 0.760, pub: ['d5'],
       note: 'Free and open data, 16-day range. Individual cycles have beaten ECMWF at 500 hPa.' },
     { id: 'icon', name: 'ICON', center: 'DWD', type: 'physics', grid: '~13 km', color: '#4ade80', d5: 0.905, d10: 0.765, pub: [],
-      note: 'Open source since January 2024. Matches the leaders at short range over Europe.' },
+      note: 'Open source (BSD-3) since January 2024. Global runs go out to 7.5 days.' },
     { id: 'gem', name: 'GEM', center: 'ECCC (Canada)', type: 'physics', grid: '~15 km', color: '#a3e635', d5: 0.895, d10: 0.750, pub: [],
       note: 'Canadian global model. Solid mid-pack performer, strong over North America.' },
     { id: 'arpege', name: 'ARPEGE', center: 'Météo-France', type: 'physics', grid: '~5–24 km', color: '#e879f9', d5: 0.893, d10: 0.745, pub: [],
@@ -30,13 +30,13 @@
     { id: 'kim', name: 'KIM', center: 'KMA (Korea)', type: 'physics', grid: '~12 km', color: '#94a3b8', d5: 0.890, d10: 0.740, pub: [],
       note: 'Korean Integrated Model on a cubed-sphere grid, operational since 2020.' },
     { id: 'gsm', name: 'GSM', center: 'JMA', type: 'physics', grid: '~13 km', color: '#facc15', d5: 0.890, d10: 0.740, pub: [],
-      note: 'Steady global model, best work in West Pacific typhoon season.' },
+      note: 'Resolution raised from 20 km to 13 km in 2023. Best work in West Pacific typhoon season.' },
     { id: 'access', name: 'ACCESS-G', center: 'BoM (Australia)', type: 'physics', grid: '~12 km', color: '#38bdf8', d5: 0.880, d10: 0.725, pub: [],
       note: 'Based on the UM. Southern Hemisphere focus; NH scores trail.' },
-    { id: 'cma', name: 'CMA-GFS', center: 'CMA (China)', type: 'physics', grid: '~25 km', color: '#fca5a5', d5: 0.875, d10: 0.720, pub: [],
-      note: 'GRAPES-based global model, steadily improving through recent upgrades.' },
-    { id: 'navgem', name: 'NAVGEM', center: 'US Navy FNMOC', type: 'physics', grid: '~31 km', color: '#cbd5e1', d5: 0.865, d10: 0.705, pub: [],
-      note: 'Navy global model. Coarsest grid on the board and last on day-5 skill.' }
+    { id: 'cma', name: 'CMA-GFS', center: 'CMA (China)', type: 'physics', grid: '~12.5 km', color: '#fca5a5', d5: 0.875, d10: 0.720, pub: [],
+      note: 'GRAPES-based global model. Version 4.0 (May 2023) doubled resolution to 0.125°.' },
+    { id: 'navgem', name: 'NAVGEM', center: 'US Navy FNMOC', type: 'physics', grid: '~19 km', color: '#cbd5e1', d5: 0.865, d10: 0.705, pub: [],
+      note: 'US Navy global model with hybrid 4D-Var data assimilation.' }
   ];
 
   /* Fit ACC(d) = 1 - a*d^b through the day-5 and day-10 anchors. */
@@ -48,11 +48,14 @@
     m.pts = [];
     for (var d = 1; d <= 10; d++) m.pts.push({ d: d, v: m.acc(d), pub: (d === 5 && m.pub.indexOf('d5') > -1) || (d === 10 && m.pub.indexOf('d10') > -1) });
   });
+  var PROFILES = {"ecmwf": {"skills": [10, 9, 9, 9, 9, 9], "good": ["Best physics model at 500 hPa, the WMO headline score", "Heavy and extreme precipitation, where AI models still lag", "Tropical cyclone tracks and intensity via the 51-member ensemble", "Skill horizon past day 10"], "bad": ["Only 2 of 4 daily runs go to 15 days; 06 and 18 UTC stop at day 6", "Slower to run than AI models, about 1 hour per cycle on a supercomputer"]}, "aifs": {"skills": [10, 9, 7, 8, 8, 9], "good": ["Beats IFS by 12–24 hours of skill in the medium range", "Fast: a 10-day forecast in minutes on a GPU", "Tropical cyclone tracks up to 20% better than physics models"], "bad": ["Coarser 0.25° grid smooths small-scale detail versus 9 km IFS", "Underestimates heavy rain peaks and intensity extremes", "Relies on IFS analyses to start each run"]}, "graphcast": {"skills": [10, 9, 6, 8, 8, 8], "good": ["Beat ECMWF HRES on 90.3% of 1,380 targets in its 2023 Science paper", "Excellent cyclone track forecasts", "Runs in under a minute on one TPU"], "bad": ["Blurs fields at long lead times, losing sharp features", "Weak on extreme precipitation and peak intensity", "Trained on reanalysis; not a full physical model, so no guaranteed conservation laws"]}, "aurora": {"skills": [10, 9, 7, 8, 8, 8], "good": ["High 0.1° resolution for an AI model", "Foundation model that also does air quality and ocean waves", "Beat IFS HRES on more than 92% of targets (Nature, 2025)"], "bad": ["Newer and less proven in real-time operations", "Expensive to fine-tune; fewer independent verifications", "Extremes and rare events still underrepresented in training"]}, "fuxi": {"skills": [9, 8, 6, 7, 8, 10], "good": ["Pushed skillful Z500 lead time to 10.5 days versus 9.25 for ECMWF HRES", "Skillful 2 m temperature out to 14.5 days versus 10 for HRES"], "bad": ["Slightly behind the leaders at short range", "Smooth output underplays convective rainfall", "Limited independent operational verification"]}, "pangu": {"skills": [9, 8, 5, 8, 7, 7], "good": ["First ML model to match IFS at medium range (Nature, 2023)", "Very fast: global forecast in seconds", "Good cyclone tracks"], "bad": ["No precipitation output in its original release", "Falls behind newer AI models past day 7", "Underestimates cyclone intensity"]}, "ukmo": {"skills": [9, 9, 8, 8, 9, 8], "good": ["North Atlantic storms and frontal systems", "UK and Western Europe surface detail", "Strong wind forecasts"], "bad": ["Global scores trail ECMWF at range", "Limited free data access"]}, "gfs": {"skills": [8, 7, 7, 8, 7, 7], "good": ["Fully free and open data, updated 4 times a day", "16-day range, longest standard range here", "Good hurricane tracks in recent versions"], "bad": ["Known warm and cold surface biases in some seasons", "Tends to overdo precipitation amounts and convective feedback", "Trails ECMWF by about a day of skill at range"]}, "icon": {"skills": [8, 9, 8, 7, 8, 7], "good": ["Short-range detail over Europe matching the leaders", "Open source since January 2024", "Good 2 m temperature forecasts"], "bad": ["Global runs stop at 7.5 days, so no extended-range guidance", "Tropical cyclone guidance weaker than ECMWF and GFS"]}, "gem": {"skills": [8, 8, 7, 7, 7, 7], "good": ["Strong over North America and Canadian winter", "Good snowfall and cold-air forecasts"], "bad": ["Mid-pack at 500 hPa globally", "Can over-deepen some mid-latitude lows"]}, "arpege": {"skills": [7, 8, 8, 6, 7, 6], "good": ["Stretched grid gives very fine detail over France", "Good Mediterranean rain events"], "bad": ["Coarse far from France, so global scores suffer", "Shorter forecast range than most"]}, "kim": {"skills": [7, 7, 7, 7, 7, 7], "good": ["Cubed-sphere grid with no pole problems", "Solid East Asia performance"], "bad": ["Operational only since April 2020, a short track record", "Trails leaders across most global scores"]}, "gsm": {"skills": [7, 7, 7, 9, 7, 7], "good": ["West Pacific typhoon tracks", "Steady and consistent run to run"], "bad": ["Middle of the pack at 500 hPa", "Less skill over the Atlantic and Europe"]}, "access": {"skills": [7, 7, 7, 7, 7, 6], "good": ["Southern Hemisphere and Australian region", "Built on the proven Met Office UM"], "bad": ["Northern Hemisphere scores trail", "Smaller verification footprint"]}, "cma": {"skills": [7, 6, 7, 7, 6, 6], "good": ["East Asian monsoon rainfall", "Improving quickly with recent upgrades"], "bad": ["Fewer independent verifications outside East Asia", "Global skill still behind the leading centers"]}, "navgem": {"skills": [6, 6, 6, 6, 6, 5], "good": ["Maritime and naval weather products", "Useful as an independent ensemble member"], "bad": ["Documented forecast dropouts (sudden skill collapses) in verification studies", "Lowest 500 hPa skill in this group"]}};
+  var SKILLS = ["Upper air (500 hPa)","Surface temperature","Precipitation","Tropical cyclones","Wind","Extended range"];
+  MODELS.forEach(function (m) { var p = PROFILES[m.id]; m.skills = p.skills; m.good = p.good; m.bad = p.bad; });
   var BY = {}; MODELS.forEach(function (m) { BY[m.id] = m; });
 
   /* ---------- Leaderboard ---------- */
   var body = document.getElementById('lbBody');
-  var sortKey = 'd5', filter = 'all';
+  var sortKey = 'd5', filter = 'all', open = null;
   var active = { ecmwf: true, gfs: true, aifs: true, icon: true };
 
   function fmt(v) { return v.toFixed(3); }
@@ -74,22 +77,47 @@
         var bar = k === sortKey ? '<span class="lb-bar"><i style="width:' + pct.toFixed(1) + '%;background:' + m.color + '"></i></span>' : '';
         return '<td class="lb-num' + (k === sortKey ? ' is-sorted' : '') + '">' + '<span class="lb-val">' + val + pubTag + '</span>' + bar + '</td>';
       }
-      html += '<tr data-id="' + m.id + '" tabindex="0" class="' + (active[m.id] ? 'is-on' : '') + '">' +
+      html += '<tr data-id="' + m.id + '" tabindex="0" aria-expanded="' + (open === m.id) + '" class="' + (active[m.id] ? 'is-on' : '') + (open === m.id ? ' is-open' : '') + '">' +
         '<td><span class="lb-rank' + medal + '">' + (tied ? 'T' : '') + rank + '</span></td>' +
         '<td><span class="lb-model"><span class="dot" style="background:' + m.color + '"></span><span><strong>' + m.name + '</strong><small>' + m.center + '</small></span></span></td>' +
         '<td class="lb-hide-sm"><span class="lb-tag lb-tag--' + m.type + '">' + (m.type === 'ai' ? 'AI' : 'Physics') + '</span></td>' +
         '<td class="lb-hide-sm lb-grid">' + m.grid + '</td>' +
         cell('d5') + cell('d10') + cell('horizon') + '</tr>';
+      if (open === m.id) html += detail(m, rank, tied, rows.length);
     });
     body.innerHTML = html;
   }
+  function detail(m, rank, tied, n) {
+    var bars = SKILLS.map(function (lab, i) {
+      var v = m.skills[i];
+      return '<li><span>' + lab + '</span><span class="md-meter"><i style="width:' + v * 10 + '%;background:' + m.color + '"></i></span><b>' + v + '</b></li>';
+    }).join('');
+    function list(a) { return a.map(function (t) { return '<li>' + t + '</li>'; }).join(''); }
+    return '<tr class="lb-detail"><td colspan="7"><div class="md">' +
+      '<div class="md-head"><div><h3>' + m.name + '</h3><p>' + m.note + '</p></div>' +
+      '<button class="btn btn-sm md-plot" type="button" data-plot="' + m.id + '">' + (active[m.id] ? 'Remove from chart' : 'Plot on chart') + '</button></div>' +
+      '<div class="md-stats">' +
+        '<div><small>Rank</small><b>' + (tied ? 'T' : '') + rank + '<em>/' + n + '</em></b></div>' +
+        '<div><small>Day 5 ACC</small><b>' + fmt(m.d5) + '</b></div>' +
+        '<div><small>Day 10 ACC</small><b>' + fmt(m.d10) + '</b></div>' +
+        '<div><small>Skillful to</small><b>' + m.horizon.toFixed(1) + '<em> days</em></b></div>' +
+        '<div><small>Grid</small><b>' + m.grid + '</b></div>' +
+      '</div>' +
+      '<div class="md-grid">' +
+        '<div><h4>Skill profile <small>editorial 1–10</small></h4><ul class="md-skills">' + bars + '</ul></div>' +
+        '<div><h4 class="md-good">Really good at</h4><ul class="md-list md-list--good">' + list(m.good) + '</ul>' +
+        '<h4 class="md-bad">Weak spots</h4><ul class="md-list md-list--bad">' + list(m.bad) + '</ul></div>' +
+      '</div></div></td></tr>';
+  }
   if (body) {
     body.addEventListener('click', function (e) {
-      var tr = e.target.closest('tr[data-id]'); if (tr) toggle(tr.getAttribute('data-id'), true);
+      var pb = e.target.closest('[data-plot]');
+      if (pb) { toggle(pb.getAttribute('data-plot'), true); return; }
+      var tr = e.target.closest('tr[data-id]'); if (tr) expand(tr.getAttribute('data-id'));
     });
     body.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      var tr = e.target.closest('tr[data-id]'); if (tr) { e.preventDefault(); toggle(tr.getAttribute('data-id'), true); }
+      var tr = e.target.closest('tr[data-id]'); if (tr && e.target === tr) { e.preventDefault(); expand(tr.getAttribute('data-id')); }
     });
   }
   document.querySelectorAll('.lb-sort').forEach(function (b) {
@@ -140,6 +168,12 @@
     chips.addEventListener('click', function (e) {
       var c = e.target.closest('.chip'); if (c) toggle(c.getAttribute('data-model'), false);
     });
+  }
+  function expand(id) {
+    open = open === id ? null : id;
+    renderBoard();
+    var tr = body.querySelector('tr[data-id="' + id + '"]');
+    if (tr) tr.focus({ preventScroll: true });
   }
   function syncChips() {
     if (!chips) return;
