@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S6FK50PH25"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S6FK50PH25');
+</script>
+<title>Forecast Demo | CellScope Products</title>
+<meta name="description" content="Try a live CellScope forecast graphic for your town: hour-by-hour, 7-day and moon phase, on real National Weather Service data.">
+<link rel="canonical" href="https://bluegrasstransport.site/demo.html">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css?v=202610010750">
+<link rel="stylesheet" href="assets/demo.css?v=202610062110">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CellScope Products">
+<meta property="og:title" content="Forecast Demo | CellScope Products">
+<meta property="og:description" content="Try a live CellScope forecast graphic for your town.">
+<meta property="og:url" content="https://bluegrasstransport.site/demo.html">
+<meta property="og:image" content="https://bluegrasstransport.site/assets/radar-3d-volume.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@CellScopeRadar">
+<meta name="twitter:title" content="Forecast Demo | CellScope Products">
+<meta name="twitter:description" content="Try a live CellScope forecast graphic for your town.">
+<meta name="twitter:image" content="https://bluegrasstransport.site/assets/radar-3d-volume.png">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img class="brand-badge" src="assets/logo.svg" width="58" height="58" alt=""><span class="brand-text">CELLSCOPE<small>WEATHER</small></span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNav">☰</button>
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <a href="index.html">Home</a><a href="products.html">Products</a>
+      <a href="demo.html" aria-current="page">Demo</a><a href="solutions.html">Solutions</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="benchmarks.html">Benchmarks</a><a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Demo</p>
+        <p class="pill pill--green">Live data</p>
+        <h1>Try a forecast graphic for your town</h1>
+        <p class="lede">A tiny slice of CellScope: pick a place and get the same style of on-air forecast graphics we make for broadcast, built on real National Weather Service data right now.</p>
+      </div>
+
+      <form class="demo-search" id="demoForm" autocomplete="off">
+        <label class="sr" for="demoQ">City</label>
+        <input id="demoQ" type="search" placeholder="City or town, e.g. Lexington, KY" value="Richmond, KY" aria-label="City or town">
+        <button class="btn" type="submit">Show forecast</button>
+        <button class="btn btn-ghost" type="button" id="demoGeo">Use my location</button>
+      </form>
+      <p class="demo-note" id="demoNote" role="status">Loading Richmond, KY...</p>
+
+      <div class="demo-tabs" role="tablist" aria-label="Graphic type">
+        <button role="tab" id="tab-hourly" aria-selected="true" aria-controls="demoStage" data-g="hourly">Hour by hour</button>
+        <button role="tab" id="tab-7day" aria-selected="false" aria-controls="demoStage" data-g="7day">7-day</button>
+        <button role="tab" id="tab-moon" aria-selected="false" aria-controls="demoStage" data-g="moon">Moon phase</button>
+      </div>
+
+      <div class="demo-stage" id="demoStage" role="tabpanel" aria-live="polite"></div>
+
+      <div class="callout demo-cta">
+        <div>
+          <h3>This took one click.</h3>
+          <p>CellScope builds graphics like these automatically at broadcast size, with your station branding, plus radar, 3D storm views and weather models.</p>
+        </div>
+        <div class="demo-cta-btns">
+          <a class="btn" href="contact.html">Join the waitlist <span class="arr">&rarr;</span></a>
+          <a class="btn btn-ghost" href="products.html">See the products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>© <span id="year"></span> CellScope Products · <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav aria-label="Footer"><a href="index.html">Home</a><a href="products.html">Products</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="benchmarks.html">Benchmarks</a><a href="contact.html">Contact</a><a href="terms.html">Terms</a></nav>
+  </div>
+  <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
+</footer>
+<script src="assets/app.js?v=202610010750" defer></script>
+<script src="assets/demo.js?v=202610062110" defer></script>
+</body>
+</html>
