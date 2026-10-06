@@ -13,7 +13,7 @@
 
 /* 16:9 stage: everything inside scales with the stage width via container units */
 .demo-stage{container-type:inline-size;position:relative;aspect-ratio:16/9;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line-2);
-  background:radial-gradient(120% 90% at 8% 0%,rgba(240,178,74,.14),transparent 55%),radial-gradient(90% 80% at 100% 100%,rgba(63,224,255,.12),transparent 60%),linear-gradient(180deg,#0f1a30,#070c18);
+  background:#0b1424;
   box-shadow:0 24px 70px rgba(0,0,0,.45);margin-bottom:28px}
 .g-head{position:absolute;inset:0 0 auto 0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:start;padding:3.2cqw 3.4cqw 0;border-bottom:1px solid rgba(240,178,74,.45);height:14.5cqw;margin:0 3.4cqw;padding-inline:0}
 .g-brand{display:flex;align-items:center;gap:1.4cqw}
@@ -40,7 +40,7 @@
 /* 7-day cards */
 .wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.1cqw;height:100%}
 .wk-d{display:flex;flex-direction:column;align-items:center;padding:1.8cqw .6cqw;border-radius:.6cqw;border-top:.45cqw solid var(--ac);
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(4,8,16,.7));border-inline:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+  background:#0a1220;border-inline:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
 .wk-n{max-width:100%;box-sizing:border-box;text-align:center;padding:.5cqw .8cqw;font:800 1.4cqw/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;color:#fff;background:rgba(255,255,255,.12);border-bottom:.25cqw solid var(--ac);text-transform:uppercase}
 .wk-i{width:6.4cqw;height:6.4cqw;margin:1.8cqw 0 .8cqw}
 .wk-hi{font:800 4.2cqw/1 ui-sans-serif,system-ui,sans-serif;color:var(--ac)}

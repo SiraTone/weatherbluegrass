@@ -540,3 +540,8 @@ h3+p,h3+ul{margin-top:10px}
 .md-good{color:var(--green)!important}
 .md-bad{color:#fb7185!important}
 @media (max-width:760px){.md{width:calc(100vw - 50px);position:sticky;left:0}.md-stats{grid-template-columns:repeat(2,1fr)}.md-grid{grid-template-columns:1fr}.md-skills li{grid-template-columns:110px 1fr 22px}.md{padding:16px 14px}}
+
+/* Flat look: solid colour surfaces, no decorative gradients (video scrims and the intro animation keep theirs) */
+body::before{background:var(--bg)}
+.eyebrow::after{background:var(--line-2)}
+.pcard::before{background:var(--cyan)}

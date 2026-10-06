@@ -45,7 +45,7 @@
 .tp-prog:hover .tp-track,.tp-prog:focus-visible .tp-track,.tp-prog.drag .tp-track{height:7px}
 .tp-buf,.tp-fill{position:absolute;left:0;top:0;bottom:0;border-radius:inherit}
 .tp-buf{background:rgba(255,255,255,.28)}
-.tp-fill{background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 10px rgba(63,224,255,.55)}
+.tp-fill{background:var(--cyan)}
 .tp-knob{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(63,224,255,.5);transform:scale(0);transition:transform .15s}
 .tp-prog:hover .tp-knob,.tp-prog:focus-visible .tp-knob,.tp-prog.drag .tp-knob{transform:scale(1)}
 .tp-prog:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:6px}
