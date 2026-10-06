@@ -56,7 +56,11 @@
 .onair{margin-top:48px}
 .onair h2{margin:0 0 6px}
 .onair .lede{margin-bottom:20px}
-.onair-grid{display:grid;grid-template-columns:1fr;gap:18px}
+.onair{--ow:min(1240px,calc(100vw - 48px));width:var(--ow);margin-left:calc(50% - var(--ow) / 2)}
+.onair-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.onair-grid a{display:block;cursor:zoom-in}
+@media (max-width:760px){.onair-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+  .onair-grid figure{flex:0 0 88%;scroll-snap-align:center}}
 .onair-grid figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:border-color .3s,transform .3s var(--ease)}
 .onair-grid figure:hover{border-color:rgba(63,224,255,.45);transform:translateY(-3px)}
 .onair-grid img{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
