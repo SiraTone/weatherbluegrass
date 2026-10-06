@@ -30,7 +30,7 @@
 .g-body{position:absolute;left:3.4cqw;right:3.4cqw;top:16.5cqw;bottom:6cqw}
 
 /* hourly bars */
-.hb{display:grid;grid-template-columns:repeat(6,1fr);gap:1.6cqw;height:100%;align-items:end}
+.hb{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1.6cqw;height:100%;align-items:end}
 .hb-col{display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
 .hb-t{font:800 4cqw/1 ui-sans-serif,system-ui,sans-serif;color:#fff;text-shadow:0 .3cqw .8cqw rgba(0,0,0,.5);margin-bottom:.8cqw}
 .hb-bar{width:100%;border-radius:.4cqw .4cqw 0 0;transition:height .6s cubic-bezier(.22,.8,.28,1)}
@@ -38,10 +38,10 @@
 .hb-h{margin-top:1.4cqw;padding:.5cqw 1.6cqw;font:800 1.7cqw/1 ui-sans-serif,system-ui,sans-serif;color:#fff;background:rgba(255,255,255,.12);border-bottom:.3cqw solid #f0b24a;border-radius:.3cqw}
 
 /* 7-day cards */
-.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:1.1cqw;height:100%}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.1cqw;height:100%}
 .wk-d{display:flex;flex-direction:column;align-items:center;padding:1.8cqw .6cqw;border-radius:.6cqw;border-top:.45cqw solid var(--ac);
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(4,8,16,.7));border-inline:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
-.wk-n{padding:.5cqw 1.2cqw;font:800 1.5cqw/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;color:#fff;background:rgba(255,255,255,.12);border-bottom:.25cqw solid var(--ac);text-transform:uppercase}
+.wk-n{max-width:100%;box-sizing:border-box;text-align:center;padding:.5cqw .8cqw;font:800 1.4cqw/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.08em;color:#fff;background:rgba(255,255,255,.12);border-bottom:.25cqw solid var(--ac);text-transform:uppercase}
 .wk-i{width:6.4cqw;height:6.4cqw;margin:1.8cqw 0 .8cqw}
 .wk-hi{font:800 4.2cqw/1 ui-sans-serif,system-ui,sans-serif;color:var(--ac)}
 .wk-lo{margin-top:.8cqw;font:700 1.6cqw/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;color:#8fb2ee}
