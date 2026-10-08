@@ -54,6 +54,16 @@ p:last-child{margin-bottom:0}
 .kicker{font:700 .86rem/1 ui-monospace,Consolas,monospace;letter-spacing:.16em;color:var(--sub-2)}
 .mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
 
+/* Live banner */
+.live-banner{background:#b3141f;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)}
+.live-banner-inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 14px;padding:10px 0;font-size:.95rem;line-height:1.35}
+.live-dot{width:10px;height:10px;border-radius:50%;background:#fff;animation:live-pulse 1.4s ease-in-out infinite}
+.live-link{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.live-link:hover{text-decoration-thickness:2px}
+.live-link:focus-visible{outline-color:#fff}
+@keyframes live-pulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
+
 /* Header */
 .site-header{position:sticky;top:0;z-index:50;background:rgba(4,6,12,.96);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:78px}
