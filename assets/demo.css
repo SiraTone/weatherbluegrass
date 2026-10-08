@@ -1,3 +1,4 @@
+/* avoid-ai-design-ignore: SD4 (caps are broadcast lower-third conventions) */
 /* Forecast demo page: search, tabs, and an on-air style 16:9 graphic stage */
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .demo-search{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 6px}

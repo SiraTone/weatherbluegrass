@@ -46,7 +46,6 @@
     '</section>' +
 
     '<section class="iscene iscene--graphs" data-id="graphs">' +
-      '<p class="intro-no">01</p>' +
       '<h2>Broadcast Weather Graphs</h2>' +
       '<div class="intro-carousel"><div class="intro-ring">' +
         GRAPHS.map(function (g, i) {
@@ -57,7 +56,6 @@
     '</section>' +
 
     '<section class="iscene" data-id="cs1">' +
-      '<p class="intro-no">02</p>' +
       '<h2>CS1.0 Weather AI Model</h2>' +
       '<div class="intro-stack">' +
         ['model-cs10', 'model-cs11', 'model-cs12'].map(function (n, i) {
@@ -67,7 +65,6 @@
     '</section>' +
 
     '<section class="iscene" data-id="bench">' +
-      '<p class="intro-no">03</p>' +
       '<h2>AI Model Benchmarks</h2>' +
       '<p class="intro-sub">The models behind your TV forecast, scored</p>' +
       '<div class="intro-bench">' +
@@ -85,7 +82,6 @@
     '</section>' +
 
     '<section class="iscene" data-id="models">' +
-      '<p class="intro-no">04</p>' +
       '<h2>Model Visualization Suite</h2>' +
       '<div class="intro-tags">' +
         ['HRRR', 'GFS', 'ECMWF', 'ICON', 'NAM', 'CS1.0'].map(function (n, i) {
@@ -95,9 +91,8 @@
     '</section>' +
 
     '<section class="iscene" data-id="app">' +
-      '<p class="intro-no">05</p>' +
       '<h2>CellScope Radar App</h2>' +
-      '<div class="intro-window"><div class="intro-bar"><i></i><i></i><i></i><span>CellScope Radar</span></div>' +
+      '<div class="intro-window"><div class="intro-bar"><span>CellScope Radar</span></div>' +
         '<img src="assets/radar-3d-volume.png" alt="" decoding="async"></div>' +
       '<p class="intro-sub">Windows demo available now</p>' +
     '</section>' +
@@ -111,7 +106,7 @@
 
     '</div>' +
     '<div class="intro-progress" aria-hidden="true"><span></span></div>' +
-    '<button class="intro-sound" type="button" aria-pressed="false"><span class="intro-eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="intro-sound-label">Sound off</span></button>' +
+    '<button class="intro-sound" type="button" aria-pressed="false"><span class="intro-eq" aria-hidden="true"></span><span class="intro-sound-label">Sound off</span></button>' +
     '<button class="intro-skip" type="button">Skip intro ›</button>';
 
   d.body.appendChild(root);

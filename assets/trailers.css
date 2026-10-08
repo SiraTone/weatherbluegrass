@@ -16,7 +16,7 @@
 .tp-big{position:absolute;inset:0;display:grid;place-items:center;width:100%;border:0;padding:0;cursor:pointer;color:#fff;
   background:linear-gradient(180deg,rgba(4,6,12,.05),rgba(4,6,12,.55));transition:opacity .25s}
 .tp-big span{position:relative;display:grid;place-items:center;width:76px;height:76px;border-radius:50%;
-  background:rgba(8,16,34,.62);border:1.5px solid rgba(63,224,255,.75);backdrop-filter:blur(6px);
+  background:rgba(8,16,34,.62);border:1.5px solid rgba(63,224,255,.75);
   box-shadow:0 0 0 0 rgba(63,224,255,.45),0 10px 34px rgba(0,0,0,.5);animation:tp-pulse 2.4s ease-out infinite;transition:transform .25s var(--ease),background .25s}
 .tp-big svg{width:30px;height:30px;margin-left:4px;fill:var(--cyan)}
 .tp-big:hover span,.tp-big:focus-visible span{transform:scale(1.1);background:rgba(63,224,255,.22)}
