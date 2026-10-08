@@ -1,0 +1,76 @@
+/* Hurricane Isaias live page */
+.iz-bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin:0 0 18px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.iz-fresh{color:var(--sub);font-size:.95rem}
+.iz-error{margin:0 0 18px;padding:12px 16px;border:1px solid rgba(255,210,63,.4);border-radius:var(--r);background:rgba(255,210,63,.07);color:var(--amber)}
+.iz-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 28px}
+.iz-stat{padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.iz-stat b{display:block;font-size:1.6rem;line-height:1.15;letter-spacing:-.02em}
+.iz-stat span{display:block;margin-top:4px;color:var(--sub-2);font-size:.85rem}
+.iz-stat--lead{border-color:var(--line-2)}
+.iz-stat--lead b{font-size:1.45rem}
+.iz-block{margin:0 0 40px}
+.iz-head{margin:0 0 14px}
+.iz-sub{margin:6px 0 0;color:var(--sub);font-size:.97rem;max-width:70ch}
+.iz-h3{margin:22px 0 10px}
+.iz-layers{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 10px;color:var(--sub);font-size:.93rem}
+.iz-layers label{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.iz-layers input{accent-color:var(--cyan);width:16px;height:16px}
+.iz-map{height:min(66vh,620px);min-height:380px;border:1px solid var(--line-2);border-radius:var(--r-lg);overflow:hidden;background:#0a1120}
+.iz-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;color:var(--sub);font-size:.85rem}
+.iz-legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.iz-legend i.sq{border-radius:2px}
+.leaflet-container{font:inherit;background:#0a1120}
+.leaflet-tooltip.iz-tip{background:rgba(4,6,12,.88);border:1px solid var(--line-2);color:var(--text);box-shadow:none;padding:2px 6px;font-size:.78rem}
+.leaflet-tooltip.iz-tip::before{display:none}
+.iz-me{display:flex;flex-wrap:wrap;gap:10px}
+.iz-me input{flex:1 1 260px;min-width:0;padding:11px 14px;border-radius:10px;border:1px solid var(--line-2);background:var(--panel);color:var(--text);font:inherit}
+.iz-me-out{margin-top:14px}
+.iz-me-card{padding:16px 18px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--panel)}
+.iz-me-card h3{margin-bottom:8px}
+.iz-me-card ul{margin:8px 0 0;padding-left:1.1em;color:var(--sub)}
+.iz-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.iz-tabs button{padding:7px 14px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--sub);font:inherit;font-weight:600;cursor:pointer}
+.iz-tabs button[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:#04202a}
+.iz-orders{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.iz-order{padding:14px 16px;border:1px solid var(--line);border-left-width:4px;border-radius:var(--r);background:var(--panel)}
+.iz-order[data-level="mandatory"]{border-left-color:#ff4d5a}
+.iz-order[data-level="visitors"]{border-left-color:#ff9f43}
+.iz-order[data-level="voluntary"]{border-left-color:var(--amber)}
+.iz-tag{display:inline-block;margin-bottom:6px;padding:2px 8px;border-radius:6px;font:800 .72rem/1.5 ui-monospace,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.08)}
+.iz-order[data-level="mandatory"] .iz-tag{background:rgba(255,77,90,.18);color:#ff8f98}
+.iz-order[data-level="visitors"] .iz-tag{background:rgba(255,159,67,.18);color:#ffb878}
+.iz-order[data-level="voluntary"] .iz-tag{background:rgba(255,210,63,.15);color:var(--amber)}
+.iz-order h3{margin:0 0 4px}
+.iz-order p{margin:0 0 6px;color:var(--sub);font-size:.93rem}
+.iz-order .iz-when{color:var(--text);font-weight:600}
+.iz-order .iz-src{color:var(--sub-2);font-size:.82rem}
+.iz-live-alerts{margin-top:14px}
+.iz-links{display:flex;flex-wrap:wrap;gap:8px}
+.iz-links a{padding:8px 14px;border:1px solid var(--line-2);border-radius:10px;color:var(--text);font-weight:600;font-size:.92rem}
+.iz-links a:hover{background:rgba(255,255,255,.06)}
+.iz-fine{margin-top:14px;color:var(--sub-2);font-size:.88rem;max-width:80ch}
+.iz-chart{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel);padding:12px}
+.iz-chart svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.iz-chart text{fill:var(--sub);font-size:11px;font-family:inherit}
+.iz-chart .iz-readout{fill:var(--text);font-size:12px;font-weight:700}
+.iz-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg)}
+.iz-table{width:100%;border-collapse:collapse;font-size:.93rem;min-width:560px}
+.iz-table th,.iz-table td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.iz-table th{color:var(--sub-2);font-weight:700;font-size:.8rem;background:var(--panel)}
+.iz-table tr:last-child td{border-bottom:0}
+.iz-cat{display:inline-block;padding:1px 9px;border-radius:6px;font-weight:700;color:#04060c}
+.iz-adv{padding:18px 20px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--panel)}
+.iz-adv pre{margin:0 0 14px;white-space:pre-wrap;font:inherit;font-size:.95rem;line-height:1.55;color:var(--sub)}
+.iz-adv h3{margin:0 0 6px}
+.iz-adv .iz-links{margin-top:6px}
+.iz-alert{padding:12px 16px;margin:0 0 10px;border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:var(--r);background:var(--panel)}
+.iz-alert--red{border-left-color:#ff4d5a}
+.iz-alert b{display:block}
+.iz-alert span{color:var(--sub);font-size:.9rem}
+.iz-prep{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.iz-prep article{padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.iz-prep ul{margin:8px 0 0;padding-left:1.1em;color:var(--sub)}
+.iz-prep li{margin-bottom:6px}
+@media (max-width:640px){.iz-map{height:60vh}.iz-stat b{font-size:1.35rem}}
+.iz-eye{width:26px;height:26px;border-radius:50%;border:4px solid #ff4d5a;background:rgba(4,6,12,.75);box-shadow:0 0 0 3px rgba(255,255,255,.55),0 0 18px rgba(255,255,255,.5)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0a1120;color:#f2f6ff}

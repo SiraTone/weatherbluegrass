@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S6FK50PH25"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S6FK50PH25');
+</script>
+<title>Hurricane Isaias Live | CellScope Products</title>
+<meta name="description" content="Live Hurricane Isaias tracker: forecast cone, track, strength history, watches and warnings, evacuation orders and local alerts, updated from the National Hurricane Center.">
+<link rel="canonical" href="https://bluegrasstransport.site/isaias.html">
+<meta name="theme-color" content="#04060c">
+<link rel="icon" href="assets/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css?v=202610010750">
+<link rel="stylesheet" href="assets/leaflet.css">
+<link rel="stylesheet" href="assets/isaias.css?v=1">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CellScope Products">
+<meta property="og:title" content="Hurricane Isaias Live | CellScope Products">
+<meta property="og:description" content="Live cone, track, strength history, warnings and evacuation orders for Hurricane Isaias.">
+<meta property="og:url" content="https://bluegrasstransport.site/isaias.html">
+<meta property="og:image" content="https://bluegrasstransport.site/assets/radar-3d-volume.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img class="brand-badge" src="assets/logo.svg" width="58" height="58" alt=""><span class="brand-text">CELLSCOPE<small>WEATHER</small></span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNav">&#9776;</button>
+    <nav class="site-nav" id="siteNav" aria-label="Main">
+      <a href="index.html">Home</a><a href="products.html">Products</a>
+      <a href="isaias.html" class="nav-live" aria-current="page"><span class="live-dot" aria-hidden="true"></span>Isaias Live</a>
+      <a href="demo.html">Demo</a><a href="solutions.html">Solutions</a><a href="model.html">AI Model</a><a href="benchmarks.html">Benchmarks</a>
+      <a href="about.html">About</a><a href="contact.html" class="btn btn-sm">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section iz">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Hurricane tracker</p>
+        <h1 id="izTitle">Hurricane Isaias</h1>
+        <p class="lede">Live from the National Hurricane Center. This page refreshes itself, so you can leave it open.</p>
+      </div>
+
+      <div class="iz-bar" role="status" aria-live="polite">
+        <span class="iz-fresh" id="izFresh">Loading latest advisory&hellip;</span>
+        <span class="iz-bar-btns">
+          <button class="btn btn-sm btn-ghost" type="button" id="izRefresh">Refresh now</button>
+        </span>
+      </div>
+
+      <div class="iz-error" id="izError" hidden></div>
+
+      <section class="iz-stats" id="izStats" aria-label="Current status"></section>
+
+      <section class="iz-block" aria-labelledby="izMapH">
+        <div class="iz-head"><h2 id="izMapH">Forecast cone and track</h2>
+          <p class="iz-sub">The cone shows where the center may go. Dangerous weather, surge and flooding reach well outside it.</p></div>
+        <div class="iz-layers" id="izLayers" role="group" aria-label="Map layers">
+          <label><input type="checkbox" data-l="cone" checked> Cone</label>
+          <label><input type="checkbox" data-l="track" checked> Forecast track</label>
+          <label><input type="checkbox" data-l="past" checked> Past track</label>
+          <label><input type="checkbox" data-l="wind" checked> Wind field</label>
+          <label><input type="checkbox" data-l="ww" checked> Watches and warnings</label>
+          <label><input type="checkbox" data-l="radar" checked> Radar</label>
+          <label><input type="checkbox" data-l="sat"> Satellite</label>
+        </div>
+        <div class="iz-map" id="izMap" aria-label="Map of Hurricane Isaias forecast track and cone"></div>
+        <div class="iz-legend" id="izLegend"></div>
+      </section>
+
+                  <section class="iz-block" aria-labelledby="izHiH">
+        <div class="iz-head"><h2 id="izHiH">Strength history</h2>
+          <p class="iz-sub">Maximum sustained winds since the storm formed, with the official forecast.</p></div>
+        <div class="iz-chart" id="izChart"></div>
+      </section>
+
+      <section class="iz-block" aria-labelledby="izFcH">
+        <div class="iz-head"><h2 id="izFcH">Official forecast</h2></div>
+        <div class="iz-table-wrap"><table class="iz-table" id="izTable"></table></div>
+      </section>
+
+                  <section class="iz-block" aria-labelledby="izPrH">
+        <div class="iz-head"><h2 id="izPrH">Before and during the storm</h2></div>
+        <div class="iz-prep">
+          <article><h3>If you are told to evacuate</h3><ul><li>Go early, in daylight. Bridges and causeways close when winds reach tropical storm force.</li><li>Take medicine, papers, phone chargers, pets and cash.</li><li>Storm surge is the greatest threat to life along the coast. Do not wait to see it.</li></ul></article>
+          <article><h3>If you stay</h3><ul><li>Only stay if you are outside every evacuation and storm surge zone. Surge zones are not safe to ride out, even on an upper floor.</li><li>Shelter in an interior room, away from windows, on the lowest floor that will not flood.</li><li>Fill your phone, power banks and car. Store water for several days.</li><li>Keep generators outside, far from windows. Carbon monoxide kills after storms.</li></ul></article>
+          <article><h3>After it passes</h3><ul><li>Never drive or walk through floodwater.</li><li>Stay away from downed lines. Assume they are live.</li><li>The eye is not the end. Winds return from the other side.</li></ul></article>
+        </div>
+        <h3 class="iz-h3">Find your evacuation zone and shelters</h3>
+        <div class="iz-links" id="izLookups"></div>
+      </section>
+
+      <div class="iz-sources">
+        <h3 class="iz-h3">Official sources</h3>
+        <div class="iz-links" id="izSources"></div>
+        <p class="iz-fine">Data: NOAA National Hurricane Center (map services), NOAA/NWS MRMS radar, NASA GIBS satellite. CellScope is not a substitute for official warnings. Follow the National Hurricane Center, the National Weather Service and your local officials.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>&copy; <span id="year"></span> CellScope Products &middot; <a href="https://x.com/CellScopeRadar">@CellScopeRadar</a></span>
+    <nav aria-label="Footer"><a href="index.html">Home</a><a href="products.html">Products</a><a href="isaias.html">Isaias Live</a><a href="about.html">About</a><a href="model.html">AI Model</a><a href="benchmarks.html">Benchmarks</a><a href="contact.html">Contact</a><a href="terms.html">Terms</a></nav>
+  </div>
+  <div class="container"><p class="safety">CellScope is not a substitute for official warnings. Follow the National Weather Service and local officials.</p></div>
+</footer>
+<script src="assets/app.js?v=202610010750" defer></script>
+<script src="assets/leaflet.js" defer></script>
+<script src="assets/isaias.js?v=1" defer></script>
+</body>
+</html>

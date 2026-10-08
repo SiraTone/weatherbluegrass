@@ -64,6 +64,12 @@ p:last-child{margin-bottom:0}
 @keyframes live-pulse{50%{opacity:.3}}
 @media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
 
+
+/* Nav: live storm tab */
+.site-nav a.nav-live{display:inline-flex;align-items:center;gap:8px;color:#ff8088}
+.nav-live .live-dot{width:8px;height:8px;border-radius:50%;background:#ff4d5a;animation:live-pulse 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.nav-live .live-dot{animation:none}}
+
 /* Header */
 .site-header{position:sticky;top:0;z-index:50;background:rgba(4,6,12,.96);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:78px}
