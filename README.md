@@ -7,7 +7,7 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
 | File | Purpose |
 |---|---|
-| `index.html` | Opening banner, product grid, why-we-build-it |
+| `index.html` | Hero, product list, why-we-build-it |
 | `products.html` | Five product sections with renders, perf table, motion clips |
 | `solutions.html` | Coming soon |
 | `about.html` | Mission and approach |
@@ -16,8 +16,8 @@ Hosted on GitHub Pages at <https://bluegrasstransport.site>.
 
 ## Assets
 
-- `assets/style.css` — single stylesheet, ~14 KB, no webfonts
-- `assets/app.js` — nav, reveal-on-scroll, button sheen, mailto form
+- `assets/style.css` — single stylesheet, light and dark themes via CSS variables; charts, renders and the on-air stage stay dark
+- `assets/app.js` — nav, video autoplay, mailto form
 - `assets/intro.js` — skippable first-release intro (homepage only)
 - `assets/intro-music.js` — quiet Web Audio score for the intro, no audio files
 - `assets/logo.svg` — CellScope radar mark with animated sweep (header badge)

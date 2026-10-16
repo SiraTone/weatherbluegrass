@@ -3,23 +3,6 @@
   'use strict';
   var d = document;
 
-  /* Mark page as entering so CSS can stagger top-level blocks */
-  var main = d.getElementById('main');
-  if (main) main.classList.add('page-in');
-
-
-  /* Headline word rotator: all words are stacked in one grid cell sized to the
-     longest, so swapping them never reflows the sentence */
-  var rot = d.getElementById('rotator');
-  if (rot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var words = rot.children, wi = 0;
-    setInterval(function () {
-      words[wi].classList.remove('is-on');
-      wi = (wi + 1) % words.length;
-      words[wi].classList.add('is-on');
-    }, 2600);
-  }
-
   /* Year */
   var y = d.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
@@ -43,25 +26,6 @@
     if (!location.hash) return;
     var el = d.querySelector(location.hash);
     if (el) el.scrollIntoView();
-  }
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    // Blocks that already animate in on load must not also get the scroll reveal.
-    var onLoad = d.querySelectorAll(
-      '.page-in > .section > .container > *, .page-in > .container--tight > *, .page-in > .container > *'
-    );
-    var skip = new Set(onLoad);
-    d.querySelectorAll('.pcard, .product, .callout, .stat, .video-grid figure, .cta, .split > *').forEach(function (el) {
-      if (skip.has(el) || el.closest('footer')) return;
-      el.classList.add('reveal');
-      io.observe(el);
-    });
-  } else {
-    d.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-in'); });
   }
   window.addEventListener('load', function () { setTimeout(snap, 60); });
 
