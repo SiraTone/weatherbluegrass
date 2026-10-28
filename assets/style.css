@@ -445,10 +445,10 @@ h3+p,h3+ul{margin-top:8px}
 /* FRED pages */
 .fred-hero{background:#e9edf3;max-width:460px;justify-self:center}
 .fred-hero img{background:#fff}
-.fred-gallery{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:20px;align-items:start}
+.fred-gallery{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:start}
 .fred-gallery figure{margin:0;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:#0a1120;box-shadow:var(--shadow)}
 .fred-gallery img{width:100%;height:auto}
 .fred-gallery figcaption{padding:10px 14px;border-top:1px solid var(--line);color:#b6c1dc;font:500 .78rem/1.4 var(--mono)}
 .fred-short{display:flex;justify-content:center}
 .fred-short video{width:min(340px,100%);height:auto;border-radius:var(--r-lg);border:1px solid var(--line);background:#0a1120}
-@media (max-width:760px){.fred-gallery{grid-template-columns:1fr}.fred-gallery figure:nth-child(3){max-width:320px}}
+@media (max-width:760px){.fred-gallery{grid-template-columns:1fr}.fred-gallery figure:nth-child(2){max-width:320px}}
