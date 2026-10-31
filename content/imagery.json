@@ -1,0 +1,42 @@
+[
+ {
+  "date": "2026-04",
+  "site": "bgad",
+  "title": "Chemical agent destruction plant",
+  "image": "images/bgad-plant-2026-04.jpg",
+  "note": "Same plant later: a debris pile at upper left, thinner equipment rows and less piping on the roof, consistent with dismantling.",
+  "basis": "Observed"
+ },
+ {
+  "date": "2025-08",
+  "site": "bgad",
+  "title": "Chemical agent destruction plant",
+  "image": "images/bgad-plant-2025-08.jpg",
+  "note": "Plant with equipment, piping and the full row of units still in place.",
+  "basis": "Observed"
+ },
+ {
+  "date": "2026",
+  "site": "bgad",
+  "title": "Igloo field and plant overview",
+  "image": "images/bgad-igloo-field.jpg",
+  "note": "About 60 earth-covered magazines on a loop road, the plant at right, a rail line along the south edge and several bare tan mounds along the top.",
+  "basis": "Observed"
+ },
+ {
+  "date": "Not recorded",
+  "site": "bgad",
+  "title": "Munitions destruction area",
+  "image": "images/bgad-destruction-area.jpg",
+  "note": "Two round gravel pads, a cleared scarred area with a small pond, and a large bare area with two ponds beside Muddy Creek.",
+  "basis": "Reported"
+ },
+ {
+  "date": "Not recorded",
+  "site": "bgad",
+  "title": "Possible igloo-type structure",
+  "image": "images/bgad-mound.jpg",
+  "note": "Bare rounded earth mound with a small shed and a long container beside it. Function unknown.",
+  "basis": "Reported"
+ }
+]
