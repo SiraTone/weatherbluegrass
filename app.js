@@ -1,4 +1,4 @@
-/* 859 Military Observations Group - static site logic.
+/* 859 Military Observations - static site logic.
  * Live data (aircraft.json, tfr.json, activity.json) is written by a GitHub Action
  * to the "data" branch and read here through raw.githubusercontent.com (CORS-enabled).
  * Hand-edited entries live in content/*.json on the main branch.
@@ -293,7 +293,15 @@ function renderAlerts() {
   if (state.aircraft) state.aircraft.aircraft.forEach(function (a) { if (isEmerg(a)) items.push('EMERGENCY SQUAWK ' + (a.squawk || '') + ': ' + (a.callsign || a.hex)); });
   if (state.tfr) state.tfr.tfrs.forEach(function (x) { items.push('TFR ' + x.id + ' (' + x.type + '): ' + x.desc); });
   $('alertwrap').style.display = items.length ? 'table' : 'none';
-  $('alerts').textContent = items.join('   ***   ');
+  var tx = $('alerttxt'), t = items.join('   ***   ');
+  if (tx.textContent !== t) {
+    tx.textContent = t;
+    tx.style.animation = 'none';
+    void tx.offsetWidth;
+    tx.style.animationDuration = Math.max(12, Math.round((t.length * 0.16 + 60) / 1)) + 's';
+    tx.style.animation = '';
+    tx.style.animationDuration = Math.max(12, Math.round(t.length * 0.16 + 14)) + 's';
+  }
 }
 
 /* ---------- activity graph ---------- */

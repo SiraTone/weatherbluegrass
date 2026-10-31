@@ -15,7 +15,9 @@ table.data tr:nth-child(even) td { background:#000055; }
 .g { color:#00FF00; font-weight:bold; } .y { color:#FFFF00; font-weight:bold; } .r { color:#FF3333; font-weight:bold; }
 .mono { font-family:"Courier New", monospace; }
 .small { font-size:11px; color:#99CCFF; }
-marquee { background:#990000; color:#FFFF00; font-weight:bold; padding:2px; border:1px solid #FF6666; }
+.ticker { background:#990000; color:#FFFF00; font-weight:bold; padding:2px 0; border:1px solid #FF6666; overflow:hidden; white-space:nowrap; }
+.ticker span { display:inline-block; padding-left:100%; animation:tick 30s linear infinite; }
+@keyframes tick { from { transform:translateX(0); } to { transform:translateX(-100%); } }
 .warn { border:1px dashed #FFFF00; padding:4px; margin:6px 0; color:#FFFF99; }
 #mainnav a.on, .inst a.on { background:#FFFF00; color:#000033; padding:0 3px; }
 .inst a { display:block; font-weight:bold; margin-top:4px; }

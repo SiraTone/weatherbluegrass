@@ -1,4 +1,4 @@
-# 859 Military Observations Group
+# 859 Military Observations
 
 A classic-style static site tracking Kentucky military activity from public sources. Runs on GitHub Pages with no server.
 
