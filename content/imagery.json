@@ -1,10 +1,34 @@
 [
  {
+  "date": "2026",
+  "site": "bgad",
+  "title": "Triangular site, removed",
+  "image": "images/bgad-triangle-site-2026.jpg",
+  "note": "Same triangle later: the fence, mast and pad are gone and only the bare dirt outline of the fence line and a few worn patches remain in the grass. Google Earth imagery as of 2026, so the structure appears to have been removed.",
+  "basis": "Reported"
+ },
+ {
+  "date": "Not recorded",
+  "site": "bgad",
+  "title": "Triangular fenced site with mast",
+  "image": "images/bgad-triangle-site.jpg",
+  "note": "Triangular fenced site with a tall lattice mast or tower on a small concrete pad near the center, fence corner posts at each point, and a separate small post inside. Function unknown (possibly an antenna, instrument or tracking site); not confirmed. Date not recorded.",
+  "basis": "Reported"
+ },
+ {
+  "date": "2017-04",
+  "site": "bgad",
+  "title": "Igloo under construction",
+  "image": "images/bgad-igloo-construction-2017.jpg",
+  "note": "An earth-covered magazine under construction: the arched barrel is in place with the concrete front wall and apron, and soil has been excavated in a wide oval around it ready to be backfilled. Excavators and dozers are parked along the access road, with several pickups. Google Earth imagery.",
+  "basis": "Observed"
+ },
+ {
   "date": "Not recorded",
   "site": "bgad",
   "title": "Isolated igloo-type structure (high resolution)",
   "image": "images/bgad-isolated-igloo.jpg",
-  "note": "Same structure as the bare mound below, shown with a fabric-like cover, pipes and ducting, small buildings and equipment around it. Map label N115E318. Training or test use is reported, not confirmed.",
+  "note": "Same structure as the bare mound below, shown with a fabric-like cover, pipes and ducting, small buildings and equipment around it. Training or test use is reported, not confirmed.",
   "basis": "Reported"
  },
  {
