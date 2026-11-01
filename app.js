@@ -7,7 +7,7 @@
 'use strict';
 
 var RADIUS_NM = 40;
-var STALE_MIN = 45;
+var STALE_MIN = 240;
 var cfg = window.KYOSINT || {};
 
 var SITES = {
@@ -20,6 +20,12 @@ var SITES = {
       ['Mar 2026', 'The 101st tested integrating next-generation drones to support ground forces in a live-fire exercise.', 'https://www.kentuckynewera.com/ep/news/article_6e76783c-9fed-5b01-bfd0-1e2d4a91d604.html', 'Kentucky New Era'],
       ['Jul 28, 2026', 'The 101st and the Army Corps of Engineers Louisville District held a 3-day planning conference to pick the site for a new hangar at Campbell Army Airfield, the first of a series on modernizing the airfield.', 'https://www.army.mil/article/294186/101st_airborne_usace_partner_to_modernize_campbell_army_airfield', 'Army.mil'],
       ['Ongoing', 'Public affairs advisories warn of increased aircraft activity during large-scale training.', 'https://christiancountynow.com/news/267762-increased-aircraft-activity-expected-during-large-scale-training-exercise-at-fort-campbell/', 'Christian County Now']
+    ],
+    facTitle: 'Photos',
+    facilities: [
+      ['UH-60 Black Hawk with troops in the door', 'images/campbell-fastrope-1.jpg', 'Soldiers seated in the cabin doors of a 101st Airborne Black Hawk during rappel master and fast-rope training at Fort Campbell. Photographed Aug 24, 2026. Source: DVIDS.', 'Official release', 'g'],
+      ['Fast-rope drop', 'images/campbell-fastrope-2.jpg', 'Two Soldiers on fast ropes below a hovering Black Hawk, with equipment bags on the grass. Photographed Aug 24, 2026. Source: DVIDS.', 'Official release', 'g'],
+      ['Black Hawk at the Air Assault School', 'images/campbell-fastrope-3.jpg', 'Black Hawk hovering over the training field beside the rappel tower marked "The Air Assault School." Photographed Aug 24, 2026. Source: DVIDS.', 'Official release', 'g']
     ],
     notes: [
       ['Units', '<b>101st Airborne Division (Air Assault)</b>, the Army\'s only air assault division, with a large aviation brigade.', 'Public record', 'g'],
@@ -43,6 +49,15 @@ var SITES = {
       ['Landmarks', 'The <b>US Bullion Depository</b> (run by the Treasury, not the Army) and the Patton Museum are on or beside the post.', 'Public record', 'g'],
       ['Size', 'Roughly 109,000 acres in Hardin, Meade and Bullitt counties.', 'Public record', 'g']
     ] },
+  boone: { name: 'Boone National Guard Center', lat: 38.18, lon: -84.90, airfield: 'Boone heliport (Frankfort; identifier not confirmed)',
+    desc: 'Headquarters of the Kentucky National Guard, on the north side of Frankfort in Franklin County. The center has a heliport used by Kentucky Army National Guard helicopters and for state emergency response. Coordinates on this site are approximate.',
+    links: [['Kentucky National Guard', 'https://kentucky.nationalguard.mil/'], ['News search', 'https://www.google.com/search?q=Boone+National+Guard+Center+Frankfort&tbm=nws']],
+    notes: [
+      ['Mission', 'Home of Joint Force Headquarters, Kentucky National Guard (Army and Air), plus the Adjutant General\'s staff and the Kentucky Emergency Management coordination role during state activations.', 'Public record', 'g'],
+      ['Heliport', 'A heliport at the center supports Guard helicopters (UH-60 Black Hawk and UH-72 Lakota types are flown by the Kentucky Army Guard) for training, VIP lift and disaster response such as floods and winter storms.', 'Public record', 'g'],
+      ['Watching', 'Guard helicopters often fly with ADS-B off or only briefly on, so the Live Aircraft tab may show little. Activity spikes during state emergencies and drill weekends.', 'Reported', 'y'],
+      ['Exact location', 'Heliport position, identifier and aircraft assignment are not yet confirmed here; add details when verified.', 'Unconfirmed', 'y']
+    ] },
   bgad: { name: 'Blue Grass Army Depot', lat: 37.690, lon: -84.250, airfield: 'None on post (nearest civil: Richmond / Lexington)',
     desc: 'Munitions storage and maintenance depot near Richmond, Madison County. Former site of a chemical weapons stockpile. Little aircraft activity of its own, so rail and road movements matter more here than ADS-B.',
     links: [['News search', 'https://www.google.com/search?q=Blue+Grass+Army+Depot&tbm=nws']],
@@ -54,6 +69,8 @@ var SITES = {
       ['Warning systems', 'During the chemical weapons era, <b>EOWS-612</b> sirens ringed the depot border. A warning system remains, but is now concentrated around the bases.', 'Confirmed', 'g'],
       ['Mission', 'Army munitions storage and maintenance depot (est. 1941), about 14,600 acres in Madison County near Richmond.', 'Public record', 'g'],
       ['Chemical stockpile', 'Stored a legacy chemical weapons stockpile (nerve agent and mustard munitions) until the Blue Grass Chemical Agent Destruction Pilot Plant destroyed it; destruction was completed in 2023.', 'Public record', 'g'],
+      ['Air activity', 'UH-60 <b>Black Hawks</b> have been seen flying over Richmond with transponders on, so some show up on the Live Aircraft tab and in the BGAD activity log.', 'Reported', 'y'],
+      ['Training area', 'Richmond is a training hotspot for Eastern Kentucky University and military units, reportedly because the surrounding airspace is fairly clear. Operators and units are not identified.', 'Reported', 'y'],
       ['Tenants', 'Based on unclassified documents, the depot is also home to <b>SOF</b> (special operations forces) elements.', 'Reported', 'y']
     ],
     facilities: [
@@ -471,7 +488,7 @@ function renderSite(k) {
       s.recent.map(function (n) { return '<tr><td>' + n[0] + '</td><td>' + n[1] + '</td><td><a target="_blank" rel="noopener" href="' + safeUrl(n[2]) + '">' + n[3] + '</a></td></tr>'; }).join('') + '</table><div class="small">Compiled from public news and official releases. Dates are as reported.</div></div>';
   }
   if (s.facilities) {
-    h += '<h2>Facilities</h2><div class="in"><table class="data"><tr><th>Facility</th><th>Image</th><th>Basis</th></tr>' +
+    h += '<h2>' + (s.facTitle || 'Facilities') + '</h2><div class="in"><table class="data"><tr><th>Facility</th><th>Image</th><th>Basis</th></tr>' +
       s.facilities.map(function (f) { return '<tr><td><b>' + f[0] + '</b><div class="small">' + f[2] + '</div></td><td><a target="_blank" rel="noopener" href="' + f[1] + '"><img src="' + f[1] + '" alt="' + f[0] + '" style="width:220px;max-width:100%;height:auto;border:1px solid #6699FF"></a></td><td class="' + f[4] + '">' + f[3] + '</td></tr>'; }).join('') + '</table>' +
       '<div class="small">Imagery viewed in Google Earth (&copy; Airbus where shown). Descriptions are observations from imagery, not official statements.</div></div>';
   }

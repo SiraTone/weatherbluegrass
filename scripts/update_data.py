@@ -27,6 +27,7 @@ LOG_SITES = {
     "campbell": (36.669, -87.474),
     "knox": (37.891, -85.966),
     "bgad": (37.690, -84.250),
+    "boone": (38.18, -84.90),
 }
 UA = {"User-Agent": "kentucky-osint/1.0 (github static site)"}
 
