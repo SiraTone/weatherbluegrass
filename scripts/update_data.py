@@ -182,7 +182,8 @@ CONFLICTS = {
     "Syria / Iraq": ['(Syria OR Iraq) (airstrike OR "air strike" OR "U.S. forces" OR CENTCOM)', ["syria", "iraq", "homs", "centcom"]],
     "Ukraine / Russia": ['Ukraine Russia (strike OR offensive OR drone OR NATO)', ["ukrain", "russia", "nato"]],
     "Red Sea / Yemen": ['(Houthi OR Yemen OR "Red Sea") (strike OR attack OR Navy)', ["houthi", "yemen", "red sea"]],
-    "Israel / Gaza / Lebanon": ['(Israel OR Gaza OR Lebanon OR Iran) (strike OR ceasefire OR missile)', ["israel", "gaza", "lebanon", "iran", "hezbollah"]],
+    "Iran / Persian Gulf": ['(Iran OR "Strait of Hormuz" OR "Persian Gulf") (military OR strike OR missile OR nuclear OR Navy)', ["iran", "hormuz", "persian gulf", "irgc"]],
+    "Israel / Gaza / Lebanon": ['(Israel OR Gaza OR Lebanon) (strike OR ceasefire OR missile)', ["israel", "gaza", "lebanon", "hezbollah"]],
     "Taiwan Strait / Pacific": ['(Taiwan OR "South China Sea") (military OR PLA OR Navy)', ["taiwan", "south china sea", "pla", "china"]],
 }
 
