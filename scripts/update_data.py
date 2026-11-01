@@ -8,6 +8,7 @@ Writes into <output-dir>:
   tfr.json       active Kentucky TFRs from the FAA
   activity.json  rolling 15-day sighting log used for the activity graph
   contracts.json recent federal contract awards mentioning each installation (USAspending, no key)
+  conflicts.json recent headlines per conflict theater (Google News RSS)
   news.json      recent news headlines per installation (Google News RSS)
 
 Run on a schedule by .github/workflows/update-data.yml. Standard library only.
@@ -177,6 +178,45 @@ def fetch_news(prev):
     return out or None
 
 
+CONFLICTS = {
+    "Syria / Iraq": ['(Syria OR Iraq) (airstrike OR "air strike" OR "U.S. forces" OR CENTCOM)', ["syria", "iraq", "homs", "centcom"]],
+    "Ukraine / Russia": ['Ukraine Russia (strike OR offensive OR drone OR NATO)', ["ukrain", "russia", "nato"]],
+    "Red Sea / Yemen": ['(Houthi OR Yemen OR "Red Sea") (strike OR attack OR Navy)', ["houthi", "yemen", "red sea"]],
+    "Israel / Gaza / Lebanon": ['(Israel OR Gaza OR Lebanon OR Iran) (strike OR ceasefire OR missile)', ["israel", "gaza", "lebanon", "iran", "hezbollah"]],
+    "Taiwan Strait / Pacific": ['(Taiwan OR "South China Sea") (military OR PLA OR Navy)', ["taiwan", "south china sea", "pla", "china"]],
+}
+
+
+def fetch_conflicts(prev):
+    """Recent headlines per conflict theater from Google News RSS (last 7 days)."""
+    out = {}
+    for k, (q, match) in CONFLICTS.items():
+        try:
+            qs = urllib.parse.quote(q + " when:7d")
+            url = "https://news.google.com/rss/search?q=%s&hl=en-US&gl=US&ceid=US:en" % qs
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                root = ET.fromstring(r.read())
+            items = []
+            for it in root.iter("item"):
+                title = (it.findtext("title") or "").strip()
+                src = (it.findtext("source") or "").strip()
+                if src and title.endswith(" - " + src):
+                    title = title[: -len(src) - 3]
+                if not any(m in title.lower() for m in match):
+                    continue
+                items.append({"title": title, "source": src, "url": it.findtext("link"),
+                              "date": (it.findtext("pubDate") or "")[:16]})
+                if len(items) >= 8:
+                    break
+            out[k] = items
+        except Exception as e:
+            print("conflicts failed:", k, e, file=sys.stderr)
+            if prev and k in prev.get("sites", {}):
+                out[k] = prev["sites"][k]
+    return out or None
+
+
 def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
@@ -202,7 +242,7 @@ def main():
         save(act_path, act)
         print("aircraft in KY area:", len(aircraft))
 
-    for name, fn in (("contracts.json", fetch_contracts), ("news.json", fetch_news)):
+    for name, fn in (("contracts.json", fetch_contracts), ("news.json", fetch_news), ("conflicts.json", fetch_conflicts)):
         path = os.path.join(out, name)
         prev = load(path, None)
         if prev and now - prev.get("updated", 0) < SLOW_EVERY:

@@ -91,10 +91,10 @@ var SITES = {
     ] }
 };
 var SITE_KEYS = Object.keys(SITES);
-var TABS = ['status', 'live', 'activity', 'hfgcs', 'gt27', 'contracts', 'news', 'imagery', 'movements', 'events', 'installations', 'sources', 'emblem', 'about'].concat(SITE_KEYS);
+var TABS = ['status', 'live', 'activity', 'hfgcs', 'gt27', 'contracts', 'news', 'conflicts', 'imagery', 'movements', 'events', 'installations', 'sources', 'emblem', 'about'].concat(SITE_KEYS);
 var RANGES = { '24h': [3600, 24], '3d': [10800, 24], '7d': [21600, 28], '14d': [43200, 28] };
 
-var state = { aircraft: null, tfr: null, activity: null, contracts: null, news: null, imagery: null, movements: null, events: null, range: '24h', tab: 'status' };
+var state = { aircraft: null, tfr: null, activity: null, contracts: null, news: null, conflicts: null, imagery: null, movements: null, events: null, range: '24h', tab: 'status' };
 
 /* ---------- helpers ---------- */
 function $(id) { return document.getElementById(id); }
@@ -212,6 +212,7 @@ function updateStamp() {
   else if (t === 'activity') txt = at(state.activity && state.activity.last, 'Activity log');
   else if (t === 'contracts') txt = at(state.contracts && state.contracts.updated, 'Contract data');
   else if (t === 'news') txt = at(state.news && state.news.updated, 'News feed');
+  else if (t === 'conflicts') txt = at(state.conflicts && state.conflicts.updated, 'Conflict feed');
   else if (t === 'hfgcs') txt = 'Live receiver stream';
   else if (SITES[t]) txt = at(state.aircraft && state.aircraft.updated, 'Aircraft data');
   else { var m = new Date(document.lastModified); txt = isNaN(m) ? '' : 'Page last updated ' + m.toUTCString().slice(5, 16); }
@@ -437,6 +438,21 @@ function renderNews() {
   });
   el.innerHTML = h;
 }
+function renderConflicts() {
+  var el = $('conflictsbox'), d = state.conflicts;
+  if (!d || !d.sites) { el.innerHTML = '<span class="empty">Conflict feed temporarily unavailable.</span>'; return; }
+  var h = '';
+  Object.keys(d.sites).forEach(function (k) {
+    var list = d.sites[k] || [];
+    h += '<h2 style="margin-top:8px">' + esc(k) + '</h2>';
+    if (!list.length) { h += '<div class="empty">No recent headlines.</div>'; return; }
+    h += '<table class="data"><tr><th>Date</th><th>Headline</th><th>Source</th></tr>' + list.map(function (x) {
+      var u = safeUrl(x.url);
+      return '<tr><td class="mono">' + esc(x.date) + '</td><td>' + (u ? '<a target="_blank" rel="noopener" href="' + esc(u) + '">' + esc(x.title) + '</a>' : esc(x.title)) + '</td><td>' + esc(x.source) + '</td></tr>';
+    }).join('') + '</table>';
+  });
+  el.innerHTML = h;
+}
 function renderImagery() {
   var el = $('imagerybox'), d = state.imagery;
   if (!d) { el.innerHTML = '<span class="empty">Imagery log temporarily unavailable.</span>'; return; }
@@ -525,7 +541,8 @@ function loadLive() {
     getJSON(base + 'tfr.json').then(function (d) { state.tfr = d; }, function () {}),
     getJSON(base + 'activity.json').then(function (d) { state.activity = d; }, function () {}),
     getJSON(base + 'contracts.json').then(function (d) { state.contracts = d; }, function () {}),
-    getJSON(base + 'news.json').then(function (d) { state.news = d; }, function () {})
+    getJSON(base + 'news.json').then(function (d) { state.news = d; }, function () {}),
+    getJSON(base + 'conflicts.json').then(function (d) { state.conflicts = d; }, function () {})
   ];
   Promise.all(jobs).then(renderAll);
 }
@@ -535,7 +552,7 @@ function loadContent() {
   getJSON('content/events.json').then(function (d) { state.events = d; }, function () { state.events = null; }).then(renderEvents);
 }
 function renderAll() {
-  renderStatus(); renderTfr(); renderLive(); renderActivity(); renderAlerts(); renderContracts(); renderNews(); updateStamp();
+  renderStatus(); renderTfr(); renderLive(); renderActivity(); renderAlerts(); renderContracts(); renderNews(); renderConflicts(); updateStamp();
   SITE_KEYS.forEach(function (k) { renderSite(k); });
 }
 
