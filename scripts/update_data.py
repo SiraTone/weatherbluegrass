@@ -9,6 +9,7 @@ Writes into <output-dir>:
   activity.json  rolling 15-day sighting log used for the activity graph
   contracts.json recent federal contract awards mentioning each installation (USAspending, no key)
   conflicts.json recent headlines per conflict theater (Google News RSS)
+  centcom.json   recent headlines for CENTCOM-region bases (Google News RSS)
   news.json      recent news headlines per installation (Google News RSS)
 
 Run on a schedule by .github/workflows/update-data.yml. Standard library only.
@@ -188,12 +189,11 @@ CONFLICTS = {
 }
 
 
-def fetch_conflicts(prev):
-    """Recent headlines per conflict theater from Google News RSS (last 7 days)."""
+def _rss_groups(groups, prev, days, limit, label):
     out = {}
-    for k, (q, match) in CONFLICTS.items():
+    for k, (q, match) in groups.items():
         try:
-            qs = urllib.parse.quote(q + " when:7d")
+            qs = urllib.parse.quote("%s when:%dd" % (q, days))
             url = "https://news.google.com/rss/search?q=%s&hl=en-US&gl=US&ceid=US:en" % qs
             req = urllib.request.Request(url, headers=UA)
             with urllib.request.urlopen(req, timeout=30) as r:
@@ -208,14 +208,29 @@ def fetch_conflicts(prev):
                     continue
                 items.append({"title": title, "source": src, "url": it.findtext("link"),
                               "date": (it.findtext("pubDate") or "")[:16]})
-                if len(items) >= 8:
+                if len(items) >= limit:
                     break
             out[k] = items
         except Exception as e:
-            print("conflicts failed:", k, e, file=sys.stderr)
+            print(label, "failed:", k, e, file=sys.stderr)
             if prev and k in prev.get("sites", {}):
                 out[k] = prev["sites"][k]
     return out or None
+
+
+def fetch_conflicts(prev):
+    """Recent headlines per conflict theater from Google News RSS (last 7 days)."""
+    return _rss_groups(CONFLICTS, prev, 7, 8, "conflicts")
+
+
+CENTCOM = {
+    "Al Udeid Air Base (Qatar)": ['"Al Udeid"', ["al udeid", "al-udeid", "udeid"]],
+}
+
+
+def fetch_centcom(prev):
+    """Recent headlines for CENTCOM-region bases (last 30 days)."""
+    return _rss_groups(CENTCOM, prev, 30, 10, "centcom")
 
 
 def main():
@@ -243,7 +258,7 @@ def main():
         save(act_path, act)
         print("aircraft in KY area:", len(aircraft))
 
-    for name, fn in (("contracts.json", fetch_contracts), ("news.json", fetch_news), ("conflicts.json", fetch_conflicts)):
+    for name, fn in (("contracts.json", fetch_contracts), ("news.json", fetch_news), ("conflicts.json", fetch_conflicts), ("centcom.json", fetch_centcom)):
         path = os.path.join(out, name)
         prev = load(path, None)
         if prev and now - prev.get("updated", 0) < SLOW_EVERY:
