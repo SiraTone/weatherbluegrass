@@ -31,6 +31,7 @@ var SITES = {
       ['Units', '<b>101st Airborne Division (Air Assault)</b>, the Army\'s only air assault division, with a large aviation brigade.', 'Public record', 'g'],
       ['Units', '<b>160th Special Operations Aviation Regiment (Airborne)</b> and <b>5th Special Forces Group (Airborne)</b> are based here.', 'Public record', 'g'],
       ['Aircraft', 'UH-60 Black Hawk, CH-47 Chinook and AH-64 Apache; the 160th flies MH-60, MH-47 and MH-6/AH-6 variants. Night training is common.', 'Public record', 'g'],
+      ['Callsigns', 'UH-60 Black Hawk serial <b>09-20222</b> seen as callsign <b>PROTO91</b>. CH-47 Chinook serial <b>22-02938</b> seen as callsign <b>AWFUL21</b>. Both reported operating out of Fort Campbell, southeast area. Date not recorded.', 'Reported', 'y'],
       ['Airfield', 'Campbell Army Airfield (KHOP) and Sabre Army Heliport. Many military helicopters fly with ADS-B off.', 'Public record', 'g'],
       ['Size', 'Roughly 105,000 acres straddling the Kentucky/Tennessee line, with large live-fire and air assault training areas.', 'Public record', 'g']
     ] },
