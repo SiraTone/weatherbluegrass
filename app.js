@@ -7,7 +7,7 @@
 'use strict';
 
 var RADIUS_NM = 40;
-var STALE_MIN = 240;
+var STALE_MIN = 30;
 var cfg = window.KYOSINT || {};
 
 var SITES = {
