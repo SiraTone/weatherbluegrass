@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-02",
+  "location": "Louisville (KSDF)",
+  "type": "Aircraft sighting",
+  "description": "Aircraft serial 95-00098, callsign PAT044, seen operating out of Louisville Muhammad Ali International (KSDF). Aircraft type not recorded. Time and track not recorded.",
+  "source": "Contributor report",
+  "confidence": "Reported"
+ },
+ {
+  "date": "2026-11-02",
   "location": "Fort Campbell",
   "type": "Aircraft sighting",
   "description": "CH-47 Chinook serial 13-08139, seen as R08139 (as reported), operating out of Fort Campbell. Time and track not recorded.",
