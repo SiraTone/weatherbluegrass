@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-02",
+  "location": "Fort Campbell",
+  "type": "Aircraft sighting",
+  "description": "CH-47 Chinook serial 13-08139, seen as R08139 (as reported), operating out of Fort Campbell. Time and track not recorded.",
+  "source": "Contributor report",
+  "confidence": "Reported"
+ },
+ {
+  "date": "2026-11-02",
   "location": "Kentucky (overflight)",
   "type": "Aircraft sighting",
   "description": "ME-11B, callsign ARMY116, c/n 60116, tail/ICAO hex AF8445 (as reported), flew over Kentucky. Reported to be testing the new U.S. Army HADES (High Accuracy Detection and Exploitation System) platform. Exact track and time not recorded.",
