@@ -512,7 +512,9 @@ function ewsBlock(d, label) {
   var h = '<h2 style="margin-top:8px">' + esc(label) + '</h2><table class="data">';
   h += '<tr><th>Alert level</th><td class="' + cls + '">' + lvl + ' of 5 (' + esc(c.alertLevel || 'unknown') + ')</td></tr>';
   h += '<tr><th>Aircraft airborne</th><td class="mono">' + esc(c.concurrentCount) + ' now &bull; ' + Math.round(c.baselineMean || 0) + ' expected (&plusmn;' + Math.round(c.baselineStdDev || 0) + ')</td></tr>';
-  h += '<tr><th>Deviation</th><td class="mono">' + (z == null ? 'n/a' : (z >= 0 ? '+' : '') + Number(z).toFixed(2)) + ' sigma (alert at ' + esc(c.alarmSigmaThreshold || 4) + ')</td></tr>';
+  var zz = z == null ? null : Number(z), thr = c.alarmSigmaThreshold || 4, word = 'n/a';
+  if (zz != null) { var az = Math.abs(zz), dir = zz >= 0 ? 'above' : 'below'; word = az < 0.5 ? 'About normal' : (az < 1.5 ? 'Slightly ' + dir + ' normal' : (az < 2.5 ? 'Noticeably ' + dir + ' normal' : 'Far ' + dir + ' normal')); }
+  h += '<tr><th>Compared to normal</th><td>' + word + ' <span class="small">(score ' + (zz == null ? 'n/a' : (zz >= 0 ? '+' : '') + zz.toFixed(2)) + '; an alert needs about +' + thr + ')</span></td></tr>';
   h += '<tr><th>As of</th><td class="mono">' + esc((c.asOf || '').replace('T', ' ').slice(0, 16)) + ' UTC</td></tr></table>';
   return h + ewsChart(d);
 }
