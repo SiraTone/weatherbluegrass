@@ -1,7 +1,7 @@
 name: update-data
 
 # Long-running job: refreshes the data every 2 minutes for about 5.5 hours, then
-# starts the next run itself. The hourly schedule is only a backup in case the chain breaks.
+# the next run, queued at the start of this one, takes over. The hourly schedule is only a backup in case the chain breaks.
 on:
   schedule:
     - cron: "17 * * * *"
@@ -21,6 +21,11 @@ jobs:
     timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
+
+      - name: Queue the next run now (it waits for this one to finish, so the chain never breaks)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update-data.yml -R "${{ github.repository }}" || true
 
       - name: Fetch previous data (data branch)
         run: |
@@ -44,9 +49,3 @@ jobs:
             cd ..
             sleep 120
           done
-
-      - name: Start next run
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run update-data.yml -R "${{ github.repository }}" || true
