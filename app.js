@@ -92,10 +92,10 @@ var SITES = {
     ] }
 };
 var SITE_KEYS = Object.keys(SITES);
-var TABS = ['status', 'live', 'activity', 'hfgcs', 'gt27', 'contracts', 'news', 'conflicts', 'centcom', 'imagery', 'movements', 'events', 'installations', 'sources', 'emblem', 'about'].concat(SITE_KEYS);
+var TABS = ['status', 'live', 'activity', 'hfgcs', 'gt27', 'contracts', 'news', 'conflicts', 'centcom', 'warning', 'imagery', 'movements', 'events', 'installations', 'sources', 'emblem', 'about'].concat(SITE_KEYS);
 var RANGES = { '24h': [3600, 24], '3d': [10800, 24], '7d': [21600, 28], '14d': [43200, 28] };
 
-var state = { aircraft: null, tfr: null, activity: null, contracts: null, news: null, conflicts: null, centcom: null, imagery: null, movements: null, events: null, range: '24h', tab: 'status' };
+var state = { aircraft: null, tfr: null, activity: null, contracts: null, news: null, conflicts: null, centcom: null, ews: null, ewsAt: 0, imagery: null, movements: null, events: null, range: '24h', tab: 'status' };
 
 /* ---------- helpers ---------- */
 function $(id) { return document.getElementById(id); }
@@ -215,6 +215,7 @@ function updateStamp() {
   else if (t === 'news') txt = at(state.news && state.news.updated, 'News feed');
   else if (t === 'conflicts') txt = at(state.conflicts && state.conflicts.updated, 'Conflict feed');
   else if (t === 'centcom') txt = at(state.centcom && state.centcom.updated, 'CENTCOM feed');
+  else if (t === 'warning') txt = 'Early Warning data refreshed about every 30 min';
   else if (t === 'hfgcs') txt = 'Live receiver stream';
   else if (SITES[t]) txt = at(state.aircraft && state.aircraft.updated, 'Aircraft data');
   else { var m = new Date(document.lastModified); txt = isNaN(m) ? '' : 'Page last updated ' + m.toUTCString().slice(5, 16); }
@@ -226,6 +227,7 @@ function showTab(t) {
   var as = document.querySelectorAll('a[data-tab]');
   for (var i = 0; i < as.length; i++) as[i].className = (as[i].getAttribute('data-tab') === t ? 'on' : '');
   hfVisible(t === 'hfgcs');
+  if (t === 'warning') loadEws();
   state.tab = t; updateStamp();
 }
 document.addEventListener('click', function (e) {
@@ -469,6 +471,56 @@ function renderCentcom() {
     }).join('') + '</table>';
   });
   el.innerHTML = h;
+}
+
+/* ---------- early warning (Apocalypse Early Warning System) ---------- */
+var EWS_BASE = 'https://pub-49bb6a6f314c47be9b481c25e5f6ca9e.r2.dev/';
+var EWS_SETS = [['military-dashboard.json', 'Military aircraft'], ['dashboard.json', 'Business jets']];
+function loadEws() {
+  if (state.ews && Date.now() - state.ewsAt < 300000) return;
+  state.ewsAt = Date.now();
+  var out = {};
+  Promise.all(EWS_SETS.map(function (s) {
+    return getJSON(EWS_BASE + s[0]).then(function (d) { out[s[0]] = d; }, function () {});
+  })).then(function () { state.ews = out; renderEws(); });
+}
+function ewsChart(d) {
+  var a = d.trends && d.trends.archive;
+  if (!a || !a.c || !a.c.length) return '';
+  var step = (a.tr && a.tr[0] && a.tr[0][0]) || 1800000, n = 336, len = a.c.length, st = Math.max(0, len - n), t0 = Date.parse(a.t0);
+  var c = a.c.slice(st), p = a.p.slice(st), m = c.length, W = 640, H = 200, L = 44, R = 8, T = 8, B = 22, mx = 0, mn = Infinity, i;
+  for (i = 0; i < m; i++) { mx = Math.max(mx, c[i], p[i] || 0); mn = Math.min(mn, c[i], p[i] || c[i]); }
+  mn = Math.floor(mn * 0.9); mx = Math.ceil(mx * 1.05);
+  function X(k) { return L + (W - L - R) * k / Math.max(1, m - 1); }
+  function Y(v) { return T + (H - T - B) * (1 - (v - mn) / Math.max(1, mx - mn)); }
+  function path(arr) { var s = ''; for (var k = 0; k < m; k++) if (arr[k] != null) s += (s ? 'L' : 'M') + X(k).toFixed(1) + ' ' + Y(arr[k]).toFixed(1); return s; }
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:' + W + 'px;background:#000022;border:1px solid #336699">';
+  for (i = 0; i <= 3; i++) {
+    var v = mn + (mx - mn) * i / 3, y = Y(v);
+    svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" stroke="#223355"/><text x="' + (L - 4) + '" y="' + (y + 3) + '" fill="#9999CC" font-size="10" text-anchor="end">' + Math.round(v) + '</text>';
+  }
+  for (i = 0; i <= 7; i++) {
+    var k = Math.round((m - 1) * i / 7), dt = new Date(t0 + (st + k) * step);
+    svg += '<text x="' + X(k) + '" y="' + (H - 6) + '" fill="#9999CC" font-size="10" text-anchor="' + (i === 7 ? 'end' : 'middle') + '">' + (dt.getUTCMonth() + 1) + '/' + dt.getUTCDate() + '</text>';
+  }
+  svg += '<path d="' + path(p) + '" fill="none" stroke="#FFFF00" stroke-width="1.2" stroke-dasharray="4 3"/><path d="' + path(c) + '" fill="none" stroke="#00FF00" stroke-width="1.6"/></svg>';
+  return svg + '<div class="small"><span class="g">&#9473;</span> actual aircraft airborne &nbsp; <span class="y">&#9473; &#9473;</span> expected for this time of week &bull; last 7 days (UTC dates)</div>';
+}
+function ewsBlock(d, label) {
+  var c = d.current || {}, lvl = c.emergencyLevel || 1, cls = lvl >= 4 ? 'r' : (lvl >= 2 ? 'y' : 'g');
+  var z = c.varianceAdjustedZScore != null ? c.varianceAdjustedZScore : c.zScore;
+  var h = '<h2 style="margin-top:8px">' + esc(label) + '</h2><table class="data">';
+  h += '<tr><th>Alert level</th><td class="' + cls + '">' + lvl + ' of 5 (' + esc(c.alertLevel || 'unknown') + ')</td></tr>';
+  h += '<tr><th>Aircraft airborne</th><td class="mono">' + esc(c.concurrentCount) + ' now &bull; ' + Math.round(c.baselineMean || 0) + ' expected (&plusmn;' + Math.round(c.baselineStdDev || 0) + ')</td></tr>';
+  h += '<tr><th>Deviation</th><td class="mono">' + (z == null ? 'n/a' : (z >= 0 ? '+' : '') + Number(z).toFixed(2)) + ' sigma (alert at ' + esc(c.alarmSigmaThreshold || 4) + ')</td></tr>';
+  h += '<tr><th>As of</th><td class="mono">' + esc((c.asOf || '').replace('T', ' ').slice(0, 16)) + ' UTC</td></tr></table>';
+  return h + ewsChart(d);
+}
+function renderEws() {
+  var el = $('ewsbox'), d = state.ews, h = '';
+  if (!d) return;
+  EWS_SETS.forEach(function (s) { if (d[s[0]]) h += ewsBlock(d[s[0]], s[1]); });
+  el.innerHTML = h || '<span class="empty">Early warning data temporarily unavailable.</span>';
 }
 function renderImagery() {
   var el = $('imagerybox'), d = state.imagery;
