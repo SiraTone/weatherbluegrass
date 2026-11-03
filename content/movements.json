@@ -1,5 +1,13 @@
 [
  {
+  "date": "Not recorded",
+  "location": "Lexington (KLEX) / Richmond",
+  "type": "Aircraft sighting",
+  "description": "Two P-8 Poseidons reported doing touch-and-go landings at Lexington (Blue Grass Airport). One P-8 was reported flying over Richmond below 4,000 ft. The other was listed as a ground vehicle on Flightradar24, which looks like a tracker data error. Callsigns, serials and times not recorded.",
+  "source": "Contributor report",
+  "confidence": "Reported"
+ },
+ {
   "date": "2026-11-02",
   "location": "Fort Campbell",
   "type": "Aircraft sighting",
